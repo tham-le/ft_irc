@@ -21,10 +21,22 @@ public:
 	void					setConfig(std::string const key, std::string const value);
 	std::string				getConfig(std::string const key) const;
 
+	void					setPingInterval(int const pingInterval);
+	int						getPingInterval() const;
+
+	void					setPingTimeout(int const pingTimeout);
+	int						getPingTimeout() const;
+
+	void					setMaxClients(int const maxClients);
+	int						getMaxClients() const;
+
 private:
 	std::map<std::string, std::string>	_configList;
 	int									_port;
 	std::string							_password;
+	int									_pingInterval;
+	int									_pingTimeout;
+	int									_maxClients;
 
 };
 

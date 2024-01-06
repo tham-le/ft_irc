@@ -40,6 +40,8 @@ class Ircserv
 
 
 
+
+
 	private:
 
 		std::map<int, User *>			users;
@@ -49,7 +51,7 @@ class Ircserv
 
 		int 							_fd;
 		std::vector <pollfd>			_pollfds;
-
+		time_t							_lastPing;
 };
 
 #endif

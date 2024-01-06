@@ -15,9 +15,13 @@ Ircserv::~Ircserv()
 
 Ircserv::Ircserv(int port, std::string password)
 {
-	std::cout << "Welcome to Ircserv" << std::endl;
+	_lastPing = std::time(0);
 	_config.setPort(port);
 	_config.setPassword(password);
+	_config.setPingInterval(1000);
+	_config.setPingTimeout(10 000);
+	_config.setMaxClients(100);
+	std::cout << "Welcome to Ircserv" << std::endl;
 }
 
 void			Ircserv::init()
@@ -52,20 +56,77 @@ void			Ircserv::init()
 	int listening = listen(sockfd, 10);
 	if (listening < 0)
 		throw std::runtime_error("listen() failed");
-	//accept
-	_fd = accept(sockfd, (struct sockaddr *)NULL, NULL);
-	if (_fd < 0)
+	if (accept(sockfd, (struct sockaddr *)NULL, NULL) < 0)
 		throw std::runtime_error("accept() failed");
+	_pollfds.push_back(pollfd{sockfd, POLLIN, 0});
+
 }
 
 void			Ircserv::run()
 {
+	std::vector<User *> users = getUsers();
+	int pingInterval = _config.getPingInterval();
+	int pingTimeout = _config.getPingTimeout();
 
+	if (poll(_pollfds.data(), _pollfds.size(), -1) < 0)
+		throw std::runtime_error("poll() failed");
+	if (_pollfds[0].revents & POLLIN)
+		acceptUser();
+	else
+	{
+		for (int i = 1; i < _pollfds.size(); i++)
+		{
+			if (_pollfds[i].revents & POLLIN)
+				users[i]->read();
+			else if (_pollfds[i].revents & POLLOUT)
+				users[i]->write();
+		}
+	}
+
+	for (std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
+	{
+		if ((*it)->isDisconnected())
+		{
+			_pollfds.erase(_pollfds.begin() + (it - users.begin()));
+			users.erase(it);
+		}
+	}
+
+	users.clear();
+	users = getUsers();
+	for (std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
+
+	{
+		if ((*it)->getLastPing() + pingInterval < std::time(0))
+			(*it)->ping();
+		if ((*it)->getLastPing() + pingTimeout < std::time(0))
+			(*it)->disconnect();
+	}
+}
+
+
+void			Ircserv::acceptUser()
+{
+	if (_users.size() == _config.getMaxClients())
+		if (shutdown(_pollfds[0].fd, SHUT_RD) < 0)
+			throw std::runtime_error("shutdown() failed");
+
+	else
+	{
+		int sockfd = accept(_pollfds[0].fd, (struct sockaddr *)NULL, NULL);
+		if (sockfd < 0)
+			throw std::runtime_error("accept() failed");
+		if (fcntl(sockfd, F_SETFL, O_NONBLOCK) < 0)
+			throw std::runtime_error("fcntl() failed");
+		_pollfds.push_back(pollfd{sockfd, POLLIN, 0});
+		_users.push_back(new User(sockfd));
+	}
+	
 }
 
 void			Ircserv::run();
 
-void			Ircserv::acceptUser();
+
 
 Config			Ircserv::getConfig() const;
 void			Ircserv::setConfig(Config const &config);
