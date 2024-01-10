@@ -6,7 +6,7 @@
 #    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2023/12/22 20:49:47 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/10 22:38:00 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,9 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98 $(INCLUDES) -MMD -MP
 DEBUG_FLAG = -g3
 RM = rm -rf
 
-SRC_FILES = main.cpp
+
+
+SRC_FILES = main.cpp Ircserv.cpp
 
 
 SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))

@@ -6,41 +6,44 @@
 /*   By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 20:50:16 by thi-le            #+#    #+#             */
-/*   Updated: 2024/01/05 19:51:05 by thi-le           ###   ########.fr       */
+/*   Updated: 2024/01/10 23:16:42 by thi-le           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <exception>
 #include <csignal>
+#include <cstdlib>
 #include <Ircserv.hpp>
-#include <Users.hpp>
-#include <Config.hpp>
-#include <Channel.hpp>
 
 
-bool stop = false;
 
-void signal_handler(int signum)
+static int toInt(char const *port)
 {
-	std::cout << "Interrupt signal (" << signum << ") received.\n";
-	stop = true;
+	int i = 0;
+	while (port[i])
+	{
+		if (!std::isdigit(port[i]))
+			throw std::invalid_argument("Port must be a number");
+		i++;
+	}
+	return (atoi(port));
 }
+
 
 int main(int argc, char **argv)
 {
+
 	try
 	{
 		if (argc != 3)
 			throw std::invalid_argument("Usage: ./ircserv <port> <password>");
-		
-		IrcServ ircserv(port, password);
-		signal(SIGINT, signal_handler);
+		int port = toInt(argv[1]);
+		std::string password = argv[2];
 
-
+		Ircserv ircserv(port, password);
 		ircserv.init();
-		while (!stop)
-			ircserv.run();
+		ircserv.run();
 	}
 	catch (const std::exception& e)
 	{
