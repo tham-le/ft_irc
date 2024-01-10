@@ -2,15 +2,21 @@
 #define IRCSERV_HPP
 
 #include "Ircserv.hpp"
-#include <string>
+#include <cstddef>
+#include <cstring>
 #include <map>
 #include <vector>
 #include <poll.h>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include<arpa/inet.h>   // inet_addr
 #include <fcntl.h>
 #include <ctime>
+#include <unistd.h>
+
+#include <sys/types.h>
+
 
 #include <iostream>
 
@@ -42,56 +48,36 @@ Ircserv::Ircserv(int port, std::string password)
 
 void			Ircserv::init()
 {
-	//create socket
 	int	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	_fd = sockfd;
-	//AF_INET = IPv4, SOCK_STREAM = TCP, 0 = IP
 	if (sockfd < 0)
 		throw std::runtime_error("Creating socket() failed");
-	//setsockopt = set socket options
-	//SOL_SOCKET = socket level, SO_REUSEADDR = reuse address
-	//&(int){1} = 1, sizeof(int) = size of int
 	int opt = 1;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 		throw std::runtime_error("setsockopt() failed");
-
 	//mode non blocking
 	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) < 0)
 		throw std::runtime_error("fcntl() failed");
-
 	
-	//bind socket
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	// addr.sin_port = htons(_config.getPort());
 	addr.sin_port = htons(6667);
 	addr.sin_addr.s_addr = INADDR_ANY;
 
-	//forcefully attaching socket to the port
 	if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
 		throw std::runtime_error("bind port failed");
-	//listen
 	if (listen(sockfd, 10) < 0)
 		throw std::runtime_error("listen() failed");
-
-/*	If there are no incoming connections on the queue, 
-	accept() will block until a connection comes in. 
-	If you're calling accept() immediately after listen(), 
-	and there are no incoming connections, 
-	accept() will block indefinitely. 
-	To avoid this, you can use select(), 
-	poll(), or epoll() to check if there are any pending connections 
-	before calling accept().*/
-	
-	_pollfds.push_back((pollfd){sockfd, POLLIN, 0});
-	std::cout << "init done" << std::endl;
+	std::cout << "IRC server ready...." << std::endl;
+	std::cout << "Listening on port " << 6667 << std::endl;
+	std::cout << "Waiting for incoming connections..." << std::endl;
+	std::cout << "Press Ctrl-C to exit" << std::endl;
 }
 
 
 void			Ircserv::waitForEvent()
 {
-	int ret = poll(_pollfds.data(), _pollfds.size(), -1);
-	if (ret < 0)
+	if (poll(_pollfds.data(), _pollfds.size(), -1) < 0)
 		throw std::runtime_error("poll() failed");
 }
 
@@ -99,15 +85,28 @@ void			Ircserv::connectClient()
 {
 	if (_pollfds[0].revents & POLLIN)
 	{
-		int sockfd = accept(_pollfds[0].fd, (struct sockaddr *)NULL, NULL);
+		int fd = accept(_fd, (struct sockaddr *)NULL, NULL);
 		if (sockfd < 0)
 			throw std::runtime_error("accept() failed");
 		std::cout << "New client connected by socket " << sockfd << std::endl;
-		
+/*		std::cout << "Client IP address: " << inet_ntoa(((struct sockaddr_in *)&sockfd)->sin_addr) << std::endl;
+		std::cout << "Client port      : " << ntohs(((struct sockaddr_in *)&sockfd)->sin_port) << std::endl;
+		*/
+		if (write(sockfd, "Welcome to Ircserv of CTY Team\n", 31) < 0)
+			throw std::runtime_error("write() failed");
+		char buffer[1024];
+		memset(buffer, 0, 1024);
+		if (read(sockfd, buffer, 1024) < 0)
+			throw std::runtime_error("read() failed");
+		std::cout << "Message received from client: " << buffer << std::endl;
+
 		if (fcntl(sockfd, F_SETFL, O_NONBLOCK) < 0)
 			throw std::runtime_error("fcntl() failed");
 		_pollfds.push_back((pollfd){sockfd, POLLIN, 0});
-		// _users.push_back(new User(sockfd));
+
+		for (size_t i = 0; i < _pollfds.size(); i++)
+			std::cout << _pollfds[i].fd << std::endl;
+		//_users.push_back(new User(sockfd));
 	}
 }
 
