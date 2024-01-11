@@ -12,7 +12,10 @@ User::User() {
 
 User::User(int fd, struct sockaddr_in addr) {
     _fd = fd;
-    
+    _hostname = inet_ntoa(addr.sin_addr);
+    _isOperator = false;
+    _isAway = false;
+    _awayMessage = "";
 }
 
 User::~User() {}
