@@ -1,12 +1,18 @@
 #ifndef IRC_SERV_HPP
 #define IRC_SERV_HPP
 
+# define MAX_CLIENTS 100
+#define BUFF_SIZE 512
+#define FOPEN_MAX FD_SETSIZE
+
+
+
 #include <string>
 #include <map>
 #include <vector>
-#include "Users.hpp"
-/*#include "Channel.hpp"
-#include "Config.hpp"*/
+#include "User.hpp"
+/*#include "Channel.hpp" */
+#include "Config.hpp"
 #include <poll.h>
 
 class Ircserv
@@ -27,8 +33,13 @@ class Ircserv
 		void			writeToAllClientsExcept(int fd, std::string const &msg);
 
 		std::string		readFromClient(int fd);
-		std::string		readFromAllClients();
+		void		readFromAllClients();
 
+		void			putStr(std::string const &str);
+		void			disconnectClient(int fd);
+		void			disconnectAllClients();
+
+		void			handleMessage(int fd, std::string const &msg);
 
 
 		void			putStrFd(int fd, std::string const &str);
@@ -51,7 +62,7 @@ class Ircserv
 
 	private:
 
-		std::map<int, User *>			users;
+		std::map<int, User *>			_users;
 /*		std::map<std::string, Channel *>	channels;
 		Config							_config;
 */

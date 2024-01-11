@@ -6,7 +6,7 @@
 #    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/10 22:38:00 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/11 17:19:35 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RM = rm -rf
 
 
 
-SRC_FILES = main.cpp Ircserv.cpp
+SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp
 
 
 SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))

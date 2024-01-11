@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <ctime>
 #include <unistd.h>
+#include <cerrno>
 
 #include <iostream>
 
@@ -101,6 +102,8 @@ void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
 
 static bool containEOL(std::string const &str)
 {
+	if (str.size() < 2)
+		return (false);
 	return (str.find("\r\n") != std::string::npos);
 }
 
@@ -108,36 +111,55 @@ static bool containEOL(std::string const &str)
 
 std::string		Ircserv::readFromClient(int fd)
 {
-	static std::string buffer[FOPEN_MAX];
-
+	static std::string buffer;
 	try
 	{
-		while (!containEOL(buffer))
+		while (containEOL(buffer) ==  false)
 		{
-			char buf[BUFF_SIZE + 1];
-			bzero(buf, BUFF_SIZE + 1);
-			int bytes = read(fd, buf, BUFF_SIZE);
+			char buf[4096];
+			memset(buf, 0, 4096);
+		
+			int bytes = recv(fd, buf, BUFF_SIZE, 0);
+			std::cout << "bytes = " << bytes << std::endl;
 			if (bytes < 0)
-				throw std::runtime_error("read() failed");
+			{
+				if (errno == EWOULDBLOCK || errno == EAGAIN)
+				{
+					std::cout << "EWOULDBLOCK" << std::endl;
+					break ;
+				}
+				else
+					throw std::runtime_error("recv() failed");
+			}
 			else if (bytes == 0)
 				throw std::runtime_error("Client disconnected");
-			buffer[fd] += buf;
+			buffer += std::string(buf, bytes);
 		}
-		std::string msg = buffer[fd].substr(0, buffer[fd].find("\r\n"));
-		buffer[fd] = buffer[fd].substr(buffer[fd].find("\r\n") + 2);
+		std::string msg = buffer.substr(0, buffer.find("\r\n"));
+		buffer = buffer.substr(buffer.find("\r\n"));
+		
 		return (msg);
 	}
 	catch (const std::exception& e)
 	{
 		std::cerr << "readFromClient() failed: " << e.what() << '\n';
 	}
+	return ("");
 }
 
 void			Ircserv::disconnectClient(int fd)
 {
 	close(fd);
 	_pollfds.erase(_pollfds.begin() + fd);
-	_users.erase(_users.begin() + fd);
+	std::map<int, User *>::iterator it = _users.find(fd);
+	if (it != _users.end())
+	{
+		std::cout << "Client " << fd << " disconnected" << std::endl;
+		delete it->second;
+		_users.erase(it);
+	}
+	else
+		std::cout << "Client " << fd << " disconnected" << std::endl;
 }
 
 void			Ircserv::disconnectAllClients()
@@ -159,10 +181,13 @@ void			Ircserv::connectClient()
 			throw std::runtime_error("accept() failed");
 		std::cout << "New client connected by socket " << fd << std::endl;
 		_users[fd] = new User(fd, addr);
-		
-		if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
+
+		int flags = fcntl(fd, F_GETFL, 0);
+		if (flags < 0)
 			throw std::runtime_error("fcntl() failed");
-		writeToClient(sockfd, "Welcome to Ircserv\n");
+		fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+		
+		writeToClient(fd, "Welcome to Ircserv of the three invicible\n");
 		_pollfds.push_back((pollfd){fd, POLLIN | POLLOUT, 0});
 	}
 }
@@ -170,30 +195,33 @@ void			Ircserv::connectClient()
 
 void		Ircserv::handleMessage(int fd, std::string const &msg)
 {
-	Command *cmd = Command::parse(msg);
-	if (cmd == NULL)
-	{
-		writeToClient(fd, "ERROR :Unknow command\n");
-		return ;
-	}
-	if (cmd->getName() == "QUIT")
-	{
-		disconnectClient(fd);
-		return ;
-	}
-	cmd->run(fd, *this);
-
+	// Command *cmd = Command::parse(msg);
+	// if (cmd == NULL)
+	// {
+	// 	writeToClient(fd, "ERROR :Unknow command\n");
+	// 	return ;
+	// }
+	// if (cmd->getName() == "QUIT")
+	// {
+	// 	disconnectClient(fd);
+	// 	return ;
+	// }
+	std::cout << "Message from client " << fd << ": " << msg << std::endl;
+	writeToClient(fd, "OK\n");
 }
 
 
 
 void		Ircserv::readFromAllClients()
 {
+
 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
 	{
-		if (it->id != _sockfd &&  it->revents & POLLIN)
+		if (it->fd != _sockfd &&  it->revents & POLLIN)
 		{
 			std::string msg = readFromClient(it->fd);
+			if (msg == "")
+				break ;
 			std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
 			handleMessage(it->fd, msg);
 		}
