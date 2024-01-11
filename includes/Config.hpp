@@ -12,14 +12,14 @@ public:
 	Config();
 	~Config();
 
-	void					setPort(std::string const port);
+	void					setPort(int port);
 	void					setPassword(std::string const password);
 
 	int						getPort() const;
 	std::string				getPassword() const;
 
-	void					setConfig(std::string const key, std::string const value);
-	std::string				getConfig(std::string const key) const;
+	// void					setConfig(std::string const key, std::string const value);
+	// std::string				getConfig(std::string const key) const;
 
 	void					setPingInterval(int const pingInterval);
 	int						getPingInterval() const;
@@ -30,13 +30,17 @@ public:
 	void					setMaxClients(int const maxClients);
 	int						getMaxClients() const;
 
+	void					setMaxChannels(int const maxChannels);
+	int						getMaxChannels() const;
+
 private:
-	std::map<std::string, std::string>	_configList;
+	// std::map<std::string, std::string>	_configList;
 	int									_port;
 	std::string							_password;
 	int									_pingInterval;
 	int									_pingTimeout;
 	int									_maxClients;
+	int									_maxChannels;
 
 };
 
