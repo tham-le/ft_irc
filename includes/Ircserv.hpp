@@ -19,6 +19,8 @@ class Ircserv
 
 		void			init();
 		void			run();
+		void			waitForEvent();
+		void			connectClient();
 
 
 
@@ -48,10 +50,6 @@ class Ircserv
 		int 							_fd;
 		std::vector <pollfd>			_pollfds;
 		time_t							_lastPing;
-
-		void			waitForEvent();
-		void			connectClient();
-
 		
 };
 
