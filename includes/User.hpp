@@ -3,18 +3,17 @@
 
 
 #include <locale>
+#include <iostream>
 #include <string>
+#include <cctype>
 #include <map>
 #include <vector>
 #include <netinet/in.h>
-#include ""
 #include "Command.hpp"
 
 
 class Channel;
 class Command;
-
-
 
 class User
 {
@@ -22,7 +21,7 @@ public:
 	User();
 	~User();
 
-	User(int fd, struct sockaddr_in adresse);
+	User(int fd, struct sockaddr_in addr);
 
 	void	sendMessage(User *user, std::string message);
 
@@ -43,9 +42,6 @@ public:
 	bool	isAway() const;
 	void	setAwayMessage(std::string awayMessage);
 	std::string	getAwayMessage() const;
-
-
-
 
 private:
 	std::map<std::string, void (*)(Command *)> command_function;
@@ -68,9 +64,6 @@ private:
 	void	receive(Ircserv *ircserv);
 	void	write(std::string message);
 	void	pushMessage();
-
-
-		
-}
+};
 
 #endif
