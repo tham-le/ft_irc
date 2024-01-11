@@ -4,8 +4,8 @@
 #include <string>
 #include <map>
 #include <vector>
-/*#include "Users.hpp"
-#include "Channel.hpp"
+#include "Users.hpp"
+/*#include "Channel.hpp"
 #include "Config.hpp"*/
 #include <poll.h>
 
@@ -22,11 +22,20 @@ class Ircserv
 		void			waitForEvent();
 		void			connectClient();
 
+		void			writeToClient(int fd, std::string const &msg);
+		void			writeToAllClients(std::string const &msg);
+		void			writeToAllClientsExcept(int fd, std::string const &msg);
+
+		std::string		readFromClient(int fd);
+		std::string		readFromAllClients();
 
 
-/*		void			acceptUser();
 
-		Config			getConfig() const;
+		void			putStrFd(int fd, std::string const &str);
+
+
+
+/*		Config			getConfig() const;
 		void			setConfig(Config const &config);
 
 		void			addUser(User *user);
@@ -42,12 +51,12 @@ class Ircserv
 
 	private:
 
-/*		std::map<int, User *>			users;
-		std::map<std::string, Channel *>	channels;
+		std::map<int, User *>			users;
+/*		std::map<std::string, Channel *>	channels;
 		Config							_config;
 */
 
-		int 							_fd;
+		int 							_sockfd;
 		std::vector <pollfd>			_pollfds;
 		time_t							_lastPing;
 		

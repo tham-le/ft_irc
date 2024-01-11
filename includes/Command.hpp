@@ -20,19 +20,16 @@ class Command
 {
 public:
 	Command();
-	Command(User *user, std::string command, std::string message);
+	Command(std::string message);
 
 	~Command();
 
-	void					setUser(User *user);
-	User					*getUser() const;
-
-	Ircserv					*getIrcserv() const;
+	void		run(int fd, Ircserv &ircserv);
+	void		parse(std::string message);
+	std::string	getName() const;
 
 private:
-	std::string _command;
-	std::string _prefix;
-	std::vector<std::string> _params;
+	std::string _name;
 };
 
 #endif
