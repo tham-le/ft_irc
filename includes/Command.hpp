@@ -1,26 +1,23 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-
 #include <string>
 #include <map>
 #include <vector>
 
 #include "User.hpp"
-#include "Config.hpp"
+#include "Ircserv.hpp"
+#include "Channel.hpp"
 
 class User;
 class Ircserv;
-
-
-
-
+class Channel;
 
 class Command
 {
 public:
 	Command();
-	Command(std::string message);
+	Command(std::string name);
 
 	~Command();
 
@@ -28,8 +25,36 @@ public:
 	void		parse(std::string message);
 	std::string	getName() const;
 
+	void		admin(std::string const &message);//Y
+	void		info(std::string const &message);
+	void		join(std::string const &message);//C
+	void		nickname(std::string const &message);//Y
+	void		names(std::string const &message);
+	void		part(std::string const &message);
+	void		quit(std::string const &message);
+	void 		list(std::string const &message);
+	void		kick(std::string const &message);//C
+	void		invite(std::string const &message);//C
+	void		topic(std::string const &message);//C
+	void		changeMode(std::string const &message);
+	bool		isInChannel(std::string const &channel);
+	void 		version(std::string const &message);
+
+
 private:
 	std::string _name;
+	int _fd;
+	enum e_type
+	{
+		MSG;
+		CMD;
+	};
+	e_type _type;
+	std::string _commandename;
+	std::string _param;
+	int _isInChannel;
+	const std::string _commands[10] = {"INFO", "JOIN", "NICK", "QUIT", "LIST", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
+	//std::map<std::string, Cmds*> _cmds;
 };
 
 #endif

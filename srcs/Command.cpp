@@ -1,14 +1,14 @@
-#ifndef COMMAND_HPP
-#define COMMAND_HPP
+#include "../includes/Command.hpp"
 
-class Command
+Command::Command() : _name("") {}
+
+Command::Command(std::string name) {
+	parse(name);
+}
+
+Command::~Command() {}
+
+std::string	Command::getName() const
 {
-public:
-	Command();
-	~Command();
-private:
-	
-	
-};
-
-#endif
+	return _name;
+}
