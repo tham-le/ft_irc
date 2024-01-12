@@ -55,7 +55,6 @@ void			Ircserv::init()
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(_config.getPort());
-	//addr.sin_port = htons(6667);
 	addr.sin_addr.s_addr = INADDR_ANY;
 	if (bind(_sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
 		throw std::runtime_error("bind port failed: Port already in use");
@@ -144,7 +143,14 @@ std::string		Ircserv::readFromClient(int fd)
 void			Ircserv::disconnectClient(int fd)
 {
 	close(fd);
-	_pollfds.erase(_pollfds.begin() + fd);
+	std::vector<pollfd>::iterator itfd;
+	for (itfd = _pollfds.begin(); itfd != _pollfds.end(); itfd++)
+		if (itfd->fd == fd)
+			break ;
+	if (itfd != _pollfds.end())
+		_pollfds.erase(itfd);
+
+	
 	std::map<int, User *>::iterator it = _users.find(fd);
 	if (it != _users.end())
 	{
