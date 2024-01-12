@@ -1,11 +1,12 @@
 #include "Channel.hpp"
 
-Channel::Channel()
-{
-}
-Channel::~Channel()
-{
-}
+// Channel::Channel()
+// {
+// }
+
+Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100) {}
+
+Channel::~Channel(){}
 
 void	Channel::setName(std::string const name)
 {
@@ -25,7 +26,7 @@ std::string		Channel::getTopic() const
 	return (_topic);
 }
 
-void	Channel::setMode(t_channelMode mode);
+void	Channel::setMode(t_channelMode mode)
 {
 	this->_mode = mode;
 }
@@ -57,10 +58,25 @@ void	Channel::addUser(User &user)
 {
 	if (isUserInChannel(user) == true)
 		std::cout << "User is already in the channel." << std::endl;
+	else if (_users.size() + 1  >= _maxUser)
+		std::cout << "Cannot add user because limits of users is reached";
+	else if (isBanned(user) == true)
+		std::cout << "Cannot add user because " << user.getNickname() << "is banned." << std::endl;
 	else
 	{
-		_users.insert({user.getFd(), &user});
+		if (_mode == INVITE_ONLY)
+		{
+			if (!isInvited(user))
+			{
+				std::cout << "Cannot add user because the channel is on invited only mode and ";
+				std::cout << user.getNickname() << " is not invited." << std::endl;
+				return ;
+			}
+		}
+		_users.insert(std::make_pair(user.getFd(), &user));
 		std::cout << user.getNickname() << "add in the channel " << this->_name << std::endl;
+		if (_mode == INVITE_ONLY)
+			Uninvite(user);
 	}
 }
 
@@ -71,41 +87,58 @@ void	Channel::removeUser(User &user)
 		std::cout << "Cannot remove " << user.getNickname();
 		std::cout << "because is not in the channel" << std::endl;
 	}
+	else if (isOperator(user) && _operators.size() == 1)
+	{
+		std::cout << "Cannot remove " << user.getNickname();
+		std::cout << "because is the last one operator." << std::endl;
+	}
 	else
 	{
 		int fd = user.getFd();
+		if (isOperator(user))
+			removeOperator(user);
 		_users.erase(fd);
 		std::cout << user.getNickname() << " is removed from " << this->_name << std::endl;
 	}
 }
 
-void			Channel::removeUser(std::string const nickname)
-{
-	int it = _users.find(nickname);
+// void			Channel::removeUser(std::string const nickname)
+// {
+// 	User *user = getUser(nickname);
+// 	removeUser(user);
+// 	// int it = _users.find(nickname);
 
-	if (it != _users.end())
-	{
-		_users.erase(it);
-		std::cout << nickname << " is removed from " << this->_name << std::endl;
-	}
-	else
-	{
-		std::cout << "Cannot remove " << nickname << " because is not in the channel" << std::endl;
-	}
-}
-User			Channel::getUser(std::string const nickname)
-{
-	int it = _users.find(nickname);
+// 	// if (isUserInChannel(nickname) == false)
+// 	// {
+// 	// 	std::cout << "Cannot remove " << nickname;
+// 	// 	std::cout << "because is not in the channel" << std::endl;
+// 	// }
+// 	// else if (isOperator(nickname) && _operators.size() == 1)
+// 	// {
+// 	// 	std::cout << "Cannot remove " << nickname;
+// 	// 	std::cout << "because is the last one operator." << std::endl;
+// 	// }
+// 	// if (it != _users.end())
+// 	// {
+// 	// 	if (isOperator(getUser(nickname)))
+// 	// 		removeOperator(nickname);
+// 	// 	_users.erase(it);
+// 	// 	std::cout << nickname << " is removed from " << this->_name << std::endl;
+// 	// }
+// }
+// User			Channel::getUser(std::string const nickname)
+// {
+// 	std::iterator *it = _users.find(nickname);
 
-	if (it != _users.end())
-		return (it->second);
-	else
-		return (NULL);
-}
-std::map<std::string, User *>	Channel::getUsers() const
-{
-	return (_users);
-}
+// 	if (it != _users.end())
+// 		return (it->second);
+// 	else
+// 		return (NULL);
+// }
+// std::map<std::string, User *>	Channel::getUsers() const
+// {
+// 	return (_users);
+// }
 
 bool			Channel::isUserInChannel(std::string const nickname) const
 {
@@ -120,7 +153,6 @@ bool			Channel::isUserInChannel(User const &user) const
 	return (false);
 }
 
-
 void	Channel::Ban(User &user)
 {
 	if (isUserInChannel(user) == false)
@@ -128,105 +160,185 @@ void	Channel::Ban(User &user)
 		std::cout << "Cannot ban the user because " << user.getNickname() << " is not in the channel." << std::endl;
 		return ;
 	}
-
+	if (isOperator(user) && _operators.size() == 1)
+	{
+		std::cout << "Cannot remove " << user.getNickname();
+		std::cout << "because is the last one operator." << std::endl;
+	}
 	if (user.isBanned() == TRUE)
 		std::cout << user.getNickname() << "already ban haha." << std::endl;
 	else
 	{
-		removeUser(user);
 		_bannedUsers.push_back(user);
+		removeOperator(user);
+		removeUser(user);
 		std::cout << user.getNickname() << "is ban now." <<std::endl;
 	}
 }
-void	Channel::Unban(User &user)
+// void	Channel::Unban(User &user)
+// {
+// 	int it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+
+// 	if (it == _bannedUsers.end())
+// 		std::cout << "cannot unban because " << user.getNickname() << " is not ban." << std::endl;
+// 	else
+// 	{
+// 		_bannedUsers.erase(it);
+// 		std::cout << user.getNickname() << "is not ban now." <<std::endl;
+// 	}
+// }
+// void	Channel::Unban(std::string const nickname)
+// {
+// 	int it = _bannedUsers.find(nickname);
+
+// 	if (it != _bannedUsers.end())
+// 	{
+// 		_bannedUsers.erase(it);
+// 		std::cout << user.getNickname() << " is removed from banned users" << std::endl;
+// 	}
+// 	else
+// 	{
+// 		std::cout << "Cannot remove " << nickname << " because not in the banned users." << std::endl;
+// 	}
+// }
+
+// bool	Channel::isBanned(User &user) const
+// {
+// 	int it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+
+// 	if (it == _bannedUsers.end())
+// 		return (false);
+// 	return (true);
+// }
+
+// /*Si user non connecte est ce qu'on peut l'inviter */
+// void			Channel::Invite(User &user)
+// {
+// 	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
+
+// 	if (isUserInChannel(user) == true)
+// 	{
+// 		std::cout << user.getNickname() << " is already in the channel." << std::endl;
+// 		return ;
+// 	}
+// 	if (isBanned(user) == true)
+// 		Unban(user);
+
+// 	if (it != _invitedUsers.end())
+// 		std::cout << user.getNickname() << " is already invited." << std::endl;
+// 	else
+// 	{
+// 		_invitedUsers.push_back(&user);
+// 		std::cout << user.getNickname() << " is now invited." << std::endl;
+// 	}
+// }
+// void			Channel::Uninvite(User &user)
+// {
+// 	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
+
+// 	if (it == _invitedUsers.end())
+// 		std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
+// 	else
+// 	{
+// 		_invitedUsers.erase(it);
+// 		std::cout << user.getNickname() << " is not in the invited list now." << std::endl;
+// 	}
+// }
+// void			Channel::Uninvite(std::string const nickname)
+// {
+// 	User *user = getUser(nickname);
+// 	Uninvite(user);
+// 	// int it = _invitedUsers.find(nickname);
+
+// 	// if (it == _invitedUsers.end())
+// 	// 	std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
+// 	// else
+// 	// {
+// 	// 	_invitedUsers.erase(it);
+// 	// 	std::cout << user.getNickname() << " is not in the invited list now." << std::endl;
+// 	// }
+// }
+
+// bool			Channel::isInvited(User &user) const
+// {
+// 	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
+
+// 	if (it != _invitedUsers.end())
+// 		return (true);
+// 	return (false);
+// }
+
+// bool			Channel::isGoodKey(std::string key)
+// {
+// 	if (key == _key)
+// 		return (true);
+// 	return (false)
+// }
+
+// void			Channel::addOperator(User &user)
+// {
+// 	int it = std::find(_operators.begin(), _operators.end(), &user);
+
+// 	if (isUserInChannel(user))
+// 	{
+// 		std::cout << user.getNickname() << " is not in the channel, cannot to be operator." << std::endl;
+// 		return ;
+// 	}
+// 	if (it != _operators.end())
+// 	{
+// 		std::cout << user.getNickname() << " is already Operator." << std::endl;
+// 		return ;
+// 	}
+// 	_operators.push_back(&user);
+// 	std::cout << user.getNickname() << " is Operator now." << std::endl;
+// }
+// void			Channel::removeOperator(User &user)
+// {
+// 	int it = std::find(_operators.begin(), _operators.end(), &user);
+
+// 	if (isUserInChannel(user))
+// 	{
+// 		std::cout << "Cannot be a regular user of the channel because ";
+// 		std::cout << user.getNickname() << " is not in the channel." << std::endl;
+// 		return ;
+// 	}
+// 	if (it == _operators.end())
+// 	{
+// 		std::cout << "Cannot remove the user, because " << user.getNickname()
+// 		std::cout << "is not Operator." << std::endl;
+// 		return ;
+// 	}
+// 	_operators.erase(it);
+// 	removeUser(user);
+// 	std::cout << user.getNickname() << " is not Operator now." << std::endl;
+// }
+
+// void			Channel::removeOperator(std::string const nickname)
+// {
+// 	int it = _operators.find(nickname);
+
+// 	if (isUserInChannel(nickname))
+// 	{
+// 		std::cout << "Cannot be a regular user of the channel because "
+// 		std::cout << nickname << " is not in the channel." << std::endl;
+// 		return ;
+// 	}
+// 	if (it == _operators.end())
+// 	{
+// 		std::cout << "Cannot remove the user, because " << nickname
+// 		std::cout << "is not Operator." << std::endl;
+// 		return ;
+// 	}
+// 	_operators.erase(it);
+// 	removeUser(nickname);
+// 	std::cout << nickname << " is not Operator now." << std::endl;
+// }
+
+bool			Channel::isOperator(User &user)
 {
-	int it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+	int it = std::find(_operators.begin(), _operators.end(), &user);
 
-	if (it == _bannedUsers.end())
-		std::cout << "cannot unban because " << user.getNickname() << " is not ban." << std::endl;
-	else
-	{
-		_bannedUsers.erase(it);
-		std::cout << user.getNickname() << "is not ban now." <<std::endl;
-	}
-}
-void	Channel::Unban(std::string const nickname)
-{
-	int it = _bannedUsers.find(nickname);
-
-	if (it != _bannedUsers.end())
-	{
-		_bannedUsers.erase(it);
-		std::cout << user.getNickname() << " is removed from banned users" << std::endl;
-	}
-	else
-	{
-		std::cout << "Cannot remove " << nickname << " because not in the banned users." << std::endl;
-	}
-}
-
-bool	Channel::isBanned(User &user) const
-{
-	int it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
-
-	if (it == _bannedUsers.end())
+	if (it == _operators.end())
 		return (false);
 	return (true);
-}
-
-void			Channel::Invite(User &user)
-{
-	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
-
-	if (isUserInChannel(user) == true)
-	{
-		std::cout << user.getNickname() << " is already in the channel." << std::endl;
-		return ;
-	}
-	if (isBanned(user) == true)
-	{
-		std::cout << "Cannot invite user because " << user.getNickname() << " is ban." << std::endl;
-		return :
-	}
-
-	if (it != _invitedUsers.end())
-		std::cout << user.getNickname() << " is already invited." << std::endl;
-	else
-	{
-		_invitedUsers.push_back(&user);
-		std::cout << user.getNickname() << " is now invited." << std::endl;
-	}
-}
-void			Channel::Uninvite(User &user)
-{
-	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
-
-	if (it == _invitedUsers.end())
-		std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
-	else
-	{
-		_invitedUsers.erase(it);
-		std::cout << user.getNickname() << " is not in the invited list now." << std::endl;
-	}
-}
-void			Channel::Uninvite(std::string const nickname)
-{
-	int it = _invitedUsers.find(nickname);
-
-	if (it == _invitedUsers.end())
-		std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
-	else
-	{
-		_invitedUsers.erase(it);
-		std::cout << user.getNickname() << " is not in the invited list now." << std::endl;
-	}
-}
-
-bool			Channel::isInvited(User &user) const
-{
-	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
-
-	if (it != _invitedUsers.end())
-		return (true);
-	return (false);
 }
