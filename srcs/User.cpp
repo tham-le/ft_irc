@@ -65,6 +65,10 @@ std::string User::getHostname() const {
     return _hostname;
 }
 
+int User::getFd() const {
+    return _fd;
+}
+
 bool User::isOperator() const {
     return _isOperator;
 }
