@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
+#    By: cqin <cqin@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/11 17:19:35 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/12 16:02:28 by cqin             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RM = rm -rf
 
 
 
-SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp
+SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp
 
 
 SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))
@@ -34,7 +34,7 @@ $(NAME): $(OBJ) Makefile
 		@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -o $(NAME)
 		@echo "\033[32m$(NAME) created\033[0m"
 
-$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp 
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 			@mkdir -p $(OBJS_DIR)
 			@$(CC) $(CFLAGS) $(DEBUG_FLAG) -c $< -o $@
 			@echo "\033[33m$@ object file created\033[0m"

@@ -9,18 +9,16 @@
 
 class Channel
 {
-	typedef enum eChannelMode
-	{
-		PRIVATE = 0,
-		SECRET,
-		INVITE_ONLY,
-		PUBLIC,
-		PROTECTED
-	} t_channelMode;
-
-
 	public:
-		Channel();
+
+		typedef enum eChannelMode
+		{
+			INVITE_ONLY,
+			PUBLIC,
+			PROTECTED
+		} t_channelMode;
+		// Channel();
+		Channel(std::string name);
 		~Channel();
 
 		void			setName(std::string const name);
@@ -33,7 +31,7 @@ class Channel
 		t_channelMode	getMode() const;
 
 		void			setKey(std::string const key);
-		std::string		getKey() const;	
+		std::string		getKey() const;
 
 		void			setMaxUser(int maxUser);
 		int				getMaxUser() const;
@@ -59,14 +57,21 @@ class Channel
 		void			Uninvite(std::string const nickname);
 		bool			isInvited(User &user) const;
 
+		bool			isGoodKey(std::string key);
+
+		void			addOperator(User &user);
+		void			removeOperator(User &user);
+		void			removeOperator(std::string const nickname);
+		bool			isOperator(User &user);
+
 private:
 		std::string		_name;
 		std::string		_topic;
 		t_channelMode	_mode;
 		std::string		_key;
 
-		int				maxUser;
-		
+		unsigned long			_maxUser;
+
 
 
 		std::map<int, User *>	_users;
