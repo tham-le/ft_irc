@@ -11,8 +11,6 @@ class Channel
 {
 	typedef enum eChannelMode
 	{
-		PRIVATE = 0,
-		SECRET,
 		INVITE_ONLY,
 		PUBLIC,
 		PROTECTED
@@ -33,7 +31,7 @@ class Channel
 		t_channelMode	getMode() const;
 
 		void			setKey(std::string const key);
-		std::string		getKey() const;	
+		std::string		getKey() const;
 
 		void			setMaxUser(int maxUser);
 		int				getMaxUser() const;
@@ -66,7 +64,7 @@ private:
 		std::string		_key;
 
 		int				maxUser;
-		
+
 
 
 		std::map<int, User *>	_users;

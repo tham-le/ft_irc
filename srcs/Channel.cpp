@@ -55,81 +55,178 @@ int		Channel::getMaxUser() const
 
 void	Channel::addUser(User &user)
 {
-	if (isUserInChannel(user) == TRUE)
+	if (isUserInChannel(user) == true)
 		std::cout << "User is already in the channel." << std::endl;
 	else
 	{
-		_users.insert(pair<int, User *>(user.getFd, user));
+		_users.insert({user.getFd(), &user});
 		std::cout << user.getNickname() << "add in the channel " << this->_name << std::endl;
 	}
 }
 
 void	Channel::removeUser(User &user)
 {
-	if (isUserInChannel(user) == FALSE)
+	if (isUserInChannel(user) == false)
 	{
-		std::cout << "Cannot remove " << _users[users.getFd].getNickname;
+		std::cout << "Cannot remove " << user.getNickname();
 		std::cout << "because is not in the channel" << std::endl;
 	}
 	else
 	{
 		int fd = user.getFd();
-		_users.erase(_users.find(fd))
-		std::cout << user.getNickname() << "is removed from " << this->_name << std::endl;
+		_users.erase(fd);
+		std::cout << user.getNickname() << " is removed from " << this->_name << std::endl;
 	}
 }
 
-// void			removeUser(std::string const nickname);
-// User			*getUser(std::string const nickname);
-// std::map<std::string, User *>	getUsers() const;
+void			Channel::removeUser(std::string const nickname)
+{
+	int it = _users.find(nickname);
 
-// bool			isUserInChannel(std::string const nickname) const;
+	if (it != _users.end())
+	{
+		_users.erase(it);
+		std::cout << nickname << " is removed from " << this->_name << std::endl;
+	}
+	else
+	{
+		std::cout << "Cannot remove " << nickname << " because is not in the channel" << std::endl;
+	}
+}
+User			Channel::getUser(std::string const nickname)
+{
+	int it = _users.find(nickname);
+
+	if (it != _users.end())
+		return (it->second);
+	else
+		return (NULL);
+}
+std::map<std::string, User *>	Channel::getUsers() const
+{
+	return (_users);
+}
+
+bool			Channel::isUserInChannel(std::string const nickname) const
+{
+	return (_users.find(nickname) != _users.end());
+}
+
 bool			Channel::isUserInChannel(User const &user) const
 {
 	int fd = user.getFd();
 	if (_users.find(fd) != _users.end())
-		return (TRUE);
-	return (FALSE);
+		return (true);
+	return (false);
 }
 
 
 void	Channel::Ban(User &user)
 {
+	if (isUserInChannel(user) == false)
+	{
+		std::cout << "Cannot ban the user because " << user.getNickname() << " is not in the channel." << std::endl;
+		return ;
+	}
+
 	if (user.isBanned() == TRUE)
 		std::cout << user.getNickname() << "already ban haha." << std::endl;
 	else
 	{
+		removeUser(user);
 		_bannedUsers.push_back(user);
 		std::cout << user.getNickname() << "is ban now." <<std::endl;
 	}
-
 }
 void	Channel::Unban(User &user)
 {
-	if (user.isBanned() == FALSE)
+	int it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+
+	if (it == _bannedUsers.end())
 		std::cout << "cannot unban because " << user.getNickname() << " is not ban." << std::endl;
 	else
 	{
-		_bannedUsers.erase(user);
-		std::cout << user.getNickname() << "is ban now." <<std::endl;
+		_bannedUsers.erase(it);
+		std::cout << user.getNickname() << "is not ban now." <<std::endl;
 	}
 }
-void	Unban(std::string const nickname);
+void	Channel::Unban(std::string const nickname)
+{
+	int it = _bannedUsers.find(nickname);
+
+	if (it != _bannedUsers.end())
+	{
+		_bannedUsers.erase(it);
+		std::cout << user.getNickname() << " is removed from banned users" << std::endl;
+	}
+	else
+	{
+		std::cout << "Cannot remove " << nickname << " because not in the banned users." << std::endl;
+	}
+}
+
 bool	Channel::isBanned(User &user) const
 {
-	if (this->_bannedUsers[user])
-	for (int i = 0; this->_bannedUsers[i]; i++)
-	{
-		if (this->_bannedUsers[i].getNickname() == user.getNickname())
-			return (TRUE);
-	}
-	return (FALSE);
+	int it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+
+	if (it == _bannedUsers.end())
+		return (false);
+	return (true);
 }
 
-// void			Channel::Invite(User &user);
-// void			Channel::Uninvite(User &user);
-// void			Channel::Uninvite(std::string const nickname);
+void			Channel::Invite(User &user)
+{
+	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
+
+	if (isUserInChannel(user) == true)
+	{
+		std::cout << user.getNickname() << " is already in the channel." << std::endl;
+		return ;
+	}
+	if (isBanned(user) == true)
+	{
+		std::cout << "Cannot invite user because " << user.getNickname() << " is ban." << std::endl;
+		return :
+	}
+
+	if (it != _invitedUsers.end())
+		std::cout << user.getNickname() << " is already invited." << std::endl;
+	else
+	{
+		_invitedUsers.push_back(&user);
+		std::cout << user.getNickname() << " is now invited." << std::endl;
+	}
+}
+void			Channel::Uninvite(User &user)
+{
+	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
+
+	if (it == _invitedUsers.end())
+		std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
+	else
+	{
+		_invitedUsers.erase(it);
+		std::cout << user.getNickname() << " is not in the invited list now." << std::endl;
+	}
+}
+void			Channel::Uninvite(std::string const nickname)
+{
+	int it = _invitedUsers.find(nickname);
+
+	if (it == _invitedUsers.end())
+		std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
+	else
+	{
+		_invitedUsers.erase(it);
+		std::cout << user.getNickname() << " is not in the invited list now." << std::endl;
+	}
+}
+
 bool			Channel::isInvited(User &user) const
 {
+	int it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
 
+	if (it != _invitedUsers.end())
+		return (true);
+	return (false);
 }
