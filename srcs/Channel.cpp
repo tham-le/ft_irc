@@ -1,4 +1,4 @@
-#include "Channel.hpp"
+#include "../includes/Channel.hpp"
 
 // Channel::Channel()
 // {
@@ -31,10 +31,10 @@ void	Channel::setMode(t_channelMode mode)
 	this->_mode = mode;
 }
 
-t_channelMode	Channel::getMode() const
-{
-	return (_mode);
-}
+// enum eChannelMode	Channel::getMode() const
+// {
+// 	return (_mode);
+// }
 
 void	Channel::setKey(std::string const key)
 {

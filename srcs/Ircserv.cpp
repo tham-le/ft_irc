@@ -100,22 +100,20 @@ void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
 			putStrFd(it->fd, msg);
 }
 
-static bool containEOL(std::string const &str)
-{
-	if (str.size() < 2)
-		return (false);
-	return (str.find("\r\n") != std::string::npos);
-}
+// static bool containEOL(std::string const &str)
+// {
+// 	if (str.size() < 2)
+// 		return (false);
+// 	return (str.find("\r\n") != std::string::npos);
+// }
 
 
 
 std::string		Ircserv::readFromClient(int fd)
 {
-	static std::string buffer;
 	try
 	{
-		while (containEOL(buffer) ==  false)
-		{
+		
 			char buf[4096];
 			memset(buf, 0, 4096);
 		
@@ -126,19 +124,16 @@ std::string		Ircserv::readFromClient(int fd)
 				if (errno == EWOULDBLOCK || errno == EAGAIN)
 				{
 					std::cout << "EWOULDBLOCK" << std::endl;
-					break ;
+					//break ;
 				}
 				else
 					throw std::runtime_error("recv() failed");
 			}
 			else if (bytes == 0)
 				throw std::runtime_error("Client disconnected");
-			buffer += std::string(buf, bytes);
-		}
-		std::string msg = buffer.substr(0, buffer.find("\r\n"));
-		buffer = buffer.substr(buffer.find("\r\n"));
+	
 		
-		return (msg);
+		return (std::string(buf, bytes));
 	}
 	catch (const std::exception& e)
 	{

@@ -28,7 +28,7 @@ class Channel
 		std::string		getTopic() const;
 
 		void			setMode(t_channelMode mode);
-		t_channelMode	getMode() const;
+		// enum eChannelMode	getMode() const;
 
 		void			setKey(std::string const key);
 		std::string		getKey() const;
