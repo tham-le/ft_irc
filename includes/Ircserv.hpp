@@ -69,6 +69,17 @@ class Ircserv
 		int 							_sockfd;
 		std::vector <pollfd>			_pollfds;
 		time_t							_lastPing;
+
+
+		class	DisconnectedUser : public std::exception
+		{				
+			public:
+				int		_fd;
+				
+				DisconnectedUser(int fd);
+				~DisconnectedUser() throw();
+				const char *what() const throw();
+		};
 		
 };
 

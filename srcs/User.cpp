@@ -93,6 +93,7 @@ std::string User::getAwayMessage() const {
     return _awayMessage;
 }
 
+
 void User::sendMessage(User *user, std::string message) {
     std::cout << "Sending message to " << user->getNickname() << ": " << message << std::endl;
     // send(user->getFd(), message.c_str(), message.length(), 0);
