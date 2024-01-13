@@ -2,6 +2,7 @@
 #define IRCSERV_HPP
 
 #include "../includes/Ircserv.hpp"
+#include "../includes/Command.hpp"
 #include <cstring>
 #include <string.h>
 #include <map>
@@ -40,6 +41,14 @@ Ircserv::Ircserv(int port, std::string password)
 	// _config.setPingTimeout(10 000);
 	_config.setMaxClients(100);
 	std::cout << "Welcome to Ircserv" << std::endl;
+}
+
+User & Ircserv::getUser(int fd) const
+{
+	std::map<int, User *>::const_iterator it = _users.find(fd);
+	if (it == _users.end())
+		throw std::runtime_error("User not found");
+	return (*it->second);
 }
 
 void			Ircserv::init()
@@ -103,8 +112,6 @@ static bool containEOL(std::string const &str)
 		return (false);
 	return (str.find("\r\n") != std::string::npos);
 }
-
-
 
 std::string		Ircserv::readFromClient(int fd)
 {
@@ -195,7 +202,9 @@ void			Ircserv::connectClient()
 
 void		Ircserv::handleMessage(int fd, std::string const &msg)
 {
-	// Command *cmd = Command::parse(msg);
+	User &user = getUser(fd);
+	Command cmd(msg, fd , user);
+	std::cout << msg << " " << fd << std::endl;
 	// if (cmd == NULL)
 	// {
 	// 	writeToClient(fd, "ERROR :Unknow command\n");

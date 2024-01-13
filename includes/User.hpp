@@ -22,6 +22,7 @@ class Ircserv;
 class User
 {
 public:
+	friend class Command;
 	User();
 	~User();
 
