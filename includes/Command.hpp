@@ -43,6 +43,7 @@ public:
 	void 		version(std::string const &msg);
 
 	void		split(std::string str, char separator);
+	void		command();
 
 private:
 	std::string _msg;

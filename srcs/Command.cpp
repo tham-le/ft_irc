@@ -1,9 +1,9 @@
 #include "../includes/Command.hpp"
 
-Command::Command(std::string const &msg, int fd, User &user) : _msg(msg), _fd(fd), _user(user) 
+Command::Command(std::string const &msg, int fd, User &user) : _msg(msg), _fd(fd), _user(user)
 {
 	parse(msg);
-	// _func["ADMIN"] = &Command::admin;
+	_func["ADMIN"] = &Command::admin;
 	// _func["INFO"] = &Command::info;
 	// _func["JOIN"] =  &Command::join;
 	// _func["NICK"] = &Command::nickname;
@@ -16,6 +16,7 @@ Command::Command(std::string const &msg, int fd, User &user) : _msg(msg), _fd(fd
 	// _func["TOPIC"] = &Command::topic;
 	// _func["MODE"] = &Command::changeMode;
 	// _func["VERSION"] = &Command::version;
+	command();
 }
 
 Command::~Command() {}
@@ -33,17 +34,30 @@ void		Command::parse(std::string message)
 			split(&message[1], ' ');
 		else
 			split(&message[2], ' ');
-		for (unsigned int i = 0; i < _input.size(); i++)
-		{
-			std::cout << _input[i] << "." << std::endl;
-		}
+		// for (unsigned int i = 0; i < _input.size(); i++)
+		// {
+		// 	std::cout << _input[i] << "." << std::endl;
+		// }
 	}
 }
 
-// void		Command::command()
-// {
-// 	if (_input[0])
-// }
+void		Command::command()
+{
+	// std::cout << "hey1" << std::endl;
+	std::map<std::string, FuncType>::iterator it = _func.find(_input[0]);
+	// std::cout << "hey" << std::endl;
+
+	if (it == _func.end())
+	{
+		if (_lastChannels.empty())
+			std::cout << " Unknown command: " << _input[0] << std::endl;
+		return ;
+	}
+	else
+	{
+		std::cout << it->second << std::endl;
+	}
+}
 
 void		Command::split(std::string str, char separator)
 {
