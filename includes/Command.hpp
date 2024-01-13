@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <functional>
+
 
 #include "User.hpp"
 #include "Ircserv.hpp"
@@ -23,7 +25,7 @@ public:
 
 	void		run(int fd, Ircserv &ircserv);
 	void		parse(std::string message);
-	std::string	getName() const;
+	// std::string	getName() const;
 
 	void		admin(std::string const &message);//Y
 	void		info(std::string const &message);
@@ -40,21 +42,22 @@ public:
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &message);
 
+	void		split(std::string str, char separator);
 
 private:
 	std::string _name;
 	int _fd;
-	enum e_type
-	{
-		MSG;
-		CMD;
-	};
-	e_type _type;
-	std::string _commandename;
-	std::string _param;
-	int _isInChannel;
-	const std::string _commands[10] = {"INFO", "JOIN", "NICK", "QUIT", "LIST", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
-	//std::map<std::string, Cmds*> _cmds;
+	// enum e_type
+	// {
+	// 	MSG;
+	// 	CMD;
+	// };
+	// e_type _type;
+	std::vector <std::string> _lastChannel;
+	std::vector<std::string> _input;
+	// typedef void (*FuncType)(std::string &);
+	typedef void (Command::*FuncType)(std::string const &);
+	std::map<std::string, FuncType > _func;
 };
 
 #endif
