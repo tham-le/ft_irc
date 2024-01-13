@@ -220,7 +220,20 @@ void			Ircserv::connectClient()
 void		Ircserv::handleMessage(int fd, std::string const &msg)
 {
 	User &user = getUser(fd);
-	Command cmd(msg, fd , user);
+	Command cmd(msg, user, *this);
+	std::cout << msg << " " << fd << std::endl;
+	// if (cmd == NULL)
+	// {
+	// 	writeToClient(fd, "ERROR :Unknow command\n");
+	// 	return ;
+	// }
+	// if (cmd->getName() == "QUIT")
+	// {
+	// 	disconnectClient(fd);
+	// 	return ;
+	// }
+	std::cout << "Message from client " << fd << ": " << msg << std::endl;
+	writeToClient(fd, "OK\n");
 }
 
 
