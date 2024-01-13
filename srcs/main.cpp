@@ -6,15 +6,16 @@
 /*   By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 20:50:16 by thi-le            #+#    #+#             */
-/*   Updated: 2024/01/11 14:28:12 by thi-le           ###   ########.fr       */
+/*   Updated: 2024/01/13 23:15:02 by thi-le           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <exception>
-#include <csignal>
+
 #include <cstdlib>
 #include <Ircserv.hpp>
+
 
 static int toInt(char const *port)
 {
