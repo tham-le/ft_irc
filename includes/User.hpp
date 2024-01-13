@@ -49,11 +49,13 @@ public:
 	void	setAwayMessage(std::string awayMessage);
 	std::string	getAwayMessage() const;
 
+	std::string		_buffer;
+
 private:
 	std::map<std::string, void (*)(Command *)> command_function;
 	int				_fd;
-	std::string		buffer;
-	std::vector<std::string>	pendingMessages;
+	
+	//std::string		_pendingMessages;
 	std::vector<Command *>		CommandQueue;
 
 	std::string		_nickname;

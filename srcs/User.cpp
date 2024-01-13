@@ -8,6 +8,7 @@ User::User() {
     _isOperator = false;
     _isAway = false;
     _awayMessage = "";
+    _buffer = "";
 }
 
 User::User(int fd, struct sockaddr_in addr) {

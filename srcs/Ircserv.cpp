@@ -121,7 +121,6 @@ std::string		Ircserv::readFromClient(int fd)
 		memset(buf, 0, 4096);
 	
 		int bytes = recv(fd, buf, BUFF_SIZE, 0);
-		std::cout << "bytes = " << bytes << std::endl;
 		if (bytes < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
@@ -131,6 +130,25 @@ std::string		Ircserv::readFromClient(int fd)
 		}
 		else if (bytes == 0)
 			throw DisconnectedUser(fd);
+		
+		User	&user = getUser(fd);
+		user._buffer += buf;
+		
+
+		std::string delim = "\r\n";
+		size_t pos = 0;
+		while ((pos = user._buffer.find(delim)) != std::string::npos)
+		{
+			std::string msg = user._buffer.substr(0, pos);
+			user._buffer.erase(0, pos + delim.length());
+			if (!msg.length())
+				continue ;
+			return (msg);
+		}
+
+
+
+
 		if (containEOL(buf))
 			return (std::string(buf, buf + strcspn(buf, "\r\n") + 2));
 	}
