@@ -61,8 +61,8 @@ void	Channel::addUser(User &user)
 		std::cout << "User is already in the channel." << std::endl;
 	else if (_users.size() + 1  >= _maxUser)
 		std::cout << "Cannot add user because limits of users is reached";
-	else if (isBanned(user) == true)
-		std::cout << "Cannot add user because " << user.getNickname() << "is banned." << std::endl;
+	// else if (isBanned(user) == true)
+	// 	std::cout << "Cannot add user because " << user.getNickname() << "is banned." << std::endl;
 	else
 	{
 		if (_mode == INVITE_ONLY)
@@ -160,68 +160,67 @@ bool			Channel::isUserInChannel(User const &user) const
 	return (false);
 }
 
-void	Channel::Ban(User &user)
-{
-	if (isUserInChannel(user) == false)
-	{
-		std::cout << "Cannot ban the user because " << user.getNickname() << " is not in the channel." << std::endl;
-		return ;
-	}
-	if (isOperator(user) && _operators.size() == 1)
-	{
-		std::cout << "Cannot remove " << user.getNickname();
-		std::cout << "because is the last one operator." << std::endl;
-	}
-	if (isBanned(user) == true)
-		std::cout << user.getNickname() << "already ban haha." << std::endl;
-	else
-	{
-		_bannedUsers.push_back(&user);
-		removeOperator(user);
-		removeUser(user);
-		std::cout << user.getNickname() << "is ban now." <<std::endl;
-	}
-}
-void	Channel::Unban(User &user)
-{
-	std::vector<User *>::iterator it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+// void	Channel::Ban(User &user)
+// {
+// 	if (isUserInChannel(user) == false)
+// 	{
+// 		std::cout << "Cannot ban the user because " << user.getNickname() << " is not in the channel." << std::endl;
+// 		return ;
+// 	}
+// 	if (isOperator(user) && _operators.size() == 1)
+// 	{
+// 		std::cout << "Cannot remove " << user.getNickname();
+// 		std::cout << "because is the last one operator." << std::endl;
+// 	}
+// 	if (isBanned(user) == true)
+// 		std::cout << user.getNickname() << "already ban haha." << std::endl;
+// 	else
+// 	{
+// 		_bannedUsers.push_back(&user);
+// 		removeOperator(user);
+// 		removeUser(user);
+// 		std::cout << user.getNickname() << "is ban now." <<std::endl;
+// 	}
+// }
+// void	Channel::Unban(User &user)
+// {
+// 	std::vector<User *>::iterator it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
 
-	if (it == _bannedUsers.end())
-		std::cout << "cannot unban because " << user.getNickname() << " is not ban." << std::endl;
-	else
-	{
-		_bannedUsers.erase(it);
-		std::cout << user.getNickname() << "is not ban anymore." <<std::endl;
-	}
-}
-void	Channel::Unban(std::string const nickname)
-{
-	std::vector<User *>::iterator it;
+// 	if (it == _bannedUsers.end())
+// 		std::cout << "cannot unban because " << user.getNickname() << " is not ban." << std::endl;
+// 	else
+// 	{
+// 		_bannedUsers.erase(it);
+// 		std::cout << user.getNickname() << "is not ban anymore." <<std::endl;
+// 	}
+// }
+// void	Channel::Unban(std::string const nickname)
+// {
+// 	std::vector<User *>::iterator it;
 
-	for (it = _bannedUsers.begin(); it != _bannedUsers.end(); it++)
-	{
-		if ((*it)->getNickname() == nickname)
-			break ;
-	}
-	if (it == _bannedUsers.end())
-	{
-		std::cout << "Cannot unban because " << nickname << " is not ban." << std::endl;
-		return ;
-	}
-	_bannedUsers.erase(it);
-	std::cout << nickname << " is not ban anymore." <<std::endl;
-}
+// 	for (it = _bannedUsers.begin(); it != _bannedUsers.end(); it++)
+// 	{
+// 		if ((*it)->getNickname() == nickname)
+// 			break ;
+// 	}
+// 	if (it == _bannedUsers.end())
+// 	{
+// 		std::cout << "Cannot unban because " << nickname << " is not ban." << std::endl;
+// 		return ;
+// 	}
+// 	_bannedUsers.erase(it);
+// 	std::cout << nickname << " is not ban anymore." <<std::endl;
+// }
 
-bool	Channel::isBanned(User &user)
-{
-	std::vector<User *>::iterator it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
+// bool	Channel::isBanned(User &user)
+// {
+// 	std::vector<User *>::iterator it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
 
-	if (it == _bannedUsers.end())
-		return (false);
-	return (true);
-}
+// 	if (it == _bannedUsers.end())
+// 		return (false);
+// 	return (true);
+// }
 
-/*Si user non connecte est ce qu'on peut l'inviter */
 void			Channel::Invite(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
