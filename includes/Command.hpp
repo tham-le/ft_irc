@@ -40,20 +40,21 @@ public:
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &message);
 
+	void		split(std::string str, char separator);
 
 private:
 	std::string _name;
 	int _fd;
-	enum e_type
-	{
-		MSG;
-		CMD;
-	};
-	e_type _type;
-	std::string _commandename;
-	std::string _param;
-	int _isInChannel;
-	const std::string _commands[10] = {"INFO", "JOIN", "NICK", "QUIT", "LIST", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
+	// enum e_type
+	// {
+	// 	MSG;
+	// 	CMD;
+	// };
+	// e_type _type;
+	std::vector <std::string> _lastChannel;
+	std::vector<std::string> _input;
+
+	// const std::string _commands[10] = {"INFO", "JOIN", "NICK", "QUIT", "LIST", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
 	//std::map<std::string, Cmds*> _cmds;
 };
 
