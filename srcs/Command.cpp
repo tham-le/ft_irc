@@ -9,31 +9,14 @@ Command::Command(std::string name)
 
 Command::~Command() {}
 
-std::string	Command::getName() const
+void		Command::admin(std::string const &message)
 {
-	return _name;
+	(void)message;
 }
-
-
-/*Si :
-1. je suis dans le channel
-2. je suis operator ou pas
-3. la personne a kick est dans la liste des users du channel */
-// void		Channel::kick(User *user, std::string const &message);
-// {
-// 	if (_isInChannel == TRUE)
-// 	{
-// 		if (isOperator(user))
-// 		{
-
-// 		}
-// 		else
-
-// 	}
-// }
 
 void		Command::parse(std::string message)
 {
+
 	if (message[0] != '/')
 	{
 		//MSG
@@ -51,6 +34,11 @@ void		Command::parse(std::string message)
 	}
 }
 
+// void		Command::command()
+// {
+// 	if (_input[0])
+// }
+
 void		Command::split(std::string str, char separator)
 {
 	int start = 0;
@@ -66,3 +54,19 @@ void		Command::split(std::string str, char separator)
 		}
 	}
 }
+/*Si :
+1. je suis dans le channel
+2. je suis operator ou pas
+3. la personne a kick est dans la liste des users du channel */
+// void		Channel::kick(User *user, std::string const &message);
+// {
+// 	if (_isInChannel == TRUE)
+// 	{
+// 		if (isOperator(user))
+// 		{
+
+// 		}
+// 		else
+
+// 	}
+// }
