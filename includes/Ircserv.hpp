@@ -17,6 +17,7 @@
 
 class User;
 class Channel;
+class Command;
 
 class Ircserv
 {
@@ -46,6 +47,7 @@ class Ircserv
 
 		void			putStrFd(int fd, std::string const &str);
 
+		User			&getUser(int fd) const;
 
 
 /*		Config			getConfig() const;
@@ -65,7 +67,7 @@ class Ircserv
 	private:
 
 		std::map<int, User *>			_users;
-		std::map<std::string, Channel *>	channels;
+		std::map<std::string, Channel *>	_channels;
 		Config							_config;
 
 

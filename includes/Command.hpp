@@ -18,8 +18,8 @@ class Channel;
 class Command
 {
 public:
-	Command();
-	Command(std::string msg, int fd);
+
+	Command(std::string const &msg, int fd, User &user);
 
 	~Command();
 
@@ -47,17 +47,19 @@ public:
 private:
 	std::string _msg;
 	int _fd;
+	User &_user;
 	// enum e_type
 	// {
 	// 	MSG;
 	// 	CMD;
 	// };
 	// e_type _type;
-	std::vector <std::string> _lastChannel;
 	std::vector<std::string> _input;
 	// typedef void (*FuncType)(std::string &);
 	typedef void (Command::*FuncType)(std::string const &);
 	std::map<std::string, FuncType > _func;
+	std::vector<std::string> _channels;
+	std::vector<std::string> _lastChannels;
 };
 
 #endif
