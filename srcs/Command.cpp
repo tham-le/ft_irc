@@ -1,10 +1,23 @@
 #include "../includes/Command.hpp"
 
-Command::Command() {}
+Command::Command() : _msg(""), _fd(-1) {}
 
-Command::Command(std::string name)
+Command::Command(std::string msg, int fd) : _msg(msg), _fd(fd)
 {
-	parse(name);
+	parse(msg);
+	_func["ADMIN"] = &Command::admin;
+	_func["INFO"] = &Command::info;
+	_func["JOIN"] =  &Command::join;
+	_func["NICK"] = &Command::nickname;
+	_func["NAMES"] = &Command::names;
+	_func["PART"] = &Command::part;
+	_func["QUIT"] = &Command::quit;
+	_func["LIST"] = &Command::list;
+	_func["KICK"] = &Command::kick;
+	_func["INVITE"] = &Command::invite;
+	_func["TOPIC"] = &Command::topic;
+	_func["MODE"] = &Command::changeMode;
+	_func["VERSION"] = &Command::version;
 }
 
 Command::~Command() {}

@@ -19,33 +19,33 @@ class Command
 {
 public:
 	Command();
-	Command(std::string name);
+	Command(std::string msg, int fd);
 
 	~Command();
 
 	void		run(int fd, Ircserv &ircserv);
-	void		parse(std::string message);
+	void		parse(std::string msg);
 	// std::string	getName() const;
 
-	void		admin(std::string const &message);//Y
-	void		info(std::string const &message);
-	void		join(std::string const &message);//C
-	void		nickname(std::string const &message);//Y
-	void		names(std::string const &message);
-	void		part(std::string const &message);
-	void		quit(std::string const &message);
-	void 		list(std::string const &message);
-	void		kick(std::string const &message);//C
-	void		invite(std::string const &message);//C
-	void		topic(std::string const &message);//C
-	void		changeMode(std::string const &message);
+	void		admin(std::string const &msg);//Y
+	void		info(std::string const &msg);
+	void		join(std::string const &msg);//C
+	void		nickname(std::string const &msg);//Y
+	void		names(std::string const &msg);
+	void		part(std::string const &msg);
+	void		quit(std::string const &msg);
+	void 		list(std::string const &msg);
+	void		kick(std::string const &msg);//C
+	void		invite(std::string const &msg);//C
+	void		topic(std::string const &msg);//C
+	void		changeMode(std::string const &msg);
 	bool		isInChannel(std::string const &channel);
-	void 		version(std::string const &message);
+	void 		version(std::string const &msg);
 
 	void		split(std::string str, char separator);
 
 private:
-	std::string _name;
+	std::string _msg;
 	int _fd;
 	// enum e_type
 	// {
