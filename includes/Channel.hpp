@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 #include "User.hpp"
+#include <algorithm>
+#include <iterator>
 
 
 class Channel
@@ -28,7 +30,7 @@ class Channel
 		std::string		getTopic() const;
 
 		void			setMode(t_channelMode mode);
-		t_channelMode	getMode() const;
+		// enum eChannelMode	getMode() const;
 
 		void			setKey(std::string const key);
 		std::string		getKey() const;
@@ -40,8 +42,8 @@ class Channel
 		void			addUser(User &user);
 		void			removeUser(User &user);
 		void			removeUser(std::string const nickname);
-		User			*getUser(std::string const nickname);
-		std::map<std::string, User *>	getUsers() const;
+		User*			getUser(std::string const nickname);
+		std::map<int, User *>	getUsers();
 
 
 		bool			isUserInChannel(std::string const nickname) const;
@@ -50,12 +52,12 @@ class Channel
 		void			Ban(User &user);
 		void			Unban(User &user);
 		void			Unban(std::string const nickname);
-		bool			isBanned(User &user) const;
+		bool			isBanned(User &user);
 
 		void			Invite(User &user);
 		void			Uninvite(User &user);
 		void			Uninvite(std::string const nickname);
-		bool			isInvited(User &user) const;
+		bool			isInvited(User &user);
 
 		bool			isGoodKey(std::string key);
 
@@ -63,6 +65,7 @@ class Channel
 		void			removeOperator(User &user);
 		void			removeOperator(std::string const nickname);
 		bool			isOperator(User &user);
+		bool			isOperator(std::string const nickname);
 
 private:
 		std::string		_name;
@@ -72,14 +75,10 @@ private:
 
 		unsigned long			_maxUser;
 
-
-
 		std::map<int, User *>	_users;
 		std::vector<User *>		_bannedUsers;
 		std::vector<User *>		_invitedUsers;
 		std::vector<User *>		_operators;
-
-
 };
 
 

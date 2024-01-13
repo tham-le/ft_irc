@@ -1,7 +1,7 @@
 #ifndef IRCSERV_HPP
 #define IRCSERV_HPP
 
-#include "Ircserv.hpp"
+#include "../includes/Ircserv.hpp"
 #include <cstring>
 #include <string.h>
 #include <map>
@@ -34,15 +34,13 @@ Ircserv::Ircserv(int port, std::string password)
 	(void)port;
 	(void)password;
 
-/*	_config.setPort(port);
+	_config.setPort(port);
 	_config.setPassword(password);
-	_config.setPingInterval(1000);
-	_config.setPingTimeout(10 000);
-	_config.setMaxClients(100);*/
+	// _config.setPingInterval(1000);
+	// _config.setPingTimeout(10 000);
+	_config.setMaxClients(100);
 	std::cout << "Welcome to Ircserv" << std::endl;
 }
-
-
 
 void			Ircserv::init()
 {
@@ -56,14 +54,13 @@ void			Ircserv::init()
 		throw std::runtime_error("fcntl() failed");
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	// addr.sin_port = htons(_config.getPort());
-	addr.sin_port = htons(6667);
+	addr.sin_port = htons(_config.getPort());
 	addr.sin_addr.s_addr = INADDR_ANY;
 	if (bind(_sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
 		throw std::runtime_error("bind port failed: Port already in use");
 	if (listen(_sockfd, 10) < 0)
 		throw std::runtime_error("listen() failed");
-	//std::cout << "Listening on port " << _config.getPort() << std::endl;
+	std::cout << "Listening on port " << _config.getPort() << std::endl;
 	_pollfds.push_back((pollfd){_sockfd, POLLIN, 0});
 	//first pollfd is the listening socket
 	//the others are the clients
@@ -111,35 +108,31 @@ static bool containEOL(std::string const &str)
 
 std::string		Ircserv::readFromClient(int fd)
 {
-	static std::string buffer;
 	try
 	{
-		while (containEOL(buffer) ==  false)
+		char buf[4096];
+		memset(buf, 0, 4096);
+	
+		int bytes = recv(fd, buf, BUFF_SIZE, 0);
+		std::cout << "bytes = " << bytes << std::endl;
+		if (bytes < 0)
 		{
-			char buf[4096];
-			memset(buf, 0, 4096);
-		
-			int bytes = recv(fd, buf, BUFF_SIZE, 0);
-			std::cout << "bytes = " << bytes << std::endl;
-			if (bytes < 0)
-			{
-				if (errno == EWOULDBLOCK || errno == EAGAIN)
-				{
-					std::cout << "EWOULDBLOCK" << std::endl;
-					break ;
-				}
-				else
-					throw std::runtime_error("recv() failed");
-			}
-			else if (bytes == 0)
-				throw std::runtime_error("Client disconnected");
-			buffer += std::string(buf, bytes);
+			if (errno == EWOULDBLOCK || errno == EAGAIN)
+				return ("");
+			else
+				throw std::runtime_error("recv() failed");
 		}
-		std::string msg = buffer.substr(0, buffer.find("\r\n"));
-		buffer = buffer.substr(buffer.find("\r\n"));
-		
-		return (msg);
+		else if (bytes == 0)
+			throw DisconnectedUser(fd);
+		if (containEOL(buf))
+			return (std::string(buf, buf + strcspn(buf, "\r\n") + 2));
 	}
+	catch (const DisconnectedUser& e)
+	{
+		
+		disconnectClient(e._fd);
+	}
+	
 	catch (const std::exception& e)
 	{
 		std::cerr << "readFromClient() failed: " << e.what() << '\n';
@@ -150,12 +143,19 @@ std::string		Ircserv::readFromClient(int fd)
 void			Ircserv::disconnectClient(int fd)
 {
 	close(fd);
-	_pollfds.erase(_pollfds.begin() + fd);
+	std::vector<pollfd>::iterator itfd;
+	for (itfd = _pollfds.begin(); itfd != _pollfds.end(); itfd++)
+		if (itfd->fd == fd)
+			break ;
+	if (itfd != _pollfds.end())
+		_pollfds.erase(itfd);
+
+	
 	std::map<int, User *>::iterator it = _users.find(fd);
 	if (it != _users.end())
 	{
 		std::cout << "Client " << fd << " disconnected" << std::endl;
-		delete it->second;
+		//delete it->second;
 		_users.erase(it);
 	}
 	else
@@ -217,9 +217,10 @@ void		Ircserv::readFromAllClients()
 
 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
 	{
-		if (it->fd != _sockfd &&  it->revents & POLLIN)
+		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLIN)
 		{
 			std::string msg = readFromClient(it->fd);
+
 			if (msg == "")
 				break ;
 			std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
@@ -227,7 +228,6 @@ void		Ircserv::readFromAllClients()
 		}
 	}
 }
-
 
 
 
@@ -240,6 +240,12 @@ void			Ircserv::run()
 			connectClient();
 			readFromAllClients();
 		}
+		catch (const DisconnectedUser& e)
+		{
+			disconnectClient(e._fd);
+			std::cerr << e.what() << '\n';
+			break ;
+		}
 		catch (const std::exception& e)
 		{
 			disconnectAllClients();
@@ -248,6 +254,19 @@ void			Ircserv::run()
 		}
 	}
 }
+
+Ircserv::DisconnectedUser::DisconnectedUser(int fd): _fd(fd) {}
+
+Ircserv::DisconnectedUser::~DisconnectedUser() throw(){}
+
+
+
+const char * Ircserv::DisconnectedUser::what() const throw()
+{
+	return ("User disconnected");
+}
+
+
 
 
 /*	int pingInterval = _config.getPingInterval();
@@ -283,8 +302,6 @@ void			Ircserv::acceptUser()
 	}
 	
 }
-
-void			Ircserv::run();
 
 
 

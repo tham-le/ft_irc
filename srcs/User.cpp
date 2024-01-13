@@ -65,6 +65,10 @@ std::string User::getHostname() const {
     return _hostname;
 }
 
+int User::getFd() const {
+    return _fd;
+}
+
 bool User::isOperator() const {
     return _isOperator;
 }
@@ -88,6 +92,7 @@ void User::setAwayMessage(std::string awayMessage) {
 std::string User::getAwayMessage() const {
     return _awayMessage;
 }
+
 
 void User::sendMessage(User *user, std::string message) {
     std::cout << "Sending message to " << user->getNickname() << ": " << message << std::endl;

@@ -41,7 +41,6 @@ class Ircserv
 
 		void			handleMessage(int fd, std::string const &msg);
 
-
 		void			putStrFd(int fd, std::string const &str);
 
 
@@ -63,13 +62,24 @@ class Ircserv
 	private:
 
 		std::map<int, User *>			_users;
-/*		std::map<std::string, Channel *>	channels;
+		std::map<std::string, Channel *>	channels;
 		Config							_config;
-*/
+
 
 		int 							_sockfd;
 		std::vector <pollfd>			_pollfds;
 		time_t							_lastPing;
+
+
+		class	DisconnectedUser : public std::exception
+		{				
+			public:
+				int		_fd;
+				
+				DisconnectedUser(int fd);
+				~DisconnectedUser() throw();
+				const char *what() const throw();
+		};
 		
 };
 

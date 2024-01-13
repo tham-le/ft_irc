@@ -37,6 +37,7 @@ public:
 	std::string	getUsername() const;
 	std::string	getRealname() const;
 	std::string	getHostname() const;
+	int getFd() const;
 
 	void	setOperator(bool isOperator);
 	bool	isOperator() const;
