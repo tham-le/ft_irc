@@ -1,6 +1,6 @@
 #include "../includes/Command.hpp"
 
-Command::Command(std::string const &msg, int fd, User &user) : _msg(msg), _fd(fd), _user(user)
+Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(msg), _user(user), _ircserv(ircserv)
 {
 	parse(msg);
 	_func["ADMIN"] = &Command::admin;
