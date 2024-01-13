@@ -19,7 +19,7 @@ class Command
 {
 public:
 
-	Command(std::string const &msg, int fd, User &user);
+	Command(std::string const &msg, User &user, Ircserv &ircserv);
 
 	~Command();
 
@@ -46,8 +46,8 @@ public:
 
 private:
 	std::string _msg;
-	int _fd;
 	User &_user;
+	Ircserv &_ircserv;
 	// enum e_type
 	// {
 	// 	MSG;
