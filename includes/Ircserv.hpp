@@ -15,6 +15,9 @@
 #include "Config.hpp"
 #include <poll.h>
 
+class User;
+class Channel;
+
 class Ircserv
 {
 	public:

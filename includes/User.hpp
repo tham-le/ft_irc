@@ -17,6 +17,7 @@
 
 class Channel;
 class Command;
+class Ircserv;
 
 class User
 {

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
+#    By: yuboktae <yuboktae@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/12 17:03:16 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/13 15:54:09 by yuboktae         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ RM = rm -rf
 
 
 
-SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp
+SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp Command.cpp
 
 
 SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))
