@@ -221,7 +221,7 @@ void			Ircserv::connectClient()
 void		Ircserv::handleMessage(int fd, std::string const &msg)
 {
 	User &user = getUser(fd);
-	Command cmd(msg, fd , user);
+	Command cmd(msg, user, *this);
 	std::cout << msg << " " << fd << std::endl;
 	// if (cmd == NULL)
 	// {
