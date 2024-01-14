@@ -71,7 +71,7 @@ private:
 
 	int				_fd;
 	Ircserv			*_ircserv;
-	
+
 	//std::string		_pendingMessages;
 	std::vector<Command *>		CommandQueue;
 
@@ -87,11 +87,13 @@ private:
 	std::string	_awayMessage;
 
 	time_t		_connectionTime;
-	
+
 
 	void	dispatch();
 	void	receive(Ircserv *ircserv);
 	void	pushMessage();
+
+	std::map<std::string, Channel *> _channels;
 };
 
 #endif

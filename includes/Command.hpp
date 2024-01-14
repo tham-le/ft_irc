@@ -58,12 +58,13 @@ private:
 	// };
 	// e_type _type;
 	std::vector<std::string> _input;
-	// typedef void (*FuncType)(std::string &);
 	typedef void (Command::*FuncType)(std::string const &);
 	std::map<std::string, FuncType > _func;
-	std::vector<std::string> _channels;
-	std::vector<std::string> _lastChannels;
-	std::vector<std::string> _noFunctionalOnChannel;
+	// std::map<std::string, Channel &> _channels;
+	// std::vector<Channel *> _channels;
+	std::vector<Channel *> _lastChannels;
+	std::map<std::string, Channel *>	_channels;
+	std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
 };
 
 #endif

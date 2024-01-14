@@ -57,12 +57,8 @@ int		Channel::getMaxUser() const
 
 void	Channel::addUser(User &user)
 {
-	if (isUserInChannel(user) == true)
-		std::cout << "User is already in the channel." << std::endl;
-	else if (_users.size() + 1  >= _maxUser)
+	if (_users.size() + 1  >= _maxUser)
 		std::cout << "Cannot add user because limits of users is reached";
-	// else if (isBanned(user) == true)
-	// 	std::cout << "Cannot add user because " << user.getNickname() << "is banned." << std::endl;
 	else
 	{
 		if (_mode == INVITE_ONLY)
@@ -74,8 +70,14 @@ void	Channel::addUser(User &user)
 				return ;
 			}
 		}
-		_users.insert(std::make_pair(user.getFd(), &user));
-		std::cout << user.getNickname() << "add in the channel " << this->_name << std::endl;
+		_users[user.getFd()] = &user;
+		// _users.insert(std::make_pair(user.getFd(), &user));
+		for (std::map<int, User *>::iterator i = _users.begin(); i != _users.end(); i++)
+		{
+			std::cout << "-List users of channel " << _name << std::endl;
+			std::cout << "- " << (i->second)->getHostname() << std::endl;
+		}
+		// std::cout << user.getNickname() << "add in the channel " << this->_name << std::endl;
 		if (_mode == INVITE_ONLY)
 			Uninvite(user);
 	}
