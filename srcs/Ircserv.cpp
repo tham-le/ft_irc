@@ -125,7 +125,7 @@ std::string		Ircserv::readFromClient(int fd)
 	{
 		char buf[4096];
 		memset(buf, 0, 4096);
-	
+
 		int bytes = recv(fd, buf, BUFF_SIZE, 0);
 		if (bytes < 0)
 		{
@@ -136,10 +136,10 @@ std::string		Ircserv::readFromClient(int fd)
 		}
 		else if (bytes == 0)
 			throw DisconnectedUser(fd);
-		
+
 		User	&user = getUser(fd);
 		user._buffer += buf;
-		
+
 
 		std::string delim = "\r\n";
 		size_t pos = 0;
@@ -173,7 +173,7 @@ void			Ircserv::disconnectClient(int fd)
 	if (itfd != _pollfds.end())
 		_pollfds.erase(itfd);
 
-	
+
 	std::map<int, User *>::iterator it = _users.find(fd);
 	if (it != _users.end())
 	{
@@ -211,7 +211,7 @@ void			Ircserv::connectClient()
 		}
 		else
 			writeToClient(fd, "Password required\n");
-
+    
 		_pollfds.push_back((pollfd){fd, POLLIN | POLLOUT, 0});
 	}
 }
@@ -221,7 +221,7 @@ void		Ircserv::handleMessage(int fd, std::string const &msg)
 {
 	User &user = getUser(fd);
 	Command cmd(msg, user, *this);
-	std::cout << msg << " " << fd << std::endl;
+	// std::cout << msg << " " << fd << std::endl;
 	// if (cmd == NULL)
 	// {
 	// 	writeToClient(fd, "ERROR :Unknow command\n");
@@ -334,7 +334,7 @@ void			Ircserv::acceptUser()
 		_pollfds.push_back(pollfd{sockfd, POLLIN, 0});
 		_users.push_back(new User(sockfd));
 	}
-	
+
 }
 
 

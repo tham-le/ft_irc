@@ -29,20 +29,23 @@ public:
 
 	void		admin(std::string const &msg);//Y
 	void		info(std::string const &msg);
-	void		join(std::string const &msg);//C
+	void		join(std::string const &channel);//C
 	void		nickname(std::string const &msg);//Y
 	void		names(std::string const &msg);
 	void		part(std::string const &msg);
 	void		quit(std::string const &msg);
 	void 		list(std::string const &msg);
-	void		kick(std::string const &msg);//C
-	void		invite(std::string const &msg);//C
+	void		kick(std::string const &channel, std::string &nickname);//C
+	void		invite(std::string const &nickname, std::string const &channel);//C
 	void		topic(std::string const &msg);//C
 	void		changeMode(std::string const &msg);
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &msg);
 
 	void		split(std::string str, char separator);
+	void		command();
+	void		initCmd();
+	bool		isCmdNoUse(std::string const str) const;
 
 private:
 	std::string _msg;
@@ -60,6 +63,7 @@ private:
 	std::map<std::string, FuncType > _func;
 	std::vector<std::string> _channels;
 	std::vector<std::string> _lastChannels;
+	std::vector<std::string> _noFunctionalOnChannel;
 };
 
 #endif
