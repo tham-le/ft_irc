@@ -32,10 +32,10 @@ public:
 	void		join(std::string const &channel);//C
 	void		nickname(std::string const &msg);//Y
 	void		names(std::string const &msg);
-	void		part(std::string const &msg);
+	void		part(std::string const &channel);
 	void		quit(std::string const &msg);
 	void 		list(std::string const &msg);
-	void		kick(std::string const &channel, std::string &nickname);//C
+	void		kick(std::string const &channel);//C
 	void		invite(std::string const &nickname, std::string const &channel);//C
 	void		topic(std::string const &msg);//C
 	void		changeMode(std::string const &msg);
