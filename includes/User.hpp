@@ -21,12 +21,20 @@ class Ircserv;
 
 class User
 {
+
 public:
+	enum	e_status
+	{
+		PASSWORD_REQUIRED,
+		REGISTERED,
+		ONLINE,
+		DELETED
+	};
 	friend class Command;
 	User();
 	~User();
 
-	User(int fd, struct sockaddr_in addr);
+	User(int fd, struct sockaddr_in addr, Ircserv *ircserv);
 
 	void	sendMessage(User *user, std::string message);
 
@@ -49,11 +57,20 @@ public:
 	void	setAwayMessage(std::string awayMessage);
 	std::string	getAwayMessage() const;
 
+	void	setStatus(e_status status);
+	e_status	getStatus() const;
+
+
+	void	addChannel(Channel *channel);
+
+	void	printMessage(std::string str);
+
 	std::string		_buffer;
 
 private:
-	std::map<std::string, void (*)(Command *)> command_function;
+
 	int				_fd;
+	Ircserv			*_ircserv;
 	
 	//std::string		_pendingMessages;
 	std::vector<Command *>		CommandQueue;
@@ -62,15 +79,18 @@ private:
 	std::string		_username;
 	std::string		_realname;
 	std::string		_hostname;
+	e_status		_status;
+
 
 	bool		_isOperator;
 	bool		_isAway;
 	std::string	_awayMessage;
+
+	time_t		_connectionTime;
 	
 
 	void	dispatch();
 	void	receive(Ircserv *ircserv);
-	void	write(std::string message);
 	void	pushMessage();
 };
 
