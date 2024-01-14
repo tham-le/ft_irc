@@ -119,8 +119,7 @@ void			Channel::removeUser(std::string const nickname)
 	}
 	else if (isOperator(*user) && _operators.size() == 1)
 	{
-		std::cout << "Cannot remove " << nickname;
-		std::cout << "because is the last one operator." << std::endl;
+		std::cout << "You must be a channel operator" << nickname;
 	}
 	if (it != _users.end())
 	{
@@ -288,18 +287,8 @@ void			Channel::addOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
-	if (isUserInChannel(user))
-	{
-		std::cout << user.getNickname() << " is not in the channel, cannot to be operator." << std::endl;
-		return ;
-	}
-	if (it != _operators.end())
-	{
-		std::cout << user.getNickname() << " is already Operator." << std::endl;
-		return ;
-	}
-	_operators.push_back(&user);
-	std::cout << user.getNickname() << " is Operator now." << std::endl;
+	if (it == _operators.end())
+		_operators.push_back(&user);
 }
 
 

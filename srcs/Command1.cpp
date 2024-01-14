@@ -37,7 +37,7 @@ void		Command::parse(std::string message)
 
 	if (message[0] != '/')
 	{
-		//MSG
+		_input.push_back(message);
 	}
 	else
 	{
@@ -70,8 +70,17 @@ void		Command::command()
 	else // if (it == _func.end() && (_user.getStatus() == REGISTRED || _user.getStatus() == ONLINE))
 	{
 		if ((!_lastChannels.empty() && !isCmdNoUse(_input[0])) || _lastChannels.empty())
-			(this->*(it->second))(_input[1]);
+		{
+			if (!_input[2].empty())
+				(this->*(it->second))(_input[1]);
+			// else
+			// 	std::cout << "ROUCOULE" << std::endl;
+		}
 	}
+	// else
+	// {
+	// 	std::cout << " "
+	// }
 }
 
 void		Command::split(std::string str, char separator)
@@ -100,15 +109,60 @@ void		Command::split(std::string str, char separator)
 */
 void		Command::join(std::string const &channel)
 {
-	if (_channels.find(channel) == _channels.end())
+	int idx = 0;
+	if (channel[0] == '#')
+		idx = 1;
+
+	if (_channels.find(&channel[idx]) == _channels.end())
 	{
-		_channels[channel] = new Channel(channel);
-		_channels[channel]->addUser(_user);
-		if (_channels[channel]->isUserInChannel(_user))
-		{
-			_lastChannels.push_back((_channels[channel]));
-			_user.addChannel(_channels[channel]);
-			_user.setStatus(ONLINE);
-		}
+		_channels[&channel[idx]] = new Channel(channel);
+		_channels[&channel[idx]]->addUser(_user);
+		_channels[&channel[idx]]->addOperator(_user);
+	}
+	else
+	{
+		std::vector<Channel*>::iterator it = std::find(_lastChannels.begin(), _lastChannels.end(), _channels[channel]);
+
+		if (it != _lastChannels.end())
+			_lastChannels.erase(it);
+
+		if (!_channels[&channel[idx]]->isUserInChannel(_user))
+			_channels[&channel[idx]]->addUser(_user);
+	}
+	if (_channels[&channel[idx]]->isUserInChannel(_user))
+	{
+		_user.addChannel(_channels[&channel[idx]]);
+		_lastChannels.push_back((_channels[&channel[idx]]));
+		_user.setStatus(User::ONLINE);
 	}
 }
+/*Dans un channel :
+	oui: -user change de mode ou nn si _lasChannel !empty
+ 		 -_lastChannel.popback
+	non: - verifie si la variable channel est dans _channels
+			si oui afficher nn dans le channel sinon afficher no such a channel
+*/
+void		Command::part(std::string const &channel)
+{
+	if (_user.getStatus() == User::ONLINE)
+	{
+		_lastChannels.pop_back();
+		if (_lastChannels.empty())
+			_user.setStatus(User::REGISTERED);
+	}
+	else
+	{
+		int idx = 0;
+		if (channel[0] == '#')
+			idx = 1;
+
+		if (_channels.find(&channel[idx]) != _channels.end())
+			std::cout << channel << " You're not on that channel" << std::endl;
+		else
+			std::cout << channel << " : No such channel" << std::endl;
+	}
+}
+
+void		kick(std::string const &channel);
+
+
