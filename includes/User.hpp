@@ -66,6 +66,7 @@ public:
 	void	printMessage(std::string str);
 
 	std::string		_buffer;
+	time_t			_lastPing;
 
 private:
 
@@ -86,7 +87,7 @@ private:
 	bool		_isAway;
 	std::string	_awayMessage;
 
-	time_t		_connectionTime;
+	std::string		_connectionTime;
 
 
 	void	dispatch();

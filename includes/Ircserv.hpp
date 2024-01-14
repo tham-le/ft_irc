@@ -40,7 +40,7 @@ class Ircserv
 
 		void			putStr(std::string const &str);
 		void			disconnectClient(int fd);
-		void			disconnectAllClients();
+		void			closeAllSocket();
 
 		void			handleMessage(int fd, std::string const &msg);
 
@@ -49,6 +49,10 @@ class Ircserv
 		User			&getUser(int fd) const;
 
 		std::string			getStartTime();
+
+		int				getSocketFd() const;
+
+		void			sendPing();
 
 /*		Config			getConfig() const;
 		void			setConfig(Config const &config);
