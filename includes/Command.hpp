@@ -27,17 +27,17 @@ public:
 	void		parse(std::string msg);
 	// std::string	getName() const;
 
-	void		admin(std::string const &msg);//Y
+	void		admin(std::string const &msg);
 	void		info(std::string const &msg);
-	void		join(std::string const &channel);//C
-	void		nickname(std::string const &msg);//Y
+	void		join(std::string const &channel);
+	void		nickname(std::string const &msg);
 	void		names(std::string const &msg);
 	void		part(std::string const &channel);
 	void		quit(std::string const &msg);
 	void 		list(std::string const &msg);
-	void		kick(std::string const &channel);//C
-	void		invite(std::string const &nickname, std::string const &channel);//C
-	void		topic(std::string const &msg);//C
+	void		kick(std::string const &channel);
+	void		invite(std::string const &nickname);
+	void		topic(std::string const &msg);
 	void		changeMode(std::string const &msg);
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &msg);
@@ -62,7 +62,7 @@ private:
 	std::map<std::string, FuncType > _func;
 	// std::map<std::string, Channel &> _channels;
 	// std::vector<Channel *> _channels;
-	std::vector<Channel *> _lastChannels;
+	// std::vector<Channel *> _lastChannels;
 	std::map<std::string, Channel *>	_channels;
 	std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
 };

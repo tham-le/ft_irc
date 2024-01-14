@@ -27,7 +27,7 @@ public:
 	{
 		PASSWORD_REQUIRED,
 		REGISTERED,
-		ONLINE,
+		 ONLINE,
 		DELETED
 	};
 	friend class Command;
@@ -62,6 +62,10 @@ public:
 
 
 	void	addChannel(Channel *channel);
+	void	addLastChannel(Channel *channel);
+	void	removeLastChannel();
+	Channel	*getLastChannel();
+	bool	isInLastChannels(Channel *channel);
 
 	void	printMessage(std::string str);
 
@@ -93,6 +97,7 @@ private:
 	void	receive(Ircserv *ircserv);
 	void	pushMessage();
 
+	std::vector<Channel *> _lastChannels;
 	std::map<std::string, Channel *> _channels;
 };
 

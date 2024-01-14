@@ -154,3 +154,26 @@ void	User::addChannel(Channel *channel)
 		std::cout << "- " << (i->second)->getName() << std::endl;
 	}
 }
+
+void	User::addLastChannel(Channel *channel)
+{
+	_lastChannels.push_back(channel);
+}
+
+void	User::removeLastChannel()
+{
+	_lastChannels.pop_back();
+}
+
+Channel	*User::getLastChannel()
+{
+	return (_lastChannels[_lastChannels.size() - 1]);
+}
+
+bool	User::isInLastChannels(Channel *channel)
+{
+	std::vector<Channel*>::iterator it = std::find(_lastChannels.begin(), _lastChannels.end(), channel);
+	if (it != _lastChannels.end())
+		return (true);
+	return (false);
+}
