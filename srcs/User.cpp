@@ -32,7 +32,14 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	_nickname = "";
 	_username = "";
 	_realname = "";
-	std::cout << "New user connected by IP: ";
+	_ircserv = ircserv;
+
+	time_t start = std::time(0);
+	char buffer[100];
+	std::strftime(buffer, sizeof(buffer), "%d/%m/%y - %H:%M:%S", std::localtime(&start));
+	_connectionTime = buffer;
+	std::cout << _connectionTime;
+	std::cout << ": New user connected by IP: ";
 	if (strcmp(_hostname.c_str(), "127.0.0.1") == 0)
 		std::cout << "localhost";
 	else
@@ -41,8 +48,6 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	printMessage("Welcome to the IRC server, as Irrelevant Random Chat  \n");
 	printMessage("This server was created " + _ircserv->getStartTime());
 	printMessage("\n");
-
-
 }
 
 User::~User() {}
@@ -50,10 +55,7 @@ User::~User() {}
 void	User::printMessage(std::string str) {
 	if (write(_fd, str.c_str(), str.size()) < 0)
 		throw std::runtime_error("write() failed");
-
 }
-
-
 
 void User::setNickname(std::string nickname) {
 	try {
