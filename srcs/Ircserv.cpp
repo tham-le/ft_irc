@@ -41,7 +41,7 @@ Ircserv::Ircserv(int port, std::string password)
 	std::strftime(buffer, sizeof(buffer), "%d/%m/%y - %H:%M:%S", std::localtime(&start));
 	std::cout << "Current time: " << buffer << std::endl;
 	_startTime = buffer;
-	
+
 }
 
 
@@ -211,7 +211,7 @@ void			Ircserv::connectClient()
 		}
 		else
 			writeToClient(fd, "Password required\n");
-    
+
 		_pollfds.push_back((pollfd){fd, POLLIN | POLLOUT, 0});
 	}
 }
@@ -278,7 +278,7 @@ void			Ircserv::run()
 		}
 		if (stop)
 			return ;
-	
+
 	}
 
 }

@@ -16,7 +16,7 @@ User::User() {
 	_buffer = "";
 }
 
-User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)	 
+User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 {
 	_ircserv = ircserv;
 	int flags = fcntl(fd, F_GETFL, 0);
@@ -142,4 +142,15 @@ User::e_status User::getStatus() const {
 void User::sendMessage(User *user, std::string message) {
 	std::cout << "Sending message to " << user->getNickname() << ": " << message << std::endl;
 	// send(user->getFd(), message.c_str(), message.length(), 0);
+}
+
+void	User::addChannel(Channel *channel)
+{
+	_channels[channel->getName()] = channel;
+
+	for (std::map<std::string, Channel *>::iterator i = _channels.begin(); i != _channels.end(); i++)
+	{
+		std::cout << "-List of channel of user " << _nickname << std::endl;
+		std::cout << "- " << (i->second)->getName() << std::endl;
+	}
 }

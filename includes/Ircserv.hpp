@@ -11,7 +11,7 @@
 #include <map>
 #include <vector>
 #include "User.hpp"
-#include "Channel.hpp" 
+#include "Channel.hpp"
 #include "Config.hpp"
 #include <poll.h>
 #include <csignal>
@@ -65,7 +65,6 @@ class Ircserv
 
 
 	private:
-		std::map<int, User *>			_unregisteredUsers;
 		std::map<int, User *>			_users;
 		std::map<std::string, Channel *>	_channels;
 		Config							_config;
@@ -80,15 +79,15 @@ class Ircserv
 
 
 		class	DisconnectedUser : public std::exception
-		{				
+		{
 			public:
 				int		_fd;
-				
+
 				DisconnectedUser(int fd);
 				~DisconnectedUser() throw();
 				const char *what() const throw();
 		};
-		
+
 };
 
 #endif

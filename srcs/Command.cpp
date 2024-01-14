@@ -12,10 +12,6 @@ void		Command::info(std::string const &msg)
 	(void)msg;
 }
 
-void		Command::join(std::string const &msg)
-{
-	(void)msg;
-}
 
 void		Command::nickname(std::string const &msg)
 {
