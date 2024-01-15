@@ -69,7 +69,6 @@ public:
 	time_t			_lastPing;
 
 private:
-
 	int				_fd;
 	Ircserv			*_ircserv;
 

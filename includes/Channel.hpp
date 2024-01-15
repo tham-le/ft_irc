@@ -69,6 +69,7 @@ class Channel
 		bool			isOperator(std::string const nickname);
 
 private:
+		friend class Command;
 		std::string		_name;
 		std::string		_topic;
 		t_channelMode	_mode;
