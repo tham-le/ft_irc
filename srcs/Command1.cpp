@@ -22,9 +22,9 @@ void		Command::initCmd()
 	// _noFunctionalOnChannel.push_back("VERSION");
 
 	_func["ADMIN"] = &Command::admin;
-	// _func["INFO"] = &Command::info; //->no channel
+	_func["INFO"] = &Command::info; //->no channel
 	_func["JOIN"] =  &Command::join;
-	// _func["NICK"] = &Command::nickname;
+	_func["NICK"] = &Command::nickname;
 	// _func["NAMES"] = &Command::names;
 	_func["PART"] = &Command::part;
 	// _func["QUIT"] = &Command::quit;

@@ -71,6 +71,7 @@ class Ircserv
 
 
 	private:
+		friend class Command;
 		std::map<int, User *>			_users;
 		std::map<std::string, Channel *>	_channels;
 		Config							_config;

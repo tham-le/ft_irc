@@ -139,8 +139,6 @@ User::e_status User::getStatus() const {
 	return _status;
 }
 
-
-
 void User::sendMessage(User *user, std::string message) {
 	std::cout << "Sending message to " << user->getNickname() << ": " << message << std::endl;
 	// send(user->getFd(), message.c_str(), message.length(), 0);

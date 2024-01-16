@@ -134,6 +134,7 @@ User*			Channel::getUser(std::string const nickname)
 	}
 	return (_users.begin()->second);
 }
+
 std::map<int, User *>	Channel::getUsers()
 {
 	return (_users);

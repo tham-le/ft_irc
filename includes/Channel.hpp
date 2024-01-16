@@ -70,6 +70,7 @@ class Channel
 		bool			isEmptyOperator();
 
 private:
+		friend class Command;
 		std::string		_name;
 		std::string		_topic;
 		t_channelMode	_mode;
