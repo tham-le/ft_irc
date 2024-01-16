@@ -4,6 +4,10 @@ Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(ms
 {
 	initCmd();
 	parse(msg);
+	/*a supp*/
+	if (_user.getStatus() == User::PASSWORD_REQUIRED)
+		_user.setStatus(User::REGISTERED);
+	/**/
 	command();
 }
 
@@ -12,17 +16,17 @@ Command::~Command()
 
 void		Command::initCmd()
 {
-	_noFunctionalOnChannel.push_back("ADMIN");
-	_noFunctionalOnChannel.push_back("INFO");
-	_noFunctionalOnChannel.push_back("LIST");
-	_noFunctionalOnChannel.push_back("VERSION");
+	// _noFunctionalOnChannel.push_back("ADMIN");
+	// _noFunctionalOnChannel.push_back("INFO");
+	// _noFunctionalOnChannel.push_back("LIST");
+	// _noFunctionalOnChannel.push_back("VERSION");
 
 	_func["ADMIN"] = &Command::admin;
 	_func["INFO"] = &Command::info; //->no channel
 	_func["JOIN"] =  &Command::join;
 	_func["NICK"] = &Command::nickname;
 	// _func["NAMES"] = &Command::names;
-	// _func["PART"] = &Command::part;
+	_func["PART"] = &Command::part;
 	// _func["QUIT"] = &Command::quit;
 	// _func["LIST"] = &Command::list; //->no channel
 	// _func["KICK"] = &Command::kick;
@@ -45,17 +49,10 @@ void		Command::parse(std::string message)
 			split(&message[1], ' ');
 		else
 			split(&message[2], ' ');
-		// for (unsigned int i = 0; i < _input.size(); i++)
-		// {
-		// 	std::cout << _input[i] << "." << std::endl;
-		// }
 	}
 }
 
-bool		Command::isCmdNoUse(std::string const str) const
-{
-	return std::find(_noFunctionalOnChannel.begin(), _noFunctionalOnChannel.end(), str) != _noFunctionalOnChannel.end();
-}
+
 
 void		Command::command()
 {
@@ -63,24 +60,24 @@ void		Command::command()
 
 	if (it == _func.end())
 	{
-		if (_lastChannels.empty())
-			std::cout << " Unknown command: " << _input[0] << std::endl;
+		if (_user.getStatus() == User::REGISTERED)
+		{
+			// std::cout << "Caca" << std::endl;
+			// _ircserv.writeToClient( _user.getFd(),"PIPI");
+			// _ircserv.writeToClient( _user.getFd(),ERR_UNKNOWNCOMMAND(_input[0]));
+		}
 		return ;
 	}
 	else // if (it == _func.end() && (_user.getStatus() == REGISTRED || _user.getStatus() == ONLINE))
 	{
-		if ((!_lastChannels.empty() && !isCmdNoUse(_input[0])) || _lastChannels.empty())
+		if (_user.getStatus() == User::ONLINE || _user.getStatus() == User::REGISTERED)
 		{
-			if (!_input[2].empty())
+			if (_input.size() > 1)
 				(this->*(it->second))(_input[1]);
-			// else
-			// 	std::cout << "ROUCOULE" << std::endl;
+			else
+				(this->*(it->second))("");
 		}
 	}
-	// else
-	// {
-	// 	std::cout << " "
-	// }
 }
 
 void		Command::split(std::string str, char separator)
@@ -98,41 +95,37 @@ void		Command::split(std::string str, char separator)
 		}
 	}
 }
-/*SI le channel existe ou pas :
- Existe pas -> -cree et le met dans _channels et _lastchannels
- 				-ajoute l'user dans la liste des users du channels
-				-ajoute le channel dans la liste des channels du users
-				-si user enrigistre du serveur et le channel a aucun user mis a part lui meme il devient operateur
-				- le status de l'user devient ONLINE
- Existe -> ajoute dans last_channel
-		-> verifie si user est dans la liste du channel sinon ajouter
-*/
+
 void		Command::join(std::string const &channel)
 {
 	int idx = 0;
+	if (channel.empty())
+	{
+		return ;
+	}
 	if (channel[0] == '#')
 		idx = 1;
 
-	if (_channels.find(&channel[idx]) == _channels.end())
+	if (!_ircserv.isChannel(&channel[idx]))
 	{
-		_channels[&channel[idx]] = new Channel(channel);
-		_channels[&channel[idx]]->addUser(_user);
-		_channels[&channel[idx]]->addOperator(_user);
+		_ircserv.addChannel(&channel[idx]);
+		_ircserv.getChannel(&channel[idx])->addUser(_user);
+
 	}
 	else
 	{
-		std::vector<Channel*>::iterator it = std::find(_lastChannels.begin(), _lastChannels.end(), _channels[channel]);
+		if (_user.isInLastChannels(_ircserv.getChannel(channel)))
+			_user.removeLastChannel();
 
-		if (it != _lastChannels.end())
-			_lastChannels.erase(it);
-
-		if (!_channels[&channel[idx]]->isUserInChannel(_user))
-			_channels[&channel[idx]]->addUser(_user);
+		if (!_ircserv.getChannel(&channel[idx])->isUserInChannel(_user))
+			_ircserv.getChannel(&channel[idx])->addUser(_user);
 	}
-	if (_channels[&channel[idx]]->isUserInChannel(_user))
+	if (_ircserv.getChannel(&channel[idx])->isUserInChannel(_user))
 	{
-		_user.addChannel(_channels[&channel[idx]]);
-		_lastChannels.push_back((_channels[&channel[idx]]));
+		if (_ircserv.getChannel(&channel[idx])->isEmptyOperator())
+			_ircserv.getChannel(&channel[idx])->addOperator(_user);
+		_user.addChannel(_ircserv.getChannel(&channel[idx]));
+		_user.addLastChannel((_ircserv.getChannel(&channel[idx])));
 		_user.setStatus(User::ONLINE);
 	}
 }
@@ -146,23 +139,44 @@ void		Command::part(std::string const &channel)
 {
 	if (_user.getStatus() == User::ONLINE)
 	{
-		_lastChannels.pop_back();
-		if (_lastChannels.empty())
-			_user.setStatus(User::REGISTERED);
+		std::cout << "PIOU" << _user.getLastChannel()->getName() << std::endl;
+		if (_user.getLastChannel()->isUserInChannel(_user) && _user.getLastChannel()->isOperator(_user))
+			std::cout << "CACA" << std::endl;
+		if (_user.getStatus() == User::ONLINE && _user.getLastChannel()->isOperator(_user))
+		{
+			_user.getLastChannel()->removeOperator(_user);
+			// std::cout << "PART " << _lastChannels[_lastChannels.size() - 1]->getName() << std::endl;
+		}
+		_user.removeLastChannel();
+		_user.setStatus(User::REGISTERED);
 	}
 	else
 	{
-		int idx = 0;
-		if (channel[0] == '#')
-			idx = 1;
-
-		if (_channels.find(&channel[idx]) != _channels.end())
+		if (_input.size() < 2)
+			std::cout << "ircserv: Not enough parameters given" << std::endl;
+		else if (_ircserv.isChannel(&channel[1]) && channel[0] == '#')
 			std::cout << channel << " You're not on that channel" << std::endl;
 		else
-			std::cout << channel << " : No such channel" << std::endl;
+			std::cout << channel << ": No such channel" << std::endl;
 	}
 }
 
-void		kick(std::string const &channel);
+
+
+
+/*Online sur le channel :
+	->non :
+			-si pas de argument < 3 : Not enough parameters given
+			-si # deuxieme arg : Irssi: Not joined to any channel
+			-si argv3 est pas un user du server : a: No such nick/channel
+			-si tout ok ,verif si le user lui meme est dans le channel(online) si non : #lol You're not on that channel!
+	->oui :
+			-verif si le user a kick est dans le channel et si nous somme op remove des list
+
+*/
+// void		Command::kick(std::string const &channel)
+// {
+
+// }
 
 

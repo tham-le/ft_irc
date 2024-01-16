@@ -1,9 +1,6 @@
 #include "../includes/Channel.hpp"
 #include <vector>
 
-// Channel::Channel()
-// {
-// }
 
 Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100) {}
 
@@ -71,7 +68,6 @@ void	Channel::addUser(User &user)
 			}
 		}
 		_users[user.getFd()] = &user;
-		// _users.insert(std::make_pair(user.getFd(), &user));
 		for (std::map<int, User *>::iterator i = _users.begin(); i != _users.end(); i++)
 		{
 			std::cout << "-List users of channel " << _name << std::endl;
@@ -162,66 +158,6 @@ bool			Channel::isUserInChannel(User const &user) const
 	return (false);
 }
 
-// void	Channel::Ban(User &user)
-// {
-// 	if (isUserInChannel(user) == false)
-// 	{
-// 		std::cout << "Cannot ban the user because " << user.getNickname() << " is not in the channel." << std::endl;
-// 		return ;
-// 	}
-// 	if (isOperator(user) && _operators.size() == 1)
-// 	{
-// 		std::cout << "Cannot remove " << user.getNickname();
-// 		std::cout << "because is the last one operator." << std::endl;
-// 	}
-// 	if (isBanned(user) == true)
-// 		std::cout << user.getNickname() << "already ban haha." << std::endl;
-// 	else
-// 	{
-// 		_bannedUsers.push_back(&user);
-// 		removeOperator(user);
-// 		removeUser(user);
-// 		std::cout << user.getNickname() << "is ban now." <<std::endl;
-// 	}
-// }
-// void	Channel::Unban(User &user)
-// {
-// 	std::vector<User *>::iterator it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
-
-// 	if (it == _bannedUsers.end())
-// 		std::cout << "cannot unban because " << user.getNickname() << " is not ban." << std::endl;
-// 	else
-// 	{
-// 		_bannedUsers.erase(it);
-// 		std::cout << user.getNickname() << "is not ban anymore." <<std::endl;
-// 	}
-// }
-// void	Channel::Unban(std::string const nickname)
-// {
-// 	std::vector<User *>::iterator it;
-
-// 	for (it = _bannedUsers.begin(); it != _bannedUsers.end(); it++)
-// 	{
-// 		if ((*it)->getNickname() == nickname)
-// 			break ;
-// 	}
-// 	if (it == _bannedUsers.end())
-// 	{
-// 		std::cout << "Cannot unban because " << nickname << " is not ban." << std::endl;
-// 		return ;
-// 	}
-// 	_bannedUsers.erase(it);
-// 	std::cout << nickname << " is not ban anymore." <<std::endl;
-// }
-
-// bool	Channel::isBanned(User &user)
-// {
-// 	std::vector<User *>::iterator it = std::find(_bannedUsers.begin(), _bannedUsers.end(), &user);
-
-// 	if (it == _bannedUsers.end())
-// 		return (false);
-// 	return (true);
-// }
 
 void			Channel::Invite(User &user)
 {
@@ -297,7 +233,7 @@ void			Channel::removeOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
-	if (isUserInChannel(user))
+	if (!isUserInChannel(user))
 	{
 		std::cout << "Cannot be a regular user of the channel because ";
 		std::cout << user.getNickname() << " is not in the channel." << std::endl;
@@ -351,4 +287,11 @@ bool			Channel::isOperator(std::string const nickname)
 	if (it == _operators.end())
 		return (false);
 	return (true);
+}
+
+bool			Channel::isEmptyOperator()
+{
+	if (_operators.empty())
+		return (true);
+	return (false);
 }

@@ -67,6 +67,7 @@ class Channel
 		void			removeOperator(std::string const nickname);
 		bool			isOperator(User &user);
 		bool			isOperator(std::string const nickname);
+		bool			isEmptyOperator();
 
 private:
 		friend class Command;

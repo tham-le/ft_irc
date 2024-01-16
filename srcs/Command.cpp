@@ -20,7 +20,7 @@ void		Command::nickname(std::string const &msg)
 	std::string nickName;
 	try {
 		if (msg.empty()) {
-			nickName = _user.getNickname(); //it will be the nickename whan i was connected? 
+			nickName = _user.getNickname(); //it will be the nickename whan i was connected?
 			_ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName);
 			throw NonNicknameGiven();
 		}
