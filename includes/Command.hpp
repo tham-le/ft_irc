@@ -47,46 +47,15 @@ public:
 	void		split(std::string str, char separator);
 	void		command();
 	void		initCmd();
+	bool		validNickname(std::string const nickname) const;
 	bool		isCmdNoUse(std::string const str) const;
 
-	class	NonNicknameGiven: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("No nickname given");
-			}
-	};
 
-	class	ErroneusNickname: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("Erroneus nickname");
-			}
-	};
-
-	class	NicknameInUse: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("Nickname is already in use");
-			}
-	};
-	/*if the NICK already exists on another server*/
-	class	NicknameCollision: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("Nickname collision");
-			}
-	};
 
 private:
 	std::string _msg;
 	User &_user;
 	Ircserv &_ircserv;
-	enum errCode {
-		ERR_NONICKNAMEGIVEN = 431,
-		ERR_ERRONEUSNICKNAME = 432,
-		ERR_NICKNAMEINUSE = 433,
-		ERR_NICKCOLLISION = 436,
-	};
 	// enum e_type
 	// {
 	// 	MSG;
