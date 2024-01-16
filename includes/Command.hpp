@@ -45,7 +45,6 @@ public:
 	void		split(std::string str, char separator);
 	void		command();
 	void		initCmd();
-	bool		isCmdNoUse(std::string const str) const;
 
 private:
 	std::string _msg;
@@ -63,8 +62,8 @@ private:
 	// std::map<std::string, Channel &> _channels;
 	// std::vector<Channel *> _channels;
 	// std::vector<Channel *> _lastChannels;
-	std::map<std::string, Channel *>	_channels;
-	std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
+	// std::map<std::string, Channel *>	_channels;
+	// std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
 };
 
 #endif

@@ -54,6 +54,12 @@ class Ircserv
 
 		void			sendPing();
 
+		void			addChannel(std::string const channel);
+		bool			isChannel(std::string const channel) const;
+		void			removeChannel(std::string const channel);
+		Channel			*getChannel(std::string const channel);
+		void			disconnectAllClients();
+
 /*		Config			getConfig() const;
 		void			setConfig(Config const &config);
 
@@ -61,10 +67,6 @@ class Ircserv
 		void			removeUser(User *user);
 		void			removeUser(std::string const nickname);
 
-		bool			isChannel(std::string const channel) const;
-		void			addChannel(std::string const channel);
-		void			removeChannel(std::string const channel);
-		Channel			*getChannel(std::string const channel);
 		std::map<std::string, Channel>	getChannels() const;*/
 
 

@@ -4,8 +4,10 @@ Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(ms
 {
 	initCmd();
 	parse(msg);
+	/*a supp*/
 	if (_user.getStatus() == User::PASSWORD_REQUIRED)
 		_user.setStatus(User::REGISTERED);
+	/**/
 	command();
 }
 
@@ -14,10 +16,10 @@ Command::~Command()
 
 void		Command::initCmd()
 {
-	_noFunctionalOnChannel.push_back("ADMIN");
-	_noFunctionalOnChannel.push_back("INFO");
-	_noFunctionalOnChannel.push_back("LIST");
-	_noFunctionalOnChannel.push_back("VERSION");
+	// _noFunctionalOnChannel.push_back("ADMIN");
+	// _noFunctionalOnChannel.push_back("INFO");
+	// _noFunctionalOnChannel.push_back("LIST");
+	// _noFunctionalOnChannel.push_back("VERSION");
 
 	_func["ADMIN"] = &Command::admin;
 	// _func["INFO"] = &Command::info; //->no channel
@@ -50,10 +52,7 @@ void		Command::parse(std::string message)
 	}
 }
 
-bool		Command::isCmdNoUse(std::string const str) const
-{
-	return std::find(_noFunctionalOnChannel.begin(), _noFunctionalOnChannel.end(), str) != _noFunctionalOnChannel.end();
-}
+
 
 void		Command::command()
 {
@@ -62,12 +61,16 @@ void		Command::command()
 	if (it == _func.end())
 	{
 		if (_user.getStatus() == User::REGISTERED)
-			std::cout << " Unknown command: " << _input[0] << std::endl;
+		{
+			// std::cout << "Caca" << std::endl;
+			// _ircserv.writeToClient( _user.getFd(),"PIPI");
+			_ircserv.writeToClient( _user.getFd(),ERR_UNKNOWNCOMMAND(_input[0]));
+		}
 		return ;
 	}
 	else // if (it == _func.end() && (_user.getStatus() == REGISTRED || _user.getStatus() == ONLINE))
 	{
-		if ((_user.getStatus() == User::ONLINE && !isCmdNoUse(_input[0])) || _user.getStatus() == User::REGISTERED)
+		if (_user.getStatus() == User::ONLINE || _user.getStatus() == User::REGISTERED)
 		{
 			if (_input.size() > 1)
 				(this->*(it->second))(_input[1]);
@@ -75,10 +78,6 @@ void		Command::command()
 				(this->*(it->second))("");
 		}
 	}
-	// else
-	// {
-	// 	std::cout << " "
-	// }
 }
 
 void		Command::split(std::string str, char separator)
@@ -96,43 +95,37 @@ void		Command::split(std::string str, char separator)
 		}
 	}
 }
-/*SI le channel existe ou pas :
- Existe pas -> -cree et le met dans _channels et _lastchannels
- 				-ajoute l'user dans la liste des users du channels
-				-ajoute le channel dans la liste des channels du users
-				-si user enrigistre du serveur et le channel a aucun user mis a part lui meme il devient operateur
-				- le status de l'user devient ONLINE
- Existe -> ajoute dans last_channel
-		-> verifie si user est dans la liste du channel sinon ajouter
-*/
+
 void		Command::join(std::string const &channel)
 {
 	int idx = 0;
 	if (channel.empty())
+	{
 		return ;
+	}
 	if (channel[0] == '#')
 		idx = 1;
 
-	if (_channels.find(&channel[idx]) == _channels.end())
+	if (!_ircserv.isChannel(&channel[idx]))
 	{
-		_channels[&channel[idx]] = new Channel(channel);
-		_channels[&channel[idx]]->addUser(_user);
+		_ircserv.addChannel(&channel[idx]);
+		_ircserv.getChannel(&channel[idx])->addUser(_user);
+
 	}
 	else
 	{
-		if (_user.isInLastChannels(_channels[&channel[idx]]))
+		if (_user.isInLastChannels(_ircserv.getChannel(channel)))
 			_user.removeLastChannel();
 
-		if (!_channels[&channel[idx]]->isUserInChannel(_user))
-			_channels[&channel[idx]]->addUser(_user);
+		if (!_ircserv.getChannel(&channel[idx])->isUserInChannel(_user))
+			_ircserv.getChannel(&channel[idx])->addUser(_user);
 	}
-	if (_channels[&channel[idx]]->isUserInChannel(_user))
+	if (_ircserv.getChannel(&channel[idx])->isUserInChannel(_user))
 	{
-		if (_channels[&channel[idx]]->isEmptyOperator())
-			_channels[&channel[idx]]->addOperator(_user);
-		_user.addChannel(_channels[&channel[idx]]);
-		_user.addLastChannel((_channels[&channel[idx]]));
-		std::cout << "PIOU" << _user.getLastChannel()->getName() << std::endl;
+		if (_ircserv.getChannel(&channel[idx])->isEmptyOperator())
+			_ircserv.getChannel(&channel[idx])->addOperator(_user);
+		_user.addChannel(_ircserv.getChannel(&channel[idx]));
+		_user.addLastChannel((_ircserv.getChannel(&channel[idx])));
 		_user.setStatus(User::ONLINE);
 	}
 }
@@ -147,6 +140,8 @@ void		Command::part(std::string const &channel)
 	if (_user.getStatus() == User::ONLINE)
 	{
 		std::cout << "PIOU" << _user.getLastChannel()->getName() << std::endl;
+		if (_user.getLastChannel()->isUserInChannel(_user) && _user.getLastChannel()->isOperator(_user))
+			std::cout << "CACA" << std::endl;
 		if (_user.getStatus() == User::ONLINE && _user.getLastChannel()->isOperator(_user))
 		{
 			_user.getLastChannel()->removeOperator(_user);
@@ -159,7 +154,7 @@ void		Command::part(std::string const &channel)
 	{
 		if (_input.size() < 2)
 			std::cout << "ircserv: Not enough parameters given" << std::endl;
-		else if (_channels.find(&channel[1]) != _channels.end() && channel[0] == '#')
+		else if (_ircserv.isChannel(&channel[1]) && channel[0] == '#')
 			std::cout << channel << " You're not on that channel" << std::endl;
 		else
 			std::cout << channel << ": No such channel" << std::endl;

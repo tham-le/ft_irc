@@ -285,11 +285,11 @@ void			Ircserv::sendPing()
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
 		{
 			write(it->fd, "PING\n", 5);
-	
+
 		}
 	}
 
-	
+
 }
 
 
@@ -386,6 +386,26 @@ void			Ircserv::acceptUser()
 
 }
 
+
+
+void			Ircserv::addChannel(std::string const channel)
+{
+	_channels[channel] = new Channel(channel);
+}
+
+bool			Ircserv::isChannel(std::string const channel) const
+{
+	if (_channels.find(channel) != _channels.end())
+		return (true);
+	return (false);
+}
+
+
+// void			Ircserv::removeChannel(std::string const channel);
+Channel			*Ircserv::getChannel(std::string const channel)
+{
+	return (_channels[channel]);
+}
 
 
 Config			Ircserv::getConfig() const;

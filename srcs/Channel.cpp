@@ -232,7 +232,7 @@ void			Channel::removeOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
-	if (isUserInChannel(user))
+	if (!isUserInChannel(user))
 	{
 		std::cout << "Cannot be a regular user of the channel because ";
 		std::cout << user.getNickname() << " is not in the channel." << std::endl;
