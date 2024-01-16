@@ -1,9 +1,19 @@
 #include "../includes/Command.hpp"
+#include "../includes/ErrorCommand.hpp"
+
+bool	Command::validNickname(std::string const nickname) const
+{
+	for (unsigned int i = 0; i < nickname.length(); i++) {
+		if (!(isalnum(nickname[i]) || nickname[i] == '-' || nickname[i] == '[' || nickname[i] == ']' || nickname[i] == '\\' || nickname[i] == '`' || nickname[i] == '^' || nickname[i] == '{' || nickname[i] == '}' || nickname[i] == '_' || nickname[i] == '|'))
+			return false;
+	}
+	return true;
+}
 
 void		Command::admin(std::string const &msg)
 {
 	(void)msg;
-	_ircserv.writeToClient(_user.getFd(), "Admin: " + to_string(_ircserv.getSocketFd())); //example
+	_ircserv.writeToClient(_user.getFd(), "Admin: \n"); //+ to_string(_ircserv.getSocketFd())); //example
 	//_ircserv.writeToClient(_user.getFd(), _ircserv.getInfo());
 }
 
@@ -18,32 +28,25 @@ void		Command::info(std::string const &msg)
 void		Command::nickname(std::string const &msg)
 {
 	std::string nickName;
-	try {
-		if (msg.empty()) {
-			nickName = _user.getNickname(); //it will be the nickename whan i was connected?
-			_ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName);
-			throw NonNicknameGiven();
-		}
-		for (unsigned int i = 0; i < msg.length(); i++) {
-			if (msg[i] != isalnum(msg[i]) || msg[i] != '-' || msg[i] != '[' || msg[i] != ']' || msg[i] != '\\' || msg[i] != '`' || msg[i] != '^' || msg[i] != '{' || msg[i] != '}' || msg[i] != '_' || msg[i] != '|') {
-				throw ErroneusNickname();
-				break;
-			}
-		}
-		for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
-			if (it->second->getNickname() == msg) {
-				throw NicknameInUse();
-				break ;
-			}
-		}
-	}
-	catch (std::exception &e) {
-		_ircserv.writeToClient(_user.getFd(), e.what());
+	if (msg.empty()) {
+		nickName = _user.getNickname(); //it will be the nickename whan i was connected?
+		_ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
+		_ircserv.writeToClient(_user.getFd(), ERR_NONICKNAMEGIVEN);
 		return ;
+	}
+	if (!validNickname(msg)) {
+		_ircserv.writeToClient(_user.getFd(), msg + ERR_ERRONEUSNICKNAME);
+		return ;
+	}
+	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
+		if (it->second->getNickname() == msg) {
+			_ircserv.writeToClient(_user.getFd(), msg + ERR_NICKNAMEINUSE);
+			return ;
+		}
 	}
 	_user.setNickname(msg);
 	nickName = _user.getNickname();
-	_ircserv.writeToClient(_user.getFd(), "You're now known as " + nickName);
+	_ircserv.writeToClient(_user.getFd(), "You're now known as " + nickName + "\n");
 }
 
 void	Command::names(std::string const &channel)
@@ -59,11 +62,16 @@ void	Command::names(std::string const &channel)
 		_ircserv.writeToClient(_user.getFd(), "Users #" + _channels[&channel[idx]]->getName());
 		std::vector<User*> operators = _channels[&channel[idx]]->_operators;
 		for (unsigned int i = 0; i < operators.size(); i++)
-			_ircserv.writeToClient(_user.getFd(), "@" + operators[i]->getNickname());
+			_ircserv.writeToClient(_user.getFd(), "@" + operators[i]->getNickname()); //if there one operator or more??
 	}
-	else if (_user.getStatus() == User::ONLINE && _channels.find(&channel[idx]) != _channels.end()) {
-		/*si je suis dans le canal(le dernier canal) et je mets Names ca donne tous les users de chanel
-		admin en premier*/
+	else if (_user.getStatus() == User::ONLINE) {
+		_ircserv.writeToClient(_user.getFd(), "Users #" + _user.getLastChannel()->getName());
+		std::vector<User*> operators = _user.getLastChannel()->_operators;
+		for (unsigned int i = 0; i < operators.size(); i++)
+			_ircserv.writeToClient(_user.getFd(), "@" + operators[i]->getNickname()); //if there one operator or more??
+		std::map<int, User*> users = _user.getLastChannel()->_users;
+		for (unsigned int i = 0; i < users.size(); i++)
+			_ircserv.writeToClient(_user.getFd(), users[i]->getNickname());
 	}
 }
 
@@ -82,7 +90,7 @@ void	Command::list(std::string const &channel)
 		return ;
 	}
 	if (_channels.empty())
-		std::cout << "No channel created" << std::endl;
+		_ircserv.writeToClient(_user.getFd(), "No channel created");
 	else {
 		int idx = 0;
 		if (channel[0] == '#')

@@ -44,6 +44,7 @@ void	Config::setPingInterval(int const pingInterval)
 {
 	this->_pingInterval = pingInterval;
 }
+
 int		Config::getPingInterval() const
 {
 	return (_pingInterval);
@@ -53,6 +54,7 @@ void	Config::setPingTimeout(int const pingTimeout)
 {
 	this->_pingTimeout = pingTimeout;
 }
+
 int		Config::getPingTimeout() const
 {
 	return (_pingTimeout);
@@ -62,6 +64,7 @@ void	Config::setMaxClients(int const maxClients)
 {
 	this->_maxClients = maxClients;
 }
+
 int		Config::getMaxClients() const
 {
 	return  (_maxClients);
@@ -71,6 +74,7 @@ void	Config::setMaxChannels(int const maxChannels)
 {
 	this->_maxChannels = maxChannels;
 }
+
 int		Config::getMaxChannels() const
 {
 	return (_maxChannels);

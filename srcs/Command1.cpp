@@ -25,10 +25,10 @@ void		Command::initCmd()
 	_func["INFO"] = &Command::info; //->no channel
 	_func["JOIN"] =  &Command::join;
 	_func["NICK"] = &Command::nickname;
-	// _func["NAMES"] = &Command::names;
+	_func["NAMES"] = &Command::names;
 	_func["PART"] = &Command::part;
-	// _func["QUIT"] = &Command::quit;
-	// _func["LIST"] = &Command::list; //->no channel
+	_func["QUIT"] = &Command::quit;
+	_func["LIST"] = &Command::list; //->no channel
 	// _func["KICK"] = &Command::kick;
 	// _func["INVITE"] = &Command::invite;
 	// _func["TOPIC"] = &Command::topic;

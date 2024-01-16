@@ -130,7 +130,6 @@ std::string User::getAwayMessage() const {
 	return _awayMessage;
 }
 
-
 void User::setStatus(e_status status) {
 	_status = status;
 }
