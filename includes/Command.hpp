@@ -29,22 +29,12 @@ public:
 	void		parse(std::string msg);
 	// std::string	getName() const;
 
-	void		admin(std::string const &msg);
-	void		info(std::string const &msg);
-	void		join(std::string const &channel);
-	void		nickname(std::string const &msg);
-	void		names(std::string const &msg);
 	void		admin(std::string const &msg);//Y
 	void		info(std::string const &msg); //Y
 	void		join(std::string const &channel);//C
 	void		nickname(std::string const &msg);//Y
 	void		names(std::string const &channel); //Y
 	void		part(std::string const &channel);
-	void		quit(std::string const &msg);
-	void 		list(std::string const &msg);
-	void		kick(std::string const &channel);
-	void		invite(std::string const &nickname);
-	void		topic(std::string const &msg);
 	void		quit(std::string const &msg); //Y
 	void 		list(std::string const &channel); //Y
 	void		kick(std::string const &channel);//C
@@ -57,34 +47,7 @@ public:
 	void		split(std::string str, char separator);
 	void		command();
 	void		initCmd();
-
-	class	NonNicknameGiven: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("No nickname given");
-			}
-	};
-
-	class	ErroneusNickname: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("Erroneus nickname");
-			}
-	};
-
-	class	NicknameInUse: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("Nickname is already in use");
-			}
-	};
-	/*if the NICK already exists on another server*/
-	class	NicknameCollision: public std::exception {
-		public:
-			virtual const char* what() const throw() {
-				return ("Nickname collision");
-			}
-	};
+	bool		isCmdNoUse(std::string const str) const;
 
 	class	NonNicknameGiven: public std::exception {
 		public:
@@ -135,9 +98,9 @@ private:
 	std::map<std::string, FuncType > _func;
 	// std::map<std::string, Channel &> _channels;
 	// std::vector<Channel *> _channels;
-	// std::vector<Channel *> _lastChannels;
-	// std::map<std::string, Channel *>	_channels;
-	// std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
+	std::vector<Channel *> _lastChannels;
+	std::map<std::string, Channel *>	_channels;
+	std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
 };
 
 /*Template to convert int to string*/

@@ -64,7 +64,7 @@ void		Command::command()
 		{
 			// std::cout << "Caca" << std::endl;
 			// _ircserv.writeToClient( _user.getFd(),"PIPI");
-			_ircserv.writeToClient( _user.getFd(),ERR_UNKNOWNCOMMAND(_input[0]));
+			// _ircserv.writeToClient( _user.getFd(),ERR_UNKNOWNCOMMAND(_input[0]));
 		}
 		return ;
 	}
