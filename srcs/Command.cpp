@@ -29,8 +29,8 @@ void		Command::nickname(std::string const &msg)
 {
 	std::string nickName;
 	if (msg.empty()) {
-		nickName = _user.getNickname(); //it will be the nickename whan i was connected?
-		_ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
+		// nickName = _user.getNickname(); //it will be the nickename whan i was connected?
+		// _ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
 		_ircserv.writeToClient(_user.getFd(), ERR_NONICKNAMEGIVEN());
 		return ;
 	}
@@ -46,7 +46,7 @@ void		Command::nickname(std::string const &msg)
 	}
 	_user.setNickname(msg);
 	nickName = _user.getNickname();
-	_ircserv.writeToClient(_user.getFd(), "You're now known as " + nickName + "\n");
+	_ircserv.writeToClient(_user.getFd(), RPL_NICK(nickName));
 }
 
 void	Command::names(std::string const &channel)
@@ -55,7 +55,7 @@ void	Command::names(std::string const &channel)
 	if (channel[0] == '#')
 		idx = 1;
 	if (_user.getStatus() != User::ONLINE && _input.size() == 1) {
-		_ircserv.writeToClient(_user.getFd(), "Not joined to any channel yet\n");
+		_ircserv.writeToClient(_user.getFd(), ERR_NOTJOINEDANYCHANNEL());
 		return ;
 	}
 	else if (_user.getStatus() != User::ONLINE && !_channels.empty() && _input.size() > 1 && channel == _input[1]) { //need to update to take only first parameter and skip others
@@ -66,7 +66,7 @@ void	Command::names(std::string const &channel)
 			_ircserv.writeToClient(_user.getFd(), "@" + operators[i]->getNickname() + "\n"); //if there one operator or more??
 		}
 		else {
-			_ircserv.writeToClient(_user.getFd(), channel + ERR_NOSUCHCHANNEL);
+			_ircserv.writeToClient(_user.getFd(), channel + ERR_NOSUCHCHANNEL(channel));
 			return ;
 		}
 	}
@@ -94,36 +94,35 @@ void	Command::quit(std::string const &msg)
 		it->second->removeUser(_user);
 	_ircserv.disconnectClient(_user.getFd());
 }
-
 void	Command::list(std::string const &channel)
 {
-	_ircserv.writeToClient(_user.getFd(), "Channel Topic Users Name\n");
+	_ircserv.writeToClient(_user.getFd(), RPL_LISTSTART());
 	if (_input.size() > 1 && channel != _input.back() && channel[0] != '#') {
-		_ircserv.writeToClient(_user.getFd(), "End of channel list\n");
+		_ircserv.writeToClient(_user.getFd(), RPL_LISTEND());
 		return ;
 	}
 	if (_channels.empty())
-		_ircserv.writeToClient(_user.getFd(), ERR_NOCHANNNELS);
+		_ircserv.writeToClient(_user.getFd(), ERR_NOCHANNNELS());
 	else {
 		int idx = 0;
 		if (channel[0] == '#')
 			idx = 1;
 		if (!channel.empty() && _channels.find(&channel[idx]) != _channels.end()) {
-			_ircserv.writeToClient(_user.getFd(), _channels[&channel[idx]]->getName() + " " + to_string(_channels[&channel[idx]]->_users.size())
-			+ " " + _channels[&channel[idx]]->getTopic() + "\n");
+			_ircserv.writeToClient(_user.getFd(), RPL_LIST(_channels[&channel[idx]]->getName(), to_string(_channels[&channel[idx]]->_users.size()),
+			_channels[&channel[idx]]->getTopic()));
 		}
 		else if (channel.empty()) {
 			for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-				_ircserv.writeToClient(_user.getFd(), "- " + it->first + " " + to_string(it->second->_users.size()) + " " + it->second->getTopic() + "\n");
+				_ircserv.writeToClient(_user.getFd(), RPL_LIST(it->first, to_string(it->second->_users.size()), it->second->getTopic()));
 		}
 	}
-	_ircserv.writeToClient(_user.getFd(), "End of channel list\n");
+	_ircserv.writeToClient(_user.getFd(), RPL_LISTEND());
 }
 
 void	Command::changeMode(std::string const &msg)
 {
 	if (msg.empty() || msg.size() < 2) {
-		// _ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS); //msg sent to user but not on channel if the user is on a channel
+		_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS(_input[0])); //msg sent to user but not on channel if the user is on a channel
 		return ;
 	}
 	int idx = 0;
@@ -131,11 +130,11 @@ void	Command::changeMode(std::string const &msg)
 		idx = 1;
 	std::map<std::string, Channel *>::iterator it = _channels.find(&msg[idx]);
 	if (it == _channels.end()) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL); //msg sent to user but not on channel if the user is on a channel
+		_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL(msg)); //msg sent to user but not on channel if the user is on a channel
 		return ;
 	}
 	if (_user.getStatus() != User::ONLINE && (msg[0] == '-' || msg[0] == '+')) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NOTONCHANNEL); //msg sent to user but not on channel if the user is on a channel
+		_ircserv.writeToClient(_user.getFd(), ERR_NOTJOINEDANYCHANNEL()); //msg sent to user but not on channel if the user is on a channel
 		return ;
 	}
 }
