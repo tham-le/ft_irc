@@ -1,5 +1,5 @@
 #include "../includes/Command.hpp"
-#include "ErrorCommand.hpp"
+#include "../includes/ReplyCommand.hpp"
 
 Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(msg), _user(user), _ircserv(ircserv)
 {
