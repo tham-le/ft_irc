@@ -40,3 +40,4 @@ objects
 ircserv
 *.log
 *.txt
+.nfs*

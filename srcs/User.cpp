@@ -45,8 +45,6 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	else
 		std::cout << _hostname ;
 	std::cout << " on fd " << fd << std::endl;
-	printMessage("Welcome to the IRC server, as Irrelevant Random Chat  \n");
-	printMessage("This server was created " + _ircserv->getStartTime());
 	printMessage("\n");
 }
 
