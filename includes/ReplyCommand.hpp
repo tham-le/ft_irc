@@ -24,10 +24,12 @@
 
 
 /*REPLY FOR COMMAND*/
-# define RPL_WELCOME(nick) ("001 " + ":Welcome to the Internet Relay Network " + nick + "\r\n") //001
-# define RPL_YOURHOST(servername, version) ("002 " + ":Your host is " + servername + ", running version " + version + "\r\n") //002
-# define RPL_MYINFO(servername, version, usr_modes, chann_modes) ("004 " + ":" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n") //004
-# define RPL_CREATED(date) ("003 " + ":This server was created " + date + "\r\n"); //003
+# define RPL_WELCOME(nick) ("Welcome to the Internet Relay Network " + nick + "\r\n") //001
+# define RPL_YOURHOST(servername, version) ("Your host is " + servername + ", running version " + version + "\r\n") //002
+# define RPL_CREATED(date) ("This server was created " + date + "\r\n"); //003
+# define RPL_MYINFO(servername, version, usr_modes, chann_modes) (":" + servername + " " + version + " " + usr_modes + " " + chann_modes + "\r\n") //004
+# define RPL_ISUPPORT() (":005\r\n") //005
+
 # define RPL_BOUNCE(server_name, port) ("010 " + "Try server " + server_name + ", port " + port + "\r\n") //010
 # define RPL_NICK(nick) ("You're now known as: " + nick + "\r\n") //notre propre message pour le changement de nickname
 # define RPL_LISTSTART() ("321 Channel :Users Name\r\n") //321

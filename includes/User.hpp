@@ -13,6 +13,10 @@
 #include <vector>
 #include <netinet/in.h>
 #include "Command.hpp"
+#include "Ircserv.hpp"
+#include "Channel.hpp"
+#include <ctime>
+#include <ReplyCommand.hpp>
 
 
 class Channel;
@@ -68,6 +72,9 @@ public:
 	bool	isInLastChannels(Channel *channel);
 
 	void	printMessage(std::string str);
+	void	printMessage(int code);
+	std::string	getPrefix() const;
+
 
 	std::string		_buffer;
 	time_t			_lastPing;
@@ -92,10 +99,7 @@ private:
 
 	std::string		_connectionTime;
 
-
-	void	dispatch();
 	void	receive(Ircserv *ircserv);
-	void	pushMessage();
 
 	std::vector<Channel *> _lastChannels;
 	std::map<std::string, Channel *> _channels;

@@ -60,6 +60,9 @@ class Ircserv
 		Channel			*getChannel(std::string const channel);
 		void			disconnectAllClients();
 
+		std::string		getHostName() const;
+		std::string		getVersion() const;
+
 /*		Config			getConfig() const;
 		void			setConfig(Config const &config);
 
@@ -83,6 +86,9 @@ class Ircserv
 
 		std::string						_startTime;
 		bool							_stopSignal;
+		std::string						_hostName;
+		std::string						_version;
+
 
 
 		class	DisconnectedUser : public std::exception

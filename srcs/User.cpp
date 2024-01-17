@@ -45,7 +45,17 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	else
 		std::cout << _hostname ;
 	std::cout << " on fd " << fd << std::endl;
-	printMessage("\n");
+	printMessage(001);
+	printMessage(002);
+	printMessage(003);
+	printMessage(004);
+	printMessage(005);
+	// printMessage(":irc.localhost 001 " + _nickname + " :There are 1 users and 0 services on 1 servers");
+	// printMessage(":irc.localhost 002 " + _nickname + " :Your host is irc.localhost, running version 1.0");
+	// printMessage(":irc.localhost 003 " + _nickname + " :This server was created " + _ircserv->getStartTime());
+	// printMessage(":irc.localhost 004 " + _nickname + " irc.localhost 1.0 ao mtov");
+	// printMessage(":irc.localhost 005 " + _nickname + " PREFIX=(ov)@+ CHANTYPES=#&+ CHANMODES=,,,");
+
 }
 
 User::~User() {}
@@ -174,3 +184,64 @@ bool	User::isInLastChannels(Channel *channel)
 		return (true);
 	return (false);
 }
+
+std::string	User::getPrefix() const
+{
+	if (_status == PASSWORD_REQUIRED)
+		return ("");
+	std::string prefix = _nickname;
+	if (_hostname != "")
+	{
+		if (_username != "")
+			prefix += "!" + _username + "@" + _hostname;
+		else
+			prefix += "!" + _hostname;
+	}
+	else
+		prefix += "!" + _username;
+	return (prefix);
+}
+
+static std::string	convert3digits(int n)
+{
+	std::string str = to_string(n);
+	while (str.length() < 3)
+		str = "0" + str;
+	return (str);
+}
+
+
+
+void	User::printMessage(int code)
+{
+	std::string str = ":";
+	str += getPrefix();
+	str += " ";
+	str += convert3digits(code);
+	str += " ";
+	if (_nickname != "")
+		str += _nickname;
+	else
+		str += "*";
+	str += " ";
+	
+	switch (code) {
+	case 001:
+		str += RPL_WELCOME(_nickname);
+		break;
+	case 002:
+		str += RPL_YOURHOST(_ircserv->getHostName(), _ircserv->getVersion());
+		break;
+	case 003:
+		str += RPL_CREATED(_ircserv->getStartTime());
+		break;
+	case 004:
+		str += RPL_MYINFO(_ircserv->getHostName(), _ircserv->getVersion(), "ao", "mtov");
+		break;
+	case 005:
+		str += RPL_ISUPPORT();
+		break;
+	}
+	printMessage(str);
+}
+

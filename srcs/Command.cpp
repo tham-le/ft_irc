@@ -44,9 +44,10 @@ void		Command::nickname(std::string const &msg)
 			return ;
 		}
 	}
+	_user.printMessage(":" + _user.getPrefix() + " NICK " + msg + "\r\n");
 	_user.setNickname(msg);
 	nickName = _user.getNickname();
-	_ircserv.writeToClient(_user.getFd(), RPL_NICK(nickName));
+	
 }
 
 void	Command::names(std::string const &channel)

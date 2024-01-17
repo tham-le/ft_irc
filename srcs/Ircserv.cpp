@@ -42,6 +42,8 @@ Ircserv::~Ircserv()
 
 Ircserv::Ircserv(int port, std::string password)
 {
+	_hostName = "Irrelevant Random Chat";
+	_version = "1.0";
 	_lastPing = std::time(0);
 	_config = Config();
 	_config.setPort(port);
@@ -57,6 +59,17 @@ Ircserv::Ircserv(int port, std::string password)
 	std::cout << "Current time: " << buffer << std::endl;
 	_startTime = buffer;
 }
+
+std::string		Ircserv::getHostName() const
+{
+	return (_hostName);
+}
+
+std::string		Ircserv::getVersion() const
+{
+	return (_version);
+}
+
 
 User & Ircserv::getUser(int fd) const
 {
