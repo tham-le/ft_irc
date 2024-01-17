@@ -14,7 +14,7 @@
 # define ERR_NOTONCHANNEL " :You're not on that channel\r\n" // 442
 # define ERR_USERONCHANNEL " :is already on channel\r\n" // 443
 # define ERR_CHANNELISFULL " :Cannot join channel (+l)\r\n" // 471
-# define ERR_INVITEONLYCHAN " :Cannot join channel (+i)\r\n" // 473
+# define ERR_INVITEONLYCHAN " :Cannot join channel (You must be invited)(+i)\r\n" // 473
 # define ERR_UMODEKNOWNFLAG " :Unknown MODE flag\r\n" // 501
 # define ERR_INVALIDMODEPARAM " :Invalid MODE parameter\r\n" // 696
 # define ERR_NEEDMOREPARAMS " :Not enough parameters\r\n" // 461
