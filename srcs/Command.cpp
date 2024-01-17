@@ -55,10 +55,10 @@ void	Command::names(std::string const &channel)
 	if (channel[0] == '#')
 		idx = 1;
 	if (_user.getStatus() != User::ONLINE && _input.size() == 1) {
-		_ircserv.writeToClient(_user.getFd(), "Not joined to any channel");
+		_ircserv.writeToClient(_user.getFd(), "Not joined to any channel yet\n");
 		return ;
 	}
-	else if (_user.getStatus() != User::ONLINE && !_channels.empty()) {
+	else if (_user.getStatus() != User::ONLINE && !_channels.empty() && _input.size() > 1 && channel == _input[1]) { //need to update to take only first parameter and skip others
 		if (_channels.find(&channel[idx]) != _channels.end()) {
 		_ircserv.writeToClient(_user.getFd(), "Users #" + _channels[&channel[idx]]->getName() + "\n");
 		std::vector<User*> operators = _channels[&channel[idx]]->_operators;
@@ -79,12 +79,17 @@ void	Command::names(std::string const &channel)
 		for (unsigned int i = 0; i < users.size(); i++)
 			_ircserv.writeToClient(_user.getFd(), users[i]->getNickname() + "\n");
 	}
+	_ircserv.writeToClient(_user.getFd(), _channels[&channel[idx]]->getName() + "End of /NAMES list\n");
 }
 
 void	Command::quit(std::string const &msg)
 {
 	(void)msg;
-	_user.setStatus(User::DELETED);
+	//_user.setStatus(User::DELETED);
+	for (std::map<std::string, Channel *>::iterator it = _user._channels.begin(); it != _user._channels.end(); it++) {
+		if (std::find(it->second->_operators.begin(), it->second->_operators.end(), &_user) != it->second->_operators.end())
+			it->second->removeOperator(_user);
+	}
 	for (std::map<std::string, Channel *>::iterator it = _user._channels.begin(); it != _user._channels.end(); it++)
 		it->second->removeUser(_user);
 	_ircserv.disconnectClient(_user.getFd());
@@ -115,7 +120,22 @@ void	Command::list(std::string const &channel)
 	_ircserv.writeToClient(_user.getFd(), "End of channel list\n");
 }
 
-void	changeMode(std::string const &msg)
+void	Command::changeMode(std::string const &msg)
 {
-	
+	if (msg.empty() || msg.size() < 2) {
+		_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS); //msg sent to user but not on channel if the user is on a channel
+		return ;
+	}
+	int idx = 0;
+	if (msg[0] == '#')
+		idx = 1;
+	std::map<std::string, Channel *>::iterator it = _channels.find(&msg[idx]);
+	if (it == _channels.end()) {
+		_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL); //msg sent to user but not on channel if the user is on a channel
+		return ;
+	}
+	if (_user.getStatus() != User::ONLINE && (msg[0] == '-' || msg[0] == '+')) {
+		_ircserv.writeToClient(_user.getFd(), ERR_NOTONCHANNEL); //msg sent to user but not on channel if the user is on a channel
+		return ;
+	}
 }
