@@ -17,10 +17,6 @@ Command::~Command()
 
 void		Command::initCmd()
 {
-	// _noFunctionalOnChannel.push_back("ADMIN");
-	// _noFunctionalOnChannel.push_back("INFO");
-	// _noFunctionalOnChannel.push_back("LIST");
-	// _noFunctionalOnChannel.push_back("VERSION");
 
 	_func["ADMIN"] = &Command::admin;
 	_func["INFO"] = &Command::info; //->no channel
@@ -47,9 +43,9 @@ void		Command::parse(std::string message)
 	else
 	{
 		if (message[1] != '/')
-			split(&message[1], ' ');
+			_input = split(&message[1], ' ');
 		else
-			split(&message[2], ' ');
+			_input = split(&message[2], ' ');
 	}
 }
 
@@ -63,9 +59,7 @@ void		Command::command()
 	{
 		if (_user.getStatus() == User::REGISTERED)
 		{
-			// std::cout << "Caca" << std::endl;
-			// _ircserv.writeToClient( _user.getFd(),"PIPI");
-			// _ircserv.writeToClient( _user.getFd(),ERR_UNKNOWNCOMMAND(_input[0]));
+			_ircserv.writeToClient(_user.getFd(), ERR_UNKNOWNCOMMAND(_input[0]));
 		}
 		return ;
 	}
@@ -81,8 +75,9 @@ void		Command::command()
 	}
 }
 
-void		Command::split(std::string str, char separator)
+std::vector<std::string>	Command::split(std::string str, char separator)
 {
+	std::vector<std::string> input;
 	int start = 0;
 
 	for (unsigned int i = 0; i <= str.size(); i++)
@@ -91,43 +86,81 @@ void		Command::split(std::string str, char separator)
 		{
 			std::string arg;
 			arg.append(str, start, i - start);
-			_input.push_back(arg);
+			input.push_back(arg);
 			start = i + 1;
 		}
 	}
+	return (input);
 }
 
 void		Command::join(std::string const &channel)
 {
 	int idx = 0;
+	int	flag = 0;
+	std::vector<std::string> str;
+	std::vector<std::string> key;
 	if (channel.empty())
 	{
+		_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS(_input[0]));
 		return ;
 	}
-	if (channel[0] == '#')
-		idx = 1;
+	str = split(channel, ',');
+	if (_input.size() > 2)
+		key = split(_input[2], ',');
 
-	if (!_ircserv.isChannel(&channel[idx]))
+	for (unsigned long i = 0; i < str.size(); i++)
 	{
-		_ircserv.addChannel(&channel[idx]);
-		_ircserv.getChannel(&channel[idx])->addUser(_user);
+		if (str[i][0] == '#')
+			idx = 1;
 
-	}
-	else
-	{
-		if (_user.isInLastChannels(_ircserv.getChannel(channel)))
-			_user.removeLastChannel();
-
-		if (!_ircserv.getChannel(&channel[idx])->isUserInChannel(_user))
-			_ircserv.getChannel(&channel[idx])->addUser(_user);
-	}
-	if (_ircserv.getChannel(&channel[idx])->isUserInChannel(_user))
-	{
-		if (_ircserv.getChannel(&channel[idx])->isEmptyOperator())
-			_ircserv.getChannel(&channel[idx])->addOperator(_user);
-		_user.addChannel(_ircserv.getChannel(&channel[idx]));
-		_user.addLastChannel((_ircserv.getChannel(&channel[idx])));
-		_user.setStatus(User::ONLINE);
+		if (!_ircserv.isChannel(&str[i][idx]))
+		{
+			_ircserv.addChannel(&str[i][idx]);
+			if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 >= _ircserv.getChannel(&str[i][idx])->getMaxUser())
+				_ircserv.writeToClient(_user.getFd(), ERR_CHANNELISFULL(std::string(&str[i][idx])));
+			_ircserv.getChannel(&str[i][idx])->addUser(_user);
+			if (_ircserv.getChannel(&str[i][idx])->isEmptyOperator())
+				_ircserv.getChannel(&str[i][idx])->addOperator(_user);
+		}
+		else
+		{
+			if (_user.isInLastChannels(_ircserv.getChannel(&str[i][idx])))
+				break;
+			if (_ircserv.getChannel(&str[i][idx])->getMode() == Channel::INVITE_ONLY)
+			{
+				if (!_ircserv.getChannel(&str[i][idx])->isInvited(_user))
+				{
+					_ircserv.writeToClient(_user.getFd(), ERR_INVITEONLYCHAN(std::string(&str[i][idx])));
+					flag = 1;
+				}
+				else if (!key.empty())
+				{
+					if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(&str[i][idx])->isGoodKey(key[i])))
+					{
+						_ircserv.writeToClient(_user.getFd(),  ERR_BADCHANNELKEY(std::string(&str[i][idx])) + "\n");
+						flag = 1;
+					}
+				}
+			}
+			if (!_ircserv.getChannel(&str[i][idx])->isUserInChannel(_user) && flag == 0)
+			{
+				if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 >= _ircserv.getChannel(&str[i][idx])->getMaxUser())
+					_ircserv.writeToClient(_user.getFd(), ERR_CHANNELISFULL(std::string(&str[i][idx])));
+				else
+					_ircserv.getChannel(&str[i][idx])->addUser(_user);
+			}
+		}
+		if (_ircserv.getChannel(&str[i][idx])->isUserInChannel(_user))
+		{
+			_user.addChannel(_ircserv.getChannel(&str[i][idx]));
+			_user.addLastChannel((_ircserv.getChannel(&str[i][idx])));
+			_user.setStatus(User::ONLINE);
+			if (_ircserv.getChannel(&str[i][idx])->getTopic() != "")
+			{
+				_ircserv.writeToClient(_user.getFd(), RPL_TOPIC(std::string(&str[i][idx]), _ircserv.getChannel(&str[i][idx])->getTopic()));
+				_ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _ircserv.getChannel(&str[i][idx])->getCreationTime()));
+			}
+		}
 	}
 }
 /*Dans un channel :

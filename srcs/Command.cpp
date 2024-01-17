@@ -123,7 +123,7 @@ void	Command::list(std::string const &channel)
 void	Command::changeMode(std::string const &msg)
 {
 	if (msg.empty() || msg.size() < 2) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS); //msg sent to user but not on channel if the user is on a channel
+		// _ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS); //msg sent to user but not on channel if the user is on a channel
 		return ;
 	}
 	int idx = 0;

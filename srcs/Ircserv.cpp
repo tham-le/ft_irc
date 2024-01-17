@@ -274,7 +274,7 @@ void			Ircserv::sendPing()
 		}
 	}
 
-	
+
 }
 
 void			Ircserv::run()

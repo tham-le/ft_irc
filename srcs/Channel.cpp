@@ -2,7 +2,13 @@
 #include <vector>
 
 
-Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100) {}
+Channel::Channel(std::string name): _name(name), _topic("caca"), _mode(PUBLIC), _key(""), _maxUser(100)
+{
+	time_t start = std::time(0);
+	char buffer[100];
+	std::strftime(buffer, sizeof(buffer), "%a %b %d  %H:%M:%S %Y", std::localtime(&start));
+	_creationTime = buffer;
+}
 
 Channel::~Channel(){}
 
@@ -24,15 +30,15 @@ std::string		Channel::getTopic() const
 	return (_topic);
 }
 
-void	Channel::setMode(t_channelMode mode)
+void	Channel::setMode(e_ChannelMode mode)
 {
 	this->_mode = mode;
 }
 
-// enum eChannelMode	Channel::getMode() const
-// {
-// 	return (_mode);
-// }
+Channel::e_ChannelMode	Channel::getMode() const
+{
+	return (_mode);
+}
 
 void	Channel::setKey(std::string const key)
 {
@@ -47,36 +53,29 @@ void	Channel::setMaxUser(int maxUser)
 {
 	this->_maxUser = maxUser;
 }
-int		Channel::getMaxUser() const
+unsigned long		Channel::getMaxUser() const
 {
 	return (_maxUser);
 }
 
 void	Channel::addUser(User &user)
 {
-	if (_users.size() + 1  >= _maxUser)
-		std::cout << "Cannot add user because limits of users is reached";
-	else
-	{
 		if (_mode == INVITE_ONLY)
 		{
 			if (!isInvited(user))
 			{
-				std::cout << "Cannot add user because the channel is on invited only mode and ";
-				std::cout << user.getNickname() << " is not invited." << std::endl;
+				// _ircserv.writeToClient(_user.getFd(), _name + ERR_INVITEONLYCHAN + "\n");
 				return ;
 			}
 		}
 		_users[user.getFd()] = &user;
-		for (std::map<int, User *>::iterator i = _users.begin(); i != _users.end(); i++)
-		{
-			std::cout << "-List users of channel " << _name << std::endl;
-			std::cout << "- " << (i->second)->getHostname() << std::endl;
-		}
-		// std::cout << user.getNickname() << "add in the channel " << this->_name << std::endl;
+		// for (std::map<int, User *>::iterator i = _users.begin(); i != _users.end(); i++)
+		// {
+		// 	std::cout << "-List users of channel " << _name << std::endl;
+		// 	std::cout << "- " << (i->second)->getHostname() << std::endl;
+		// }
 		if (_mode == INVITE_ONLY)
 			Uninvite(user);
-	}
 }
 
 void	Channel::removeUser(User &user)
@@ -294,4 +293,9 @@ bool			Channel::isEmptyOperator()
 	if (_operators.empty())
 		return (true);
 	return (false);
+}
+
+std::string		Channel::getCreationTime()
+{
+	return (_creationTime);
 }
