@@ -44,7 +44,7 @@ public:
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &msg);
 
-	void		split(std::string str, char separator);
+	std::vector<std::string>	split(std::string str, char separator);
 	void		command();
 	void		initCmd();
 	bool		validNickname(std::string const nickname) const;
@@ -56,20 +56,11 @@ private:
 	std::string _msg;
 	User &_user;
 	Ircserv &_ircserv;
-	// enum e_type
-	// {
-	// 	MSG;
-	// 	CMD;
-	// };
-	// e_type _type;
 	std::vector<std::string> _input;
 	typedef void (Command::*FuncType)(std::string const &);
 	std::map<std::string, FuncType > _func;
-	// std::map<std::string, Channel &> _channels;
-	// std::vector<Channel *> _channels;
 	std::vector<Channel *> _lastChannels;
 	std::map<std::string, Channel *>	_channels;
-	std::vector<std::string> _noFunctionalOnChannel; //cmd qui ne fonctionne pas lorsque nous sommes sur un channel
 };
 
 /*Template to convert int to string*/

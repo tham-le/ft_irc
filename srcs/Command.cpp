@@ -84,7 +84,7 @@ void	Command::names(std::string const &channel)
 void	Command::quit(std::string const &msg)
 {
 	(void)msg;
-	_user.setStatus(User::DELETED);
+	// _user.setStatus(User::DELETED);
 	for (std::map<std::string, Channel *>::iterator it = _user._channels.begin(); it != _user._channels.end(); it++)
 		it->second->removeUser(_user);
 	_ircserv.disconnectClient(_user.getFd());
@@ -115,7 +115,7 @@ void	Command::list(std::string const &channel)
 	_ircserv.writeToClient(_user.getFd(), "End of channel list\n");
 }
 
-void	changeMode(std::string const &msg)
-{
-	
-}
+// void	changeMode(std::string const &msg)
+// {
+
+// }
