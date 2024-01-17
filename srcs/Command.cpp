@@ -1,5 +1,5 @@
 #include "../includes/Command.hpp"
-#include "../includes/ErrorCommand.hpp"
+#include "../includes/ReplyCommand.hpp"
 
 bool	Command::validNickname(std::string const nickname) const
 {
@@ -31,16 +31,16 @@ void		Command::nickname(std::string const &msg)
 	if (msg.empty()) {
 		nickName = _user.getNickname(); //it will be the nickename whan i was connected?
 		_ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
-		_ircserv.writeToClient(_user.getFd(), ERR_NONICKNAMEGIVEN);
+		_ircserv.writeToClient(_user.getFd(), ERR_NONICKNAMEGIVEN());
 		return ;
 	}
 	if (!validNickname(msg)) {
-		_ircserv.writeToClient(_user.getFd(), msg + ERR_ERRONEUSNICKNAME);
+		_ircserv.writeToClient(_user.getFd(), ERR_ERRONEUSNICKNAME(msg));
 		return ;
 	}
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
 		if (it->second->getNickname() == msg) {
-			_ircserv.writeToClient(_user.getFd(), msg + ERR_NICKNAMEINUSE);
+			_ircserv.writeToClient(_user.getFd(), ERR_NICKNAMEINUSE(msg));
 			return ;
 		}
 	}
