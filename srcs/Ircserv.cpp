@@ -234,9 +234,9 @@ void			Ircserv::connectClient()
 		int fd = accept(_sockfd, (struct sockaddr *)&addr, &len);
 		if (fd < 0)
 			throw std::runtime_error("accept() failed");
-		//_users[fd] = new User(fd, addr, this);
-		User	newUser(fd, addr, this);
-		_users[fd] = &newUser;
+		_users[fd] = new User(fd, addr, this);
+		// User	newUser(fd, addr, this);
+		// _users[fd] = &newUser;
 		_pollfds.push_back((pollfd){fd, POLLIN | POLLOUT, 0});
 	}
 }
@@ -274,7 +274,7 @@ void			Ircserv::sendPing()
 		}
 	}
 
-	
+
 }
 
 void			Ircserv::run()
