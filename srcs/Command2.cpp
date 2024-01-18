@@ -27,15 +27,16 @@ void    Command::whois(std::string const &msg) {
         return ;
     }
     std::vector<std::string> str = split(msg, ' ');
-    if (strcmp(str.back().c_str(), _ircserv._users[_user.getFd()]->getNickname().c_str()) == 0) {
-        _user.printMessage(311);
-        _user.printMessage(312);
-        if (_user._channels.size() > 0) {
-            _user.printMessage(319);
+    std::vector<std::string>::reverse_iterator rit = str.rbegin();
+    std::vector<std::string>::reverse_iterator rend = str.rend();
+    for (; rit != rend; ++rit) {;
+        if (strcmp(rit->c_str(), _ircserv._users[_user.getFd()]->getNickname().c_str()) == 0) {
+            _user.printMessage(311);
+            _user.printMessage(312);
+            if (_user._channels.size() > 0) {
+                _user.printMessage(319);
+            }
+            break ;
         }
-        return ;
-    }
-    else {
-        _ircserv.writeToClient(_user.getFd(), " ");
     }
 }

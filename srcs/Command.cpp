@@ -28,12 +28,12 @@ void		Command::info(std::string const &msg)
 void		Command::nickname(std::string const &msg)
 {
 	std::string nickName;
-	if (msg.empty()) {
-		// nickName = _user.getNickname(); //it will be the nickename whan i was connected?
-		// _ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
-		_user.printMessage(431);
-		return ;
-	}
+	// if (msg.empty()) {
+	// 	// nickName = _user.getNickname(); //it will be the nickename whan i was connected?
+	// 	// _ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
+	// 	_user.printMessage(431);
+	// 	return ;
+	// }
 	if (!validNickname(msg)) {
 		//_user.printMessage(msg);
 		_user.printMessage(432);
