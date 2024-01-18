@@ -50,10 +50,6 @@ class Channel
 		bool			isUserInChannel(std::string const nickname) const;
 		bool			isUserInChannel(User const &user) const;
 
-		// void			Ban(User &user);
-		// void			Unban(User &user);
-		// void			Unban(std::string const nickname);
-		// bool			isBanned(User &user);
 
 		void			Invite(User &user);
 		void			Uninvite(User &user);

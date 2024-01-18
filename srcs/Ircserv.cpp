@@ -356,7 +356,11 @@ bool			Ircserv::isChannel(std::string const channel) const
 }
 
 
-// void			Ircserv::removeChannel(std::string const channel);
+void			Ircserv::removeChannel(std::string const channel)
+{
+	_channels.erase(channel);
+}
+
 Channel			*Ircserv::getChannel(std::string const channel)
 {
 	return (_channels[channel]);
@@ -408,7 +412,6 @@ void			Ircserv::removeUser(std::string const nickname);
 
 bool			Ircserv::isChannel(std::string const channel) const;
 void			Ircserv::addChannel(std::string const channel);
-void			Ircserv::removeChannel(std::string const channel);
 Channel			Ircserv::*getChannel(std::string const channel);
 std::map<std::string, Channel>	Ircserv::getChannels() const;
 
