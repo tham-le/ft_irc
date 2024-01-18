@@ -66,6 +66,7 @@ public:
 
 
 	void	addChannel(Channel *channel);
+	void	removeChannel(std::string channel);
 	void	addLastChannel(Channel *channel);
 	void	removeLastChannel();
 	Channel	*getLastChannel();

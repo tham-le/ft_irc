@@ -24,6 +24,7 @@
 # define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")// 475
 
 
+
 /*REPLY FOR COMMAND*/
 # define RPL_WELCOME(nick) ("Welcome to the Internet Relay Network " + nick + "\r\n") //001
 # define RPL_YOURHOST(servername, version) ("Your host is " + servername + ", running version " + version + "\r\n") //002
