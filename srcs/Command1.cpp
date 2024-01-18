@@ -40,6 +40,7 @@ void		Command::parse(std::string message)
 {
 	//_input.push_back(message);
 	//std::cout << "00 input[0] = " << _input[0] << std::endl;
+	_input.clear();
 	_input = split(&message[0], ' ');
 	std::cout << _input << std::endl;
 }

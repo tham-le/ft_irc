@@ -6,10 +6,10 @@
 #include <unistd.h>
 
 User::User() {
-	_nickname = "";
-	_username = "";
-	_realname = "";
-	_hostname = "";
+	// _nickname = "";
+	// _username = "";
+	// _realname = "";
+	// _hostname = "";
 	_isOperator = false;
 	_isAway = false;
 	_awayMessage = "";
