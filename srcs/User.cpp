@@ -185,6 +185,17 @@ bool	User::isInLastChannels(Channel *channel)
 	return (false);
 }
 
+std::string User::getNameChannels() const
+{
+	std::string str = "";
+	for (std::map<std::string, Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); it++)
+	{
+		str += it->first;
+		str += " ";
+	}
+	return (str);
+}
+
 std::string	User::getPrefix() const
 {
 	if (_status == PASSWORD_REQUIRED)
@@ -240,6 +251,27 @@ void	User::printMessage(int code)
 		break;
 	case 005:
 		str += RPL_ISUPPORT();
+		break;
+	case 311:
+		str += RPL_WHOISUSER(_nickname, _username, _hostname, _realname);
+		break;
+	case 312:
+		str += RPL_WHOISSERVER(_nickname, _ircserv->getHostName(), _ircserv->getVersion());
+		break;
+	case 319:
+		str += RPL_WHOISCHANNELS(_nickname, getNameChannels());
+		break;
+	case 431:
+		str += ERR_NONICKNAMEGIVEN();
+		break;
+	case 432:
+		str += ERR_ERRONEUSNICKNAME();
+		break;
+	case 461:
+		str += ERR_NEEDMOREPARAMS();
+		break;
+	case 462:
+		str += ERR_ALREADYREGISTRED();
 		break;
 	}
 	printMessage(str);

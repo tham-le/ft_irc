@@ -74,6 +74,7 @@ public:
 	void	printMessage(std::string str);
 	void	printMessage(int code);
 	std::string	getPrefix() const;
+	std::string	getNameChannels() const;
 
 
 	std::string		_buffer;

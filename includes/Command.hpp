@@ -2,6 +2,7 @@
 #define COMMAND_HPP
 
 #include <string>
+#include <cstring>
 #include <sstream>
 #include <map>
 #include <vector>
@@ -43,6 +44,8 @@ public:
 	void		changeMode(std::string const &msg);
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &msg);
+	void		user(std::string const &msg);
+	void		whois(std::string const &msg);
 
 	std::vector<std::string>	split(std::string str, char separator);
 	void		command();
@@ -75,7 +78,7 @@ std::string to_string(T value)
 /* Template to print vector. Usage: std::cout << myVector << std::endl;*/
 template <typename T>
 std::ostream& operator<< (std::ostream& os, const std::vector<T> &v) {
-	for (typename std::vector<T>::const_itearot it = v.begin(); it != v.end(); it++) {
+	for (typename std::vector<T>::const_iterator it = v.begin(); it != v.end(); it++) {
 		os << *it << ' ';
 	}
 	return os;
