@@ -1,5 +1,6 @@
 #include "../includes/Command.hpp"
 #include "../includes/ReplyCommand.hpp"
+#include <cstddef>
 
 Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(msg), _user(user), _ircserv(ircserv)
 {
@@ -36,17 +37,20 @@ void		Command::initCmd()
 void		Command::parse(std::string message)
 {
 
-	if (message[0] != '/')
-	{
-		_input.push_back(message);
-	}
-	else
-	{
+	// if (message[0] != '/')
+	// {
+	// 	_input.push_back(message);
+	// 	std::cout << "00 input[0] = " << _input[0] << std::endl;
+	// }
+	// else
+	// {
 		if (message[1] != '/')
-			_input = split(&message[1], ' ');
+			_input = split(&message[0], ' ');
 		else
-			_input = split(&message[2], ' ');
-	}
+			_input = split(&message[0], ' ');
+		std::cout << "11 input[0] = " << _input[0] << std::endl;
+
+	// }
 }
 
 
@@ -56,7 +60,7 @@ void		Command::command()
 	std::map<std::string, FuncType>::iterator it = _func.find(_input[0]);
 
 	if (it == _func.end())
-	{
+	{	
 		if (_user.getStatus() == User::REGISTERED)
 		{
 			_ircserv.writeToClient(_user.getFd(), ERR_UNKNOWNCOMMAND(_input[0]));
@@ -65,6 +69,8 @@ void		Command::command()
 	}
 	else // if (it == _func.end() && (_user.getStatus() == REGISTRED || _user.getStatus() == ONLINE))
 	{
+		for (size_t i = 0; i < _input.size(); i++)
+			std::cout << "input[" << i << "] = " << _input[i] << std::endl;
 		if (_user.getStatus() == User::ONLINE || _user.getStatus() == User::REGISTERED)
 		{
 			if (_input.size() > 1)

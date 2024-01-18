@@ -45,6 +45,7 @@ void		Command::nickname(std::string const &msg)
 		}
 	}
 	_user.printMessage(":" + _user.getPrefix() + " NICK " + msg + "\r\n");
+	//_user.printMessage(":* NICK Kilroy ");
 	_user.setNickname(msg);
 	nickName = _user.getNickname();
 	

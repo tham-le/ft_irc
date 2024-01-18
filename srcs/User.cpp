@@ -29,9 +29,9 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	_isAway = false;
 	_awayMessage = "";
 	_buffer = "";
-	_nickname = "";
-	_username = "";
-	_realname = "";
+	_nickname = "*";
+	_username = "*";
+	_realname = "*";
 	_ircserv = ircserv;
 
 	time_t start = std::time(0);
