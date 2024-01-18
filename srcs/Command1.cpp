@@ -27,6 +27,8 @@ void		Command::initCmd()
 	_func["PART"] = &Command::part;
 	_func["QUIT"] = &Command::quit;
 	_func["LIST"] = &Command::list; //->no channel
+	_func["USER"] = &Command::user;
+	_func["WHOIS"] = &Command::whois;
 	// _func["KICK"] = &Command::kick;
 	// _func["INVITE"] = &Command::invite;
 	// _func["TOPIC"] = &Command::topic;
@@ -36,21 +38,10 @@ void		Command::initCmd()
 
 void		Command::parse(std::string message)
 {
-
-	// if (message[0] != '/')
-	// {
-	// 	_input.push_back(message);
-	// 	std::cout << "00 input[0] = " << _input[0] << std::endl;
-	// }
-	// else
-	// {
-		if (message[1] != '/')
-			_input = split(&message[0], ' ');
-		else
-			_input = split(&message[0], ' ');
-		std::cout << "11 input[0] = " << _input[0] << std::endl;
-
-	// }
+	//_input.push_back(message);
+	//std::cout << "00 input[0] = " << _input[0] << std::endl;
+	_input = split(&message[0], ' ');
+	std::cout << _input << std::endl;
 }
 
 

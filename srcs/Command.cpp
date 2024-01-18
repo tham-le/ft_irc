@@ -31,24 +31,25 @@ void		Command::nickname(std::string const &msg)
 	if (msg.empty()) {
 		// nickName = _user.getNickname(); //it will be the nickename whan i was connected?
 		// _ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
-		_ircserv.writeToClient(_user.getFd(), ERR_NONICKNAMEGIVEN());
+		_user.printMessage(431);
 		return ;
 	}
 	if (!validNickname(msg)) {
-		_ircserv.writeToClient(_user.getFd(), ERR_ERRONEUSNICKNAME(msg));
+		//_user.printMessage(msg);
+		_user.printMessage(432);
+		//_ircserv.writeToClient(_user.getFd(), ERR_ERRONEUSNICKNAME(msg));
 		return ;
 	}
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
 		if (it->second->getNickname() == msg) {
+			_user.printMessage(433);
 			_ircserv.writeToClient(_user.getFd(), ERR_NICKNAMEINUSE(msg));
 			return ;
 		}
 	}
 	_user.printMessage(":" + _user.getPrefix() + " NICK " + msg + "\r\n");
-	//_user.printMessage(":* NICK Kilroy ");
 	_user.setNickname(msg);
 	nickName = _user.getNickname();
-	
 }
 
 void	Command::names(std::string const &channel)
