@@ -157,20 +157,26 @@ std::string		Ircserv::readFromClient(int fd)
 			closeAllSocket();
 			return ("");
 		}
+		if (fd < 0)
+			throw std::runtime_error("Invalid fd");
+
 		int bytes = recv(fd, buf, BUFF_SIZE, 0);
+		std::cout << "Received " << bytes << " bytes from client " << fd << std::endl;
+
 		if (bytes < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
+			{
 				return ("");
+			}
 			else
+			{
+				std::cout << "wtf" << std::endl;
 				throw std::runtime_error("recv() failed");
+			}
 		}
 		else if (bytes == 0)
 			throw DisconnectedUser(fd);
-		std::cout << "Bytes received: " << bytes << std::endl;
-		std::cout << "RAW Message received: " << buf << std::endl;
-		
-
 		User	&user = getUser(fd);
 		user._buffer += buf;
 		std::string delim = "\r\n";
@@ -202,14 +208,14 @@ int				Ircserv::getSocketFd() const
 }
 
 void			Ircserv::disconnectClient(int fd)
-{
-	close(fd);
+{	if (fd > 0)
+		close(fd);
 	std::vector<pollfd>::iterator itfd;
 	for (itfd = _pollfds.begin(); itfd != _pollfds.end(); itfd++)
 		if (itfd->fd == fd)
 			break ;
 	if (itfd != _pollfds.end())
-		_pollfds.erase(itfd);
+		itfd->fd = -1;
 
 	std::map<int, User *>::iterator it = _users.find(fd);
 	if (it != _users.end())
@@ -227,8 +233,11 @@ void			Ircserv::closeAllSocket()
 	std::cout << "Disconnecting all socket" << std::endl;
 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
 	{
-		std::cout << "Disconnecting socket " << it->fd << std::endl;
-		close(it->fd);
+		if (it->fd > 0)
+		{
+			std::cout << "Disconnecting socket " << it->fd << std::endl;
+			close(it->fd);
+		}
 	}
 
 }
@@ -270,14 +279,7 @@ void		Ircserv::readFromAllClients()
 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
 	{
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLIN)
-		{
 			readFromClient(it->fd);
-
-			// if (msg == "")
-			// 	break ;
-			//std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
-			//handleMessage(it->fd, msg);
-		}
 	}
 }
 
