@@ -266,8 +266,17 @@ void	User::printMessage(int code)
 	case 319:
 		str += RPL_WHOISCHANNELS(_nickname, getNameChannels());
 		break;
+	case 321:
+		str += RPL_LISTSTART();
+		break;
+	case 322:
+		str += RPL_LIST(getLastChannel()->getName(), getLastChannel()->getUsersName(), getLastChannel()->getTopic());
+		break;
+	case 323:
+		str += RPL_LISTEND();
+		break;
 	case 353:
-		str += RPL_NAMREPLY(getLastChannel()->getName(), getLastChannel()->getNameUsers());
+		str += RPL_NAMREPLY(getLastChannel()->getName(), getLastChannel()->getUsersName());
 		break;
 	case 366:
 		str += RPL_ENDOFNAMES(getLastChannel()->getName());

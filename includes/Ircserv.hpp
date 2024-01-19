@@ -58,6 +58,7 @@ class Ircserv
 		bool			isChannel(std::string const channel) const;
 		void			removeChannel(std::string const channel);
 		Channel			*getChannel(std::string const channel);
+		std::string		getChannelsName() const;
 		void			disconnectAllClients();
 
 		std::string		getHostName() const;

@@ -259,7 +259,7 @@ void		Ircserv::handleMessage(int fd, std::string const &msg)
 	User &user = getUser(fd);
 	Command cmd(msg, user, *this);
 	std::cout << "Message from client " << fd << ": " << msg << std::endl;
-	writeToClient(fd, "OK\n");
+	//writeToClient(fd, "OK\n");
 }
 
 void		Ircserv::readFromAllClients()
@@ -355,7 +355,6 @@ bool			Ircserv::isChannel(std::string const channel) const
 	return (false);
 }
 
-
 void			Ircserv::removeChannel(std::string const channel)
 {
 	_channels.erase(channel);
@@ -366,6 +365,13 @@ Channel			*Ircserv::getChannel(std::string const channel)
 	return (_channels[channel]);
 }
 
+std::string		Ircserv::getChannelsName() const
+{
+	std::string channelsName;
+	for (std::map<std::string, Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); it++)
+		channelsName += it->first + " , ";
+	return (channelsName);
+}
 
 /*	int pingInterval = _config.getPingInterval();
 	int pingTimeout = _config.getPingTimeout();

@@ -124,6 +124,7 @@ void			Channel::removeUser(std::string const nickname)
 		std::cout << nickname << " is removed from " << this->_name << std::endl;
 	}
 }
+
 User*			Channel::getUser(std::string const nickname)
 {
 	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
@@ -137,6 +138,17 @@ User*			Channel::getUser(std::string const nickname)
 std::map<int, User *>	Channel::getUsers()
 {
 	return (_users);
+}
+
+std::string Channel::getUsersName() const
+{
+	std::string str = "";
+	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		str += it->second->getNickname();
+		str += " , ";
+	}
+	return (str);
 }
 
 bool			Channel::isUserInChannel(std::string const nickname) const
