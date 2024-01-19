@@ -66,7 +66,9 @@ class Channel
 		bool			isOperator(std::string const nickname);
 		bool			isEmptyOperator();
 
+		void			setTime();
 		std::string		getCreationTime();
+		std::string		getTopicTime();
 
 private:
 		friend class Command;
@@ -75,6 +77,7 @@ private:
 		e_ChannelMode	_mode;
 		std::string		_key;
 		std::string		_creationTime;
+		std::string		_setTopicTime;
 
 		unsigned long			_maxUser;
 

@@ -4,6 +4,7 @@
 
 Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(msg), _user(user), _ircserv(ircserv)
 {
+	// std::cout << msg << " lalalalla" << std::endl;
 	initCmd();
 	parse(msg);
 	/*a supp*/
@@ -31,7 +32,7 @@ void		Command::initCmd()
 	_func["WHOIS"] = &Command::whois;
 	// _func["KICK"] = &Command::kick;
 	// _func["INVITE"] = &Command::invite;
-	// _func["TOPIC"] = &Command::topic;
+	_func["TOPIC"] = &Command::topic;
 	// _func["MODE"] = &Command::changeMode;
 	// _func["VERSION"] = &Command::version; // -> no channel
 }
@@ -108,6 +109,7 @@ void		Command::join(std::string const &channel)
 
 	for (unsigned long i = 0; i < str.size(); i++)
 	{
+		idx = 0;
 		if (str[i][0] == '#')
 			idx = 1;
 
@@ -153,11 +155,29 @@ void		Command::join(std::string const &channel)
 			_user.addChannel(_ircserv.getChannel(&str[i][idx]));
 			_user.addLastChannel((_ircserv.getChannel(&str[i][idx])));
 			_user.setStatus(User::ONLINE);
-			if (_ircserv.getChannel(&str[i][idx])->getTopic() != "")
-			{
-				_ircserv.writeToClient(_user.getFd(), RPL_TOPIC(std::string(&str[i][idx]), _ircserv.getChannel(&str[i][idx])->getTopic()));
+			// if (_ircserv.getChannel(&str[i][idx])->getTopic() != "")
+			// {
+				// _user.printMessage(RPL_TOPIC(std::string(&str[i][idx]),_ircserv.getChannel(&str[i][idx])->getTopic()));
+				_user.printMessage(332);
+				// _ircserv.writeToClient(_user.getFd(), RPL_TOPIC(std::string(&str[i][idx]), _ircserv.getChannel(&str[i][idx])->getTopic()));
+				std::map<int, User *> listUsers;
+				listUsers = _user.getLastChannel()->getUsers();
+				std::map<int, User *>::iterator it;
+				std::string s;
+				for (it = listUsers.begin(); it != listUsers.end(); it++)
+				{
+					s += "[";
+					if (_ircserv.getChannel(&str[i][idx])->isOperator(it->second->getNickname()))
+						s += "@";
+					s += it->second->getNickname() + "] ";
+					// std::cout << s << std::endl;
+				}
 				_ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _ircserv.getChannel(&str[i][idx])->getCreationTime()));
-			}
+				_ircserv.writeToClient(_user.getFd(), RPL_NAMREPLY(std::string(&str[i][idx]), s));
+				_ircserv.writeToClient(_user.getFd(), RPL_ENDOFNAMES(std::string(&str[i][idx])));
+				// _ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _ircserv.getChannel(&str[i][idx])->getCreationTime()));
+				std::cout << "HEEEEEEEEEEEEEEEEEEEEEEEEEEE" << std::endl;
+			// }
 		}
 	}
 }
@@ -167,7 +187,6 @@ void		Command::part(std::string const &channel)
 	listChannel = split(channel, ',');
 	if (_user.getStatus() == User::ONLINE)
 	{
-		// _user.removeLastChannel();
 		_user.setStatus(User::REGISTERED);
 
 		std::map<int, User *> listUsers;
@@ -177,11 +196,13 @@ void		Command::part(std::string const &channel)
 		{
 			if (it->second->getStatus() == User::ONLINE)
 				break;
+			_ircserv.writeToClient(_user.getFd(), "part");
 		}
 		if (it == listUsers.end())
 		{
 			_user.removeChannel(_user.getLastChannel()->getName());
 			_ircserv.removeChannel(_user.getLastChannel()->getName());
+			_user.getLastChannel()->removeOperator(_user);
 		}
 		_user.removeLastChannel();
 	}
@@ -194,7 +215,7 @@ void		Command::part(std::string const &channel)
 			int j = 0;
 			if (listChannel[i][j] == '#')
 				j = 1;
-			std::cout << &listChannel[i][j] << std::endl;
+			// std::cout << &listChannel[i][j] << std::endl;
 			if (_ircserv.isChannel(&listChannel[i][j]))
 			{
 				if (_ircserv.getChannel(&listChannel[i][j])->isUserInChannel(_user))
@@ -210,21 +231,47 @@ void		Command::part(std::string const &channel)
 }
 
 
-
-
-/*Online sur le channel :
-	->non :
-			-si pas de argument < 3 : Not enough parameters given
-			-si # deuxieme arg : Irssi: Not joined to any channel
-			-si argv3 est pas un user du server : a: No such nick/channel
-			-si tout ok ,verif si le user lui meme est dans le channel(online) si non : #lol You're not on that channel!
-	->oui :
-			-verif si le user a kick est dans le channel et si nous somme op remove des list
-
-*/
 // void		Command::kick(std::string const &channel)
 // {
 
 // }
 
+void		Command::topic(std::string const &msg)
+{
+	int idx = 0;
 
+	if (msg[idx] == '#')
+		idx = 1;
+	if (_user.getStatus() == User::ONLINE)
+	{
+		if (msg.empty())
+		{
+			if (_user.getLastChannel()->getTopic() != "")
+				_ircserv.writeToClient(_user.getFd(), RPL_NOTOPIC(_user.getLastChannel()->getName()));
+			else if (_user.getLastChannel()->getTopic() == "")
+			{
+				_ircserv.writeToClient(_user.getFd(), RPL_TOPIC(_user.getLastChannel()->getName(), _user.getLastChannel()->getTopic()));
+				_ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _user.getLastChannel()->getTopicTime()));
+			}
+		}
+		// else
+		// {
+		// 	if (idx == 1)
+		// 	{
+		// 		if (_ircserv.isChannel(&msg[idx]))
+		// 		{
+		// 			//  _user.isOperator() && _input.size() > 2)
+		// 			_ircserv.getChannel(&msg[idx])->setTopic(&msg[idx]);
+		// 		}
+		// 		else
+		// 			_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL(std::string(&msg[idx])));
+		// 	}
+		// 	else
+		// 	{
+		// 		if (_user.isOperator())
+		// 			_user.getLastChannel()->setTopic(&msg[idx]);
+
+		// 	}
+		// }
+	}
+}

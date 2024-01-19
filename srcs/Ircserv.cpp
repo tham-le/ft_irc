@@ -271,7 +271,7 @@ void		Ircserv::readFromAllClients()
 			std::string msg = readFromClient(it->fd);
 			if (msg == "")
 				break ;
-			std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
+			// std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
 			handleMessage(it->fd, msg);
 		}
 	}
@@ -283,7 +283,7 @@ void			Ircserv::sendPing()
 	{
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
 		{
-			write(it->fd, "PING\n", 5);
+			// write(it->fd, "PING\n", 5);
 		}
 	}
 
@@ -308,7 +308,7 @@ void			Ircserv::run()
 			if (std::time(0) - _lastPing > _config.getPingInterval())
 			{
 				_lastPing = std::time(0);
-				std::cout << "Sending ping to all clients" << std::endl;
+				// std::cout << "Sending ping to all clients" << std::endl;
 				sendPing();
 			}
 		}
