@@ -28,14 +28,7 @@ void		Command::info(std::string const &msg)
 void		Command::nickname(std::string const &msg)
 {
 	std::string nickName;
-	// if (msg.empty()) {
-	// 	// nickName = _user.getNickname(); //it will be the nickename whan i was connected?
-	// 	// _ircserv.writeToClient(_user.getFd(), "Your nickname is " + nickName + "\n");
-	// 	_user.printMessage(431);
-	// 	return ;
-	// }
 	if (!validNickname(msg)) {
-		//_user.printMessage(msg);
 		_user.printMessage(432);
 		//_ircserv.writeToClient(_user.getFd(), ERR_ERRONEUSNICKNAME(msg));
 		return ;
@@ -43,7 +36,7 @@ void		Command::nickname(std::string const &msg)
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
 		if (it->second->getNickname() == msg) {
 			_user.printMessage(433);
-			_ircserv.writeToClient(_user.getFd(), ERR_NICKNAMEINUSE(msg));
+			//_ircserv.writeToClient(_user.getFd(), ERR_NICKNAMEINUSE(msg));
 			return ;
 		}
 	}
@@ -63,13 +56,11 @@ void	Command::names(std::string const &channel)
 	}
 	else if (_user.getStatus() != User::ONLINE && !_channels.empty() && _input.size() > 1 && channel == _input[1]) { //need to update to take only first parameter and skip others
 		if (_channels.find(&channel[idx]) != _channels.end()) {
-		_ircserv.writeToClient(_user.getFd(), "Users #" + _channels[&channel[idx]]->getName() + "\n");
-		std::vector<User*> operators = _channels[&channel[idx]]->_operators;
-		for (unsigned int i = 0; i < operators.size(); i++)
-			_ircserv.writeToClient(_user.getFd(), "@" + operators[i]->getNickname() + "\n"); //if there one operator or more??
+			_user.printMessage(RPL_NAMREPLY(_channels[&channel[idx]]->getName(), _channels[&channel[idx]]->getNameUsers())); //replace with later _user.printMessage(353);
+			_user.printMessage(RPL_ENDOFNAMES(_channels[&channel[idx]]->getName())); //replace with later _user.printMessage(366);
 		}
 		else {
-			_ircserv.writeToClient(_user.getFd(), channel + ERR_NOSUCHCHANNEL(channel));
+			_user.printMessage(RPL_ENDOFNAMES(channel)); //replace later with _user.printMessage(366);
 			return ;
 		}
 	}
@@ -82,7 +73,6 @@ void	Command::names(std::string const &channel)
 		for (unsigned int i = 0; i < users.size(); i++)
 			_ircserv.writeToClient(_user.getFd(), users[i]->getNickname() + "\n");
 	}
-	_ircserv.writeToClient(_user.getFd(), _channels[&channel[idx]]->getName() + "End of /NAMES list\n");
 }
 
 void	Command::quit(std::string const &msg)
@@ -97,6 +87,7 @@ void	Command::quit(std::string const &msg)
 		it->second->removeUser(_user);
 	_ircserv.disconnectClient(_user.getFd());
 }
+
 void	Command::list(std::string const &channel)
 {
 	_ircserv.writeToClient(_user.getFd(), RPL_LISTSTART());

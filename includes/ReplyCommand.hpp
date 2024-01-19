@@ -37,12 +37,14 @@
 # define RPL_WHOISSERVER(nick, servername, version) (nick + " " + servername + " :" + version + "\r\n") //312
 # define RPL_WHOISCHANNELS(nick, channels) (nick + " :" + channels + "\r\n") //319
 # define RPL_ENDOFWHOIS() (" :End of /WHOIS list\r\n") //318
-# define RPL_LISTSTART() ("321 Channel :Users Name\r\n") //321
-# define RPL_LIST(channel, nb_users, topic) ("322 " + channel + " " + nb_users + " :" + topic + "\r\n") //322
-# define RPL_LISTEND() ("323 :End of /LIST\r\n") //323
-# define RPL_CHANNELMODEIS(channel, mode) ("324 " + channel + " " + mode + "\r\n") //324
-# define RPL_CREATIONTIME(channel, date) ("329 " + channel + " " + date + "\r\n") //329
-# define RPL_TOPIC(channel, subject) ("332 Topic for #" + channel + ": " + subject + "\r\n") // 332
-# define RPL_TOPICWHOTIME(user, time) ("333 Topic set by " + user + " [" + time + "]")// 333
+# define RPL_LISTSTART() ("Channel :Users Name\r\n") //321
+# define RPL_LIST(channel, nb_users, topic) (channel + " " + nb_users + " :" + topic + "\r\n") //322
+# define RPL_LISTEND() ("End of /LIST\r\n") //323
+# define RPL_CHANNELMODEIS(channel, mode) (channel + " " + mode + "\r\n") //324
+# define RPL_CREATIONTIME(channel, date) (channel + " " + date + "\r\n") //329
+# define RPL_TOPIC(channel, subject) ("Topic for #" + channel + ": " + subject + "\r\n") // 332
+# define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]")// 333
+# define RPL_NAMREPLY(channel, nick) (channel + " :" + nick + "\r\n") //353
+# define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list\r\n") //366
 
 #endif
