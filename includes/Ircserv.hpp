@@ -30,6 +30,7 @@ class Ircserv
 		void			run();
 		void			waitForEvent();
 		void			connectClient();
+		void			sendPendingMessages();
 
 		void			writeToClient(int fd, std::string const &msg);
 		void			writeToAllClients(std::string const &msg);

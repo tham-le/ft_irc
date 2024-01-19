@@ -141,12 +141,7 @@ void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
 			putStrFd(it->fd, msg);
 }
 
-static bool containEOL(std::string const &str)
-{
-	if (str.size() < 2)
-		return (false);
-	return (str.find("\r\n") != std::string::npos);
-}
+/* */
 
 std::string		Ircserv::readFromClient(int fd)
 {
@@ -172,6 +167,10 @@ std::string		Ircserv::readFromClient(int fd)
 		}
 		else if (bytes == 0)
 			throw DisconnectedUser(fd);
+		std::cout << "Bytes received: " << bytes << std::endl;
+		std::cout << "RAW Message received: " << buf << std::endl;
+		
+
 		User	&user = getUser(fd);
 		user._buffer += buf;
 		std::string delim = "\r\n";
@@ -182,10 +181,14 @@ std::string		Ircserv::readFromClient(int fd)
 			user._buffer.erase(0, pos + delim.length());
 			if (!msg.length())
 				continue ;
-			return (msg);
+			handleMessage(fd, msg);
 		}
-		if (containEOL(buf))
-			return (std::string(buf, buf + strcspn(buf, "\r\n") + 2));
+/*		if (containEOL(buf))
+		{
+			std::string msg = std::string(buf, buf + strcspn(buf, "\r\n") + 2);
+			handleMessage(fd, msg);
+			return (msg);
+		}*/
 	}
 	catch (const DisconnectedUser& e) {
 		disconnectClient(e._fd);
@@ -268,11 +271,12 @@ void		Ircserv::readFromAllClients()
 	{
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLIN)
 		{
-			std::string msg = readFromClient(it->fd);
-			if (msg == "")
-				break ;
-			// std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
-			handleMessage(it->fd, msg);
+			readFromClient(it->fd);
+
+			// if (msg == "")
+			// 	break ;
+			//std::cout << "Client " << it->fd << " sent: " << msg << std::endl;
+			//handleMessage(it->fd, msg);
 		}
 	}
 }
@@ -290,6 +294,25 @@ void			Ircserv::sendPing()
 
 }
 
+/*void			Ircserv::sendPendingMessages()
+{
+	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
+	{
+		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
+		{
+			User &user = getUser(it->fd);
+			if (user._input.size() > 0)
+			{
+				std::string msg = user._input.front();
+				user._input.pop();
+				writeToClient(it->fd, msg);
+			}
+		}
+	}
+}*/
+
+
+
 void			Ircserv::run()
 {
 	while (stop == false)
@@ -298,6 +321,7 @@ void			Ircserv::run()
 			signal(SIGINT, sighandler);
 			waitForEvent();
 			connectClient();
+			//sendPendingMessages();
 			readFromAllClients();
 			if (stop == true)
 			{
