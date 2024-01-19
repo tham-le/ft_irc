@@ -35,8 +35,7 @@ void		Command::nickname(std::string const &msg)
 	}
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
 		if (it->second->getNickname() == msg) {
-			_user.printMessage(433);
-			//_ircserv.writeToClient(_user.getFd(), ERR_NICKNAMEINUSE(msg));
+			_user.printMessage(ERR_NICKNAMEINUSE(msg));// replace later with _user.printMessage(433);
 			return ;
 		}
 	}
@@ -50,28 +49,29 @@ void	Command::names(std::string const &channel)
 	int idx = 0;
 	if (channel[0] == '#')
 		idx = 1;
-	if (_user.getStatus() != User::ONLINE && _input.size() == 1) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NOTJOINEDANYCHANNEL());
-		return ;
-	}
-	else if (_user.getStatus() != User::ONLINE && !_channels.empty() && _input.size() > 1 && channel == _input[1]) { //need to update to take only first parameter and skip others
-		if (_channels.find(&channel[idx]) != _channels.end()) {
-			_user.printMessage(RPL_NAMREPLY(_channels[&channel[idx]]->getName(), _channels[&channel[idx]]->getNameUsers())); //replace with later _user.printMessage(353);
-			_user.printMessage(RPL_ENDOFNAMES(_channels[&channel[idx]]->getName())); //replace with later _user.printMessage(366);
-		}
-		else {
-			_user.printMessage(RPL_ENDOFNAMES(channel)); //replace later with _user.printMessage(366);
-			return ;
-		}
+	// if (_user.getStatus() != User::ONLINE && _input.size() == 1) {
+	// 	_user.printMessage(ERR_NOTJOINEDANYCHANNEL());
+	// 	return ;
+	// }
+	if (_user.getStatus() != User::ONLINE && !_channels.empty()) { //need to update to take only first parameter and skip others
+		if (strcmp(channel.c_str(),_channels[&channel[idx]]->getName().c_str()) == 0) {
+				_user.printMessage(RPL_NAMREPLY(_channels[&channel[idx]]->getName(), _channels[&channel[idx]]->getUsersName())); //replace with later _user.printMessage(353);
+				_user.printMessage(RPL_ENDOFNAMES(_channels[&channel[idx]]->getName())); //replace with later _user.printMessage(366);
+			}
+			else
+				_user.printMessage(RPL_ENDOFNAMES(channel)); //replace later with _user.printMessage(366);
 	}
 	else if (_user.getStatus() == User::ONLINE) {
-		_ircserv.writeToClient(_user.getFd(), "Users #" + _user.getLastChannel()->getName() + "\n");
-		std::vector<User*> operators = _user.getLastChannel()->_operators;
-		for (unsigned int i = 0; i < operators.size(); i++)
-			_ircserv.writeToClient(_user.getFd(), "@" + operators[i]->getNickname() + "\n"); //if there one operator or more??
-		std::map<int, User*> users = _user.getLastChannel()->_users;
-		for (unsigned int i = 0; i < users.size(); i++)
-			_ircserv.writeToClient(_user.getFd(), users[i]->getNickname() + "\n");
+		if (_channels.empty() || strcmp(channel.c_str(), _user.getLastChannel()->getName().c_str()) == 0) {
+			_user.printMessage(RPL_NAMREPLY(_user.getLastChannel()->getName(), _user.getLastChannel()->getUsersName())); //replace with later _user.printMessage(353);
+			_user.printMessage(RPL_ENDOFNAMES(_user.getLastChannel()->getName())); //replace later with _user.printMessage(366);
+		}
+		else if (strcmp(channel.c_str(),_channels[&channel[idx]]->getName().c_str()) == 0) {
+		_user.printMessage(RPL_NAMREPLY(_channels[&channel[idx]]->getName(), _channels[&channel[idx]]->getUsersName())); //replace with later _user.printMessage(353);
+		_user.printMessage(RPL_ENDOFNAMES(_channels[&channel[idx]]->getName())); //replace with later _user.printMessage(366);
+		}
+		else
+			_user.printMessage(RPL_ENDOFNAMES(channel)); //replace later with _user.printMessage(366);
 	}
 }
 
@@ -90,27 +90,29 @@ void	Command::quit(std::string const &msg)
 
 void	Command::list(std::string const &channel)
 {
-	_ircserv.writeToClient(_user.getFd(), RPL_LISTSTART());
+	_user.printMessage(321);
 	if (_input.size() > 1 && channel != _input.back() && channel[0] != '#') {
-		_ircserv.writeToClient(_user.getFd(), RPL_LISTEND());
+		_user.printMessage(323);
 		return ;
 	}
 	if (_channels.empty())
-		_ircserv.writeToClient(_user.getFd(), ERR_NOCHANNNELS());
+		_user.printMessage(ERR_NOCHANNNELS());
 	else {
 		int idx = 0;
 		if (channel[0] == '#')
 			idx = 1;
 		if (!channel.empty() && _channels.find(&channel[idx]) != _channels.end()) {
-			_ircserv.writeToClient(_user.getFd(), RPL_LIST(_channels[&channel[idx]]->getName(), to_string(_channels[&channel[idx]]->_users.size()),
+			//_user.printMessage(322);
+			_user.printMessage(RPL_LIST(_channels[&channel[idx]]->getName(), to_string(_channels[&channel[idx]]->_users.size()),
 			_channels[&channel[idx]]->getTopic()));
 		}
 		else if (channel.empty()) {
+			//_user.printMessage(322);
 			for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-				_ircserv.writeToClient(_user.getFd(), RPL_LIST(it->first, to_string(it->second->_users.size()), it->second->getTopic()));
+				_user.printMessage(RPL_LIST(it->first, to_string(it->second->_users.size()), it->second->getTopic()));
 		}
 	}
-	_ircserv.writeToClient(_user.getFd(), RPL_LISTEND());
+	_user.printMessage(323);
 }
 
 void	Command::changeMode(std::string const &msg)
