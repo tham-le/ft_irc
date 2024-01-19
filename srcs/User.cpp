@@ -302,14 +302,20 @@ void	User::printMessage(int code, std::string m1)
 	std::string str = getTarget(code);
 
 	switch (code) {
-	// case 311:
-	// 	str += RPL_WHOISUSER(m1, _username, _hostname, _realname); //EXAMPLE, DONT USE
-	// 	break;
+	case 331:
+		str += RPL_NOTOPIC(m1);
+		break;
 	case 366:
 		str += RPL_ENDOFNAMES(m1);
 		break;
+	case 403:
+		str += ERR_NOSUCHCHANNEL(m1);
+		break;
 	case 421:
 		str += ERR_UNKNOWNCOMMAND(m1);
+		break;
+	case 442:
+		str += ERR_NOTONCHANNEL(m1);
 		break;
 	case 461:
 		str += ERR_NEEDMOREPARAMS(m1);
@@ -334,6 +340,9 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	str += " ";
 
 	switch (code) {
+	case 332:
+		str += RPL_TOPIC(m1, m2);
+		break;
 	case 333:
 		str += RPL_TOPICWHOTIME(m1, m2);
 		break;

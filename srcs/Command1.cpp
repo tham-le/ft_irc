@@ -59,7 +59,6 @@ void		Command::command()
 		if (_user.getStatus() == User::REGISTERED)
 		{
 			_user.printMessage(421, _input[0]);
-			// _ircserv.writeToClient(_user.getFd(), ERR_UNKNOWNCOMMAND(_input[0]));
 		}
 		return ;
 	}
@@ -160,9 +159,7 @@ void		Command::join(std::string const &channel)
 			_user.setStatus(User::ONLINE);
 			// if (_ircserv.getChannel(&str[i][idx])->getTopic() != "")
 			// {
-				// _user.printMessage(RPL_TOPIC(std::string(&str[i][idx]),_ircserv.getChannel(&str[i][idx])->getTopic()));
 				_user.printMessage(332);
-				// _ircserv.writeToClient(_user.getFd(), RPL_TOPIC(std::string(&str[i][idx]), _ircserv.getChannel(&str[i][idx])->getTopic()));
 				std::map<int, User *> listUsers;
 				listUsers = _user.getLastChannel()->getUsers();
 				std::map<int, User *>::iterator it;
@@ -175,8 +172,8 @@ void		Command::join(std::string const &channel)
 					s += it->second->getNickname() + "] ";
 					// std::cout << s << std::endl;
 				}
+				std::cout << "OUUUUUUUUUUUUUUUUUUU " << std::endl;
 				_user.printMessage(333, _ircserv.getChannel(&str[i][idx])->getCreationTime());
-				// _ircserv.writeToClient(_user.getFd(), RPL_NAMREPLY(std::string(&str[i][idx]), s));
 				_user.printMessage(353, std::string(&str[i][idx]), s);
 				_user.printMessage(366, std::string(&str[i][idx]));
 			// }
@@ -198,7 +195,6 @@ void		Command::part(std::string const &channel)
 		{
 			if (it->second->getStatus() == User::ONLINE)
 				break;
-			_ircserv.writeToClient(_user.getFd(), "part");
 		}
 		if (it == listUsers.end())
 		{
@@ -211,7 +207,7 @@ void		Command::part(std::string const &channel)
 	else
 	{
 		if (channel.empty())
-			_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS(_input[0]));
+			_user.printMessage(461, _input[0]);
 		for (unsigned long i = 0; i < listChannel.size(); i++)
 		{
 			int j = 0;
@@ -221,11 +217,12 @@ void		Command::part(std::string const &channel)
 			if (_ircserv.isChannel(&listChannel[i][j]))
 			{
 				if (_ircserv.getChannel(&listChannel[i][j])->isUserInChannel(_user))
-					_ircserv.writeToClient(_user.getFd(), ERR_NOTONCHANNEL(std::string(&listChannel[i][j])));
+					_user.printMessage(442, std::string(&listChannel[i][j]));
+
 			}
 			else
 			{
-				_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL(std::string(&listChannel[i][j])));
+				_user.printMessage(403, std::string(&listChannel[i][j]));
 				return;
 			}
 		}
@@ -246,14 +243,18 @@ void		Command::topic(std::string const &msg)
 		idx = 1;
 	if (_user.getStatus() == User::ONLINE)
 	{
+		std::cout << "UUUUUUUUUUUUUUUU" << std::endl;
 		if (msg.empty())
 		{
-			if (_user.getLastChannel()->getTopic() != "")
-				_ircserv.writeToClient(_user.getFd(), RPL_NOTOPIC(_user.getLastChannel()->getName()));
-			else if (_user.getLastChannel()->getTopic() == "")
+			_user.getLastChannel()->setTopic("coucou");
+			std::cout << _user.getLastChannel()->getTopic() << std::endl;
+			if (_user.getLastChannel()->getTopic() == "")
+				_user.printMessage(331, _user.getLastChannel()->getName());
+			else if (_user.getLastChannel()->getTopic() != "")
 			{
-				_ircserv.writeToClient(_user.getFd(), RPL_TOPIC(_user.getLastChannel()->getName(), _user.getLastChannel()->getTopic()));
-				_ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _user.getLastChannel()->getTopicTime()));
+				std::cout << "hey" << std::endl;
+				_user.printMessage(332, _user.getLastChannel()->getName(), _user.getLastChannel()->getTopic());
+				_user.printMessage(333, _user.getNickname(), _user.getLastChannel()->getTopicTime());
 			}
 		}
 		// else
