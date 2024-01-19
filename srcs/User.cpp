@@ -281,20 +281,11 @@ void	User::printMessage(int code)
 	case 323:
 		str += RPL_LISTEND();
 		break;
-	case 353:
-		str += RPL_NAMREPLY(getLastChannel()->getName(), getLastChannel()->getUsersName());
-		break;
-	case 366:
-		str += RPL_ENDOFNAMES(getLastChannel()->getName());
-		break;
 	case 431:
 		str += ERR_NONICKNAMEGIVEN();
 		break;
 	case 432:
 		str += ERR_ERRONEUSNICKNAME();
-		break;
-	case 461:
-		str += ERR_NEEDMOREPARAMS();
 		break;
 	case 462:
 		str += ERR_ALREADYREGISTRED();
@@ -311,8 +302,26 @@ void	User::printMessage(int code, std::string m1)
 	std::string str = getTarget(code);
 
 	switch (code) {
-	case 311:
-		str += RPL_WHOISUSER(m1, _username, _hostname, _realname); //EXAMPLE, DONT USE
+	// case 311:
+	// 	str += RPL_WHOISUSER(m1, _username, _hostname, _realname); //EXAMPLE, DONT USE
+	// 	break;
+	case 366:
+		str += RPL_ENDOFNAMES(m1);
+		break;
+	case 421:
+		str += ERR_UNKNOWNCOMMAND(m1);
+		break;
+	case 461:
+		str += ERR_NEEDMOREPARAMS(m1);
+		break;
+	case 471:
+		str += ERR_CHANNELISFULL(m1);
+		break;
+	case 473:
+		str += ERR_INVITEONLYCHAN(m1);
+		break;
+	case 475:
+		str += ERR_BADCHANNELKEY(m1);
 		break;
 	}
 	printMessage(str);
@@ -325,9 +334,13 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	str += " ";
 
 	switch (code) {
-	case 353:
-		str += RPL_NAMREPLY(m1, m2); //EXAMPLE, DONT USE
+	case 333:
+		str += RPL_TOPICWHOTIME(m1, m2);
 		break;
+	case 353:
+		str += RPL_NAMREPLY(m1, m2);
+		break;
+
 	}
 	printMessage(str);
 }
@@ -338,6 +351,7 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	str += " ";
 
 	switch (code) {
+
 	case 322:
 		str += RPL_LIST(m1, m2, m3); //EXAMPLE, DONT USE
 		break;
