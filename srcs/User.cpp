@@ -266,6 +266,12 @@ void	User::printMessage(int code)
 	case 319:
 		str += RPL_WHOISCHANNELS(_nickname, getNameChannels());
 		break;
+	case 353:
+		str += RPL_NAMREPLY(getLastChannel()->getName(), getLastChannel()->getNameUsers());
+		break;
+	case 366:
+		str += RPL_ENDOFNAMES(getLastChannel()->getName());
+		break;
 	case 431:
 		str += ERR_NONICKNAMEGIVEN();
 		break;
