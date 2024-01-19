@@ -58,7 +58,8 @@ void		Command::command()
 	{
 		if (_user.getStatus() == User::REGISTERED)
 		{
-			_ircserv.writeToClient(_user.getFd(), ERR_UNKNOWNCOMMAND(_input[0]));
+			_user.printMessage(421, _input[0]);
+			// _ircserv.writeToClient(_user.getFd(), ERR_UNKNOWNCOMMAND(_input[0]));
 		}
 		return ;
 	}
@@ -100,7 +101,7 @@ void		Command::join(std::string const &channel)
 	std::vector<std::string> key;
 	if (channel.empty())
 	{
-		_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS(_input[0]));
+		_user.printMessage(461, _input[0]);
 		return ;
 	}
 	str = split(channel, ',');
@@ -116,11 +117,13 @@ void		Command::join(std::string const &channel)
 		if (!_ircserv.isChannel(&str[i][idx]))
 		{
 			_ircserv.addChannel(&str[i][idx]);
-			if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 >= _ircserv.getChannel(&str[i][idx])->getMaxUser())
-				_ircserv.writeToClient(_user.getFd(), ERR_CHANNELISFULL(std::string(&str[i][idx])));
+			if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 > _ircserv.getChannel(&str[i][idx])->getMaxUser())
+			{
+				_user.printMessage(471, std::string(&str[i][idx]));
+				return; //return ou else
+			}
 			_ircserv.getChannel(&str[i][idx])->addUser(_user);
-			if (_ircserv.getChannel(&str[i][idx])->isEmptyOperator())
-				_ircserv.getChannel(&str[i][idx])->addOperator(_user);
+			_ircserv.getChannel(&str[i][idx])->addOperator(_user);
 		}
 		else
 		{
@@ -130,14 +133,14 @@ void		Command::join(std::string const &channel)
 			{
 				if (!_ircserv.getChannel(&str[i][idx])->isInvited(_user))
 				{
-					_ircserv.writeToClient(_user.getFd(), ERR_INVITEONLYCHAN(std::string(&str[i][idx])));
+					_user.printMessage(473, std::string(&str[i][idx]));
 					flag = 1;
 				}
 				else if (!key.empty())
 				{
 					if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(&str[i][idx])->isGoodKey(key[i])))
 					{
-						_ircserv.writeToClient(_user.getFd(),  ERR_BADCHANNELKEY(std::string(&str[i][idx])) + "\n");
+						_user.printMessage(std::string(&str[i][idx]));
 						flag = 1;
 					}
 				}
@@ -145,7 +148,7 @@ void		Command::join(std::string const &channel)
 			if (!_ircserv.getChannel(&str[i][idx])->isUserInChannel(_user) && flag == 0)
 			{
 				if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 >= _ircserv.getChannel(&str[i][idx])->getMaxUser())
-					_ircserv.writeToClient(_user.getFd(), ERR_CHANNELISFULL(std::string(&str[i][idx])));
+					_user.printMessage(471, std::string(&str[i][idx]));
 				else
 					_ircserv.getChannel(&str[i][idx])->addUser(_user);
 			}
@@ -172,11 +175,10 @@ void		Command::join(std::string const &channel)
 					s += it->second->getNickname() + "] ";
 					// std::cout << s << std::endl;
 				}
-				_ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _ircserv.getChannel(&str[i][idx])->getCreationTime()));
-				_ircserv.writeToClient(_user.getFd(), RPL_NAMREPLY(std::string(&str[i][idx]), s));
-				_ircserv.writeToClient(_user.getFd(), RPL_ENDOFNAMES(std::string(&str[i][idx])));
-				// _ircserv.writeToClient(_user.getFd(), RPL_TOPICWHOTIME(_user.getNickname(), _ircserv.getChannel(&str[i][idx])->getCreationTime()));
-				std::cout << "HEEEEEEEEEEEEEEEEEEEEEEEEEEE" << std::endl;
+				_user.printMessage(333, _ircserv.getChannel(&str[i][idx])->getCreationTime());
+				// _ircserv.writeToClient(_user.getFd(), RPL_NAMREPLY(std::string(&str[i][idx]), s));
+				_user.printMessage(353, std::string(&str[i][idx]), s);
+				_user.printMessage(366, std::string(&str[i][idx]));
 			// }
 		}
 	}
