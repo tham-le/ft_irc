@@ -287,7 +287,7 @@ void			Ircserv::sendPing()
 	{
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
 		{
-			write(it->fd, "PING\n", 5);
+			// write(it->fd, "PING\n", 5);
 		}
 	}
 
@@ -332,7 +332,7 @@ void			Ircserv::run()
 			if (std::time(0) - _lastPing > _config.getPingInterval())
 			{
 				_lastPing = std::time(0);
-				std::cout << "Sending ping to all clients" << std::endl;
+				// std::cout << "Sending ping to all clients" << std::endl;
 				sendPing();
 			}
 		}
