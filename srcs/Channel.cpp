@@ -4,10 +4,6 @@
 
 Channel::Channel(std::string name): _name(name), _topic("caca"), _mode(PUBLIC), _key(""), _maxUser(100)
 {
-	time_t start = std::time(0);
-	char buffer[100];
-	std::strftime(buffer, sizeof(buffer), "%a %b %d  %H:%M:%S %Y", std::localtime(&start));
-	_creationTime = buffer;
 }
 
 Channel::~Channel(){}
@@ -80,24 +76,10 @@ void	Channel::addUser(User &user)
 
 void	Channel::removeUser(User &user)
 {
-	if (isUserInChannel(user) == false)
-	{
-		std::cout << "Cannot remove " << user.getNickname();
-		std::cout << "because is not in the channel" << std::endl;
-	}
-	else if (isOperator(user) && _operators.size() == 1)
-	{
-		std::cout << "Cannot remove " << user.getNickname();
-		std::cout << "because is the last one operator." << std::endl;
-	}
-	else
-	{
-		int fd = user.getFd();
-		if (isOperator(user))
-			removeOperator(user);
-		_users.erase(fd);
-		std::cout << user.getNickname() << " is removed from " << this->_name << std::endl;
-	}
+	int fd = user.getFd();
+	if (isOperator(user))
+		removeOperator(user);
+	_users.erase(fd);
 }
 
 void			Channel::removeUser(std::string const nickname)
@@ -105,25 +87,11 @@ void			Channel::removeUser(std::string const nickname)
 	std::map<int, User *>::iterator it = _users.find(getUser(nickname)->getFd());
 	User *user = getUser(nickname);
 
-
-
-	if (isUserInChannel(nickname) == false)
-	{
-		std::cout << "Cannot remove " << nickname;
-		std::cout << "because is not in the channel" << std::endl;
-	}
-	else if (isOperator(*user) && _operators.size() == 1)
-	{
-		std::cout << "You must be a channel operator" << nickname;
-	}
-	if (it != _users.end())
-	{
-		if (isOperator(*user))
-			removeOperator(nickname);
-		_users.erase(it);
-		std::cout << nickname << " is removed from " << this->_name << std::endl;
-	}
+	if (isOperator(*user))
+		removeOperator(nickname);
+	_users.erase(it);
 }
+
 User*			Channel::getUser(std::string const nickname)
 {
 	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
@@ -232,42 +200,16 @@ void			Channel::removeOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
-	if (!isUserInChannel(user))
-	{
-		std::cout << "Cannot be a regular user of the channel because ";
-		std::cout << user.getNickname() << " is not in the channel." << std::endl;
-		return ;
-	}
-	if (it == _operators.end())
-	{
-		std::cout << "Cannot remove the user, because " << user.getNickname();
-		std::cout << "is not Operator." << std::endl;
-		return ;
-	}
 	_operators.erase(it);
-	std::cout << user.getNickname() << " is not Operator anymore." << std::endl;
 }
 
 void			Channel::removeOperator(std::string const nickname)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), getUser(nickname));
 
-
-	if (isUserInChannel(nickname))
-	{
-		std::cout << "Cannot be a regular user of the channel because ";
-		std::cout << nickname << " is not in the channel." << std::endl;
-		return ;
-	}
-	if (it == _operators.end())
-	{
-		std::cout << "Cannot remove the user, because " << nickname;
-		std::cout << "is not Operator." << std::endl;
-		return ;
-	}
 	_operators.erase(it);
 	removeUser(nickname);
-	std::cout << nickname << " is not Operator now." << std::endl;
+	// std::cout << nickname << " is not Operator now." << std::endl;
 }
 
 bool			Channel::isOperator(User &user)
@@ -295,7 +237,20 @@ bool			Channel::isEmptyOperator()
 	return (false);
 }
 
+void	Channel::setTime()
+{
+	time_t start = std::time(0);
+	char buffer[100];
+	std::strftime(buffer, sizeof(buffer), "%a %b %d  %H:%M:%S %Y", std::localtime(&start));
+	_creationTime = buffer;
+}
+
 std::string		Channel::getCreationTime()
 {
 	return (_creationTime);
+}
+
+std::string		Channel::getTopicTime()
+{
+	return (_setTopicTime);
 }

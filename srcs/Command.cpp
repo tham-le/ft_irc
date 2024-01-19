@@ -40,7 +40,7 @@ void		Command::nickname(std::string const &msg)
 			return ;
 		}
 	}
-	_user.printMessage(":" + _user.getPrefix() + " NICK " + msg + "\r\n");
+	// _user.printMessage(":" + _user.getPrefix() + " NICK " + msg + "\r\n");
 	_user.setNickname(msg);
 	nickName = _user.getNickname();
 }
@@ -56,7 +56,7 @@ void	Command::names(std::string const &channel)
 	}
 	else if (_user.getStatus() != User::ONLINE && !_channels.empty() && _input.size() > 1 && channel == _input[1]) { //need to update to take only first parameter and skip others
 		if (_channels.find(&channel[idx]) != _channels.end()) {
-			_user.printMessage(RPL_NAMREPLY(_channels[&channel[idx]]->getName(), _channels[&channel[idx]]->getNameUsers())); //replace with later _user.printMessage(353);
+			// _user.printMessage(RPL_NAMREPLY(_channels[&channel[idx]]->getName(), _channels[&channel[idx]]->getNameUsers())); //replace with later _user.printMessage(353);
 			_user.printMessage(RPL_ENDOFNAMES(_channels[&channel[idx]]->getName())); //replace with later _user.printMessage(366);
 		}
 		else {

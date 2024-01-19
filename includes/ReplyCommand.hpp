@@ -42,8 +42,9 @@
 # define RPL_LISTEND() ("End of /LIST\r\n") //323
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " " + mode + "\r\n") //324
 # define RPL_CREATIONTIME(channel, date) (channel + " " + date + "\r\n") //329
+# define RPL_NOTOPIC(channel) (channel +  ":No topic is set\r\n") // 331
 # define RPL_TOPIC(channel, subject) ("Topic for #" + channel + ": " + subject + "\r\n") // 332
-# define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]")// 333
+# define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]" + "\r\n")// 333
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick + "\r\n") //353
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list\r\n") //366
 
