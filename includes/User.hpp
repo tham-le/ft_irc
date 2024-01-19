@@ -74,7 +74,17 @@ public:
 
 	void	printMessage(std::string str);
 	void	printMessage(int code);
+	void	printMessage(int code, std::string m1);
+	void	printMessage(int code, std::string m1, std::string m2);
+	void	printMessage(int code, std::string m1, std::string m2, std::string m3);
+	void	printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4);
+	void	printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5);
+	void	printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5, std::string m6);
+	void	printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5, std::string m6, std::string m7);
+
+
 	std::string	getPrefix() const;
+	std::string	getTarget(int code);
 	std::string	getNameChannels() const;
 
 

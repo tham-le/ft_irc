@@ -10,8 +10,8 @@ Config::Config()
 {
 	this->_port = 6667;
 	this->_password = "password";
-	this->_pingInterval = 600;
-	this->_pingTimeout = 100000;
+	this->_pingInterval = 60;
+	this->_pingTimeout = 1000;
 	this->_maxClients = 100;
 	this->_maxChannels = 100;
 }

@@ -43,7 +43,9 @@ void		Command::parse(std::string message)
 	//std::cout << "00 input[0] = " << _input[0] << std::endl;
 	_input.clear();
 	_input = split(message, ' ');
-	// std::cout << _input << std::endl;
+	//std::cout << _input << std::endl;
+	// for (unsigned int i = 0; i < _input.size(); i++)
+	// 	std::cout << "input[" << i << "] = " << _input[i] << std::endl;
 }
 
 
@@ -62,8 +64,6 @@ void		Command::command()
 	}
 	else // if (it == _func.end() && (_user.getStatus() == REGISTRED || _user.getStatus() == ONLINE))
 	{
-		// for (size_t i = 0; i < _input.size(); i++)
-		// 	std::cout << "input[" << i << "] = " << _input[i] << std::endl;
 		if (_user.getStatus() == User::ONLINE || _user.getStatus() == User::REGISTERED)
 		{
 			if (_input.size() > 1)

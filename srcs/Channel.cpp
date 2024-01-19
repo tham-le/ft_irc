@@ -107,6 +107,17 @@ std::map<int, User *>	Channel::getUsers()
 	return (_users);
 }
 
+std::string Channel::getUsersName() const
+{
+	std::string str = "";
+	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		str += it->second->getNickname();
+		str += " , ";
+	}
+	return (str);
+}
+
 bool			Channel::isUserInChannel(std::string const nickname) const
 {
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)

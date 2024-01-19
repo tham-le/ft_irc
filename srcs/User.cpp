@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <cstring>
+#include <string>
 #include <unistd.h>
 
 User::User() {
@@ -226,9 +227,7 @@ static std::string	convert3digits(int n)
 	return (str);
 }
 
-
-
-void	User::printMessage(int code)
+ std::string	User::getTarget(int code)
 {
 	std::string str = ":";
 	str += getPrefix();
@@ -240,6 +239,13 @@ void	User::printMessage(int code)
 	else
 		str += "*";
 	str += " ";
+	return (str);
+}
+
+
+void	User::printMessage(int code)
+{
+	std::string str = getTarget(code);
 
 	switch (code) {
 	case 001:
@@ -266,11 +272,17 @@ void	User::printMessage(int code)
 	case 319:
 		str += RPL_WHOISCHANNELS(_nickname, getNameChannels());
 		break;
-	case 332:
-		str += RPL_TOPIC(getLastChannel()->getName(), getLastChannel()->getTopic());
+	case 321:
+		str += RPL_LISTSTART();
+		break;
+	case 322:
+		str += RPL_LIST(getLastChannel()->getName(), getLastChannel()->getUsersName(), getLastChannel()->getTopic());
+		break;
+	case 323:
+		str += RPL_LISTEND();
 		break;
 	case 353:
-		// str += RPL_NAMREPLY(getLastChannel()->getName(), getLastChannel()->getNameUsers());
+		str += RPL_NAMREPLY(getLastChannel()->getName(), getLastChannel()->getUsersName());
 		break;
 	case 366:
 		str += RPL_ENDOFNAMES(getLastChannel()->getName());
@@ -290,4 +302,122 @@ void	User::printMessage(int code)
 	}
 	printMessage(str);
 }
+
+
+
+
+void	User::printMessage(int code, std::string m1)
+{
+	std::string str = getTarget(code);
+
+	switch (code) {
+	case 311:
+		str += RPL_WHOISUSER(m1, _username, _hostname, _realname); //EXAMPLE, DONT USE
+		break;
+	}
+	printMessage(str);
+
+}
+
+void	User::printMessage(int code, std::string m1, std::string m2)
+{
+	std::string str = getTarget(code);;
+	str += " ";
+
+	switch (code) {
+	case 353:
+		str += RPL_NAMREPLY(m1, m2); //EXAMPLE, DONT USE
+		break;
+	}
+	printMessage(str);
+}
+
+void	User::printMessage(int code, std::string m1, std::string m2, std::string m3)
+{
+	std::string str = getTarget(code);;
+	str += " ";
+
+	switch (code) {
+	case 322:
+		str += RPL_LIST(m1, m2, m3); //EXAMPLE, DONT USE
+		break;
+	}
+	printMessage(str);
+}
+
+void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4)
+{
+	std::string str = getTarget(code);;
+	str += " ";
+
+	switch (code) {
+	case 319:
+		str += RPL_WHOISCHANNELS(m1, m2); //EXAMPLE, DONT USE
+		break;
+	case 366:
+		str += RPL_ENDOFNAMES(m3); //EXAMPLE, DONT USE
+		break;
+	case 431:
+		str += RPL_ENDOFNAMES(m4); //EXAMPLE, DONT USE
+		break;
+	}
+	printMessage(str);
+}
+
+void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5)
+{
+	std::string str = getTarget(code);;
+	str += " ";
+
+	switch (code) {
+	case 353:
+		str += RPL_NAMREPLY(m1, m2); //EXAMPLE, DONT USE
+		break;
+	}
+	(void)m3;
+	(void)m4;
+	(void)m5;
+
+	printMessage(str);
+}
+
+void User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5, std::string m6)
+{
+	std::string str = getTarget(code);;
+	str += " ";
+
+	switch (code) {
+	case 311:
+		str += RPL_WHOISUSER(m1, m2, m3, m4); //EXAMPLE, DONT USE
+		break;
+	}
+	(void)m5;
+	(void)m6;
+
+	printMessage(str);
+}
+
+
+void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5, std::string m6, std::string m7)
+{
+	std::string str = getTarget(code);;
+	str += " ";
+
+	switch (code) {
+	case 311:
+		str += RPL_WHOISUSER(m1, m2, m3, m4); //EXAMPLE, DONT USE
+		break;
+	}
+	(void)m5;
+	(void)m6;
+	(void)m7;
+
+	printMessage(str);
+}
+
+
+
+
+
+
 
