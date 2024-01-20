@@ -132,6 +132,19 @@ void		Command::joinChannel(Channel *channel)
 	_user.addChannel(channel);
 	_user.addLastChannel(channel);
 	_user.setStatus(User::ONLINE);
+
+	// channel->setTopic("caca", channel->getTopicUser());
+	// std::string ms = ":" +  _user.getPrefix() + " TOPIC #" + channel->getName() + " :" + channel->getTopic() + "\r\n";
+	// _user.printMessage(ms);
+
+	// std::string msg = ":" +  _user.getPrefix() + " TOPIC #" + channel->getName() + "\r\n";
+	// _user.printMessage(msg);
+	_user.printMessage(332, channel->getName(), channel->getTopic());
+	_user.printMessage(333, channel->getTopicUser() ,channel->getTopicTime());
+
+	_user.printMessage(toFormat(_input[0], "#" + channel->getName()));
+	_user.printMessage(353, channel->getName(), "lalalla");
+	_user.printMessage(366, channel->getName());
 }
 
 void		Command::join(std::string const &channel)
@@ -142,7 +155,6 @@ void		Command::join(std::string const &channel)
 		return ;
 	}
 
-	int	flag = 0;
 	std::vector<std::string> str;
 	std::vector<std::string> key;
 	str = split(channel, ',');
@@ -168,43 +180,20 @@ void		Command::join(std::string const &channel)
 				if (!_ircserv.getChannel(str[i])->isInvited(_user))
 				{
 					_user.printMessage(473, str[i]);
-					flag = 1;
+					break;
 				}
-				else if (!key.empty())
+				else
 				{
-					if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(str[i])->isGoodKey(key[i])))
+					if (key.empty() || i >= key.size() || (i < key.size() && !_ircserv.getChannel(str[i])->isGoodKey(key[i])))
 					{
-						_user.printMessage(str[i]);
-						flag = 1;
+						_user.printMessage(475, str[i]);
+						break;
 					}
+					else
+						joinChannel(_ircserv.getChannel(str[i]));
 				}
 			}
-			if (!_ircserv.getChannel(str[i])->isUserInChannel(_user) && flag == 0)
-				joinChannel(_ircserv.getChannel(str[i]));
 		}
-		if (_ircserv.getChannel(str[i])->isUserInChannel(_user))
-		{
-
-				std::map<int, User *> listUsers;
-				listUsers = _user.getLastChannel()->getUsers();
-				std::map<int, User *>::iterator it;
-				std::string s;
-				for (it = listUsers.begin(); it != listUsers.end(); it++)
-				{
-					s += "[";
-					if (_ircserv.getChannel(str[i])->isOperator(it->second->getNickname()))
-						s += "@";
-					s += it->second->getNickname() + "] ";
-				}
-
-				_user.printMessage(toFormat(_input[0], "#" + std::string(str[i])));
-				_user.printMessage(332);
-				_user.printMessage(333, _ircserv.getChannel(str[i])->getCreationTime());
-				_user.printMessage(353, str[i], s);
-				_user.printMessage(366, str[i]);
-				_user.printMessage("now in chanel");
-		}
-
 		/*a supprimer*/
 		channelUsers(str[i]);
 		/**/
@@ -271,46 +260,52 @@ void		Command::part(std::string const &channel)
 
 // }
 
-void		Command::topic(std::string const &msg)
+void		Command::topic(std::string const &str)
 {
-	int idx = 0;
-
-	if (msg[idx] == '#')
-		idx = 1;
-	if (_user.getStatus() == User::ONLINE)
+	if (_user.getStatus() != User::ONLINE)
 	{
-		std::cout << "UUUUUUUUUUUUUUUU" << std::endl;
-		if (msg.empty())
+		if (str.empty())
 		{
-			_user.getLastChannel()->setTopic("coucou");
-			std::cout << _user.getLastChannel()->getTopic() << std::endl;
-			if (_user.getLastChannel()->getTopic() == "")
-				_user.printMessage(331, _user.getLastChannel()->getName());
-			else if (_user.getLastChannel()->getTopic() != "")
-			{
-				std::cout << "hey" << std::endl;
-				_user.printMessage(332, _user.getLastChannel()->getName(), _user.getLastChannel()->getTopic());
-				_user.printMessage(333, _user.getNickname(), _user.getLastChannel()->getTopicTime());
-			}
+			_user.printMessage(461, _input[0]);
+			return ;
 		}
-		// else
-		// {
-		// 	if (idx == 1)
-		// 	{
-		// 		if (_ircserv.isChannel(&msg[idx]))
-		// 		{
-		// 			//  _user.isOperator() && _input.size() > 2)
-		// 			_ircserv.getChannel(&msg[idx])->setTopic(&msg[idx]);
-		// 		}
-		// 		else
-		// 			_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL(std::string(&msg[idx])));
-		// 	}
-		// 	else
-		// 	{
-		// 		if (_user.isOperator())
-		// 			_user.getLastChannel()->setTopic(&msg[idx]);
 
-		// 	}
-		// }
+		std::string channel = toChannelName(str);
+		if (!_ircserv.isChannel(channel) || str[0] != '#')
+		{
+			_user.printMessage(403, channel);
+			return ;
+		}
+
+		if (!_ircserv.getChannel(channel)->isUserInChannel(_user.getNickname()))
+		{
+			_user.printMessage(442, channel);
+			return ;
+		}
+
+		if (!_ircserv.getChannel(channel)->isOperator(_user.getNickname()))
+		{
+			_user.printMessage(482, channel);
+			return ;
+		}
+
+		if (_input.size() == 2 && _ircserv.getChannel(channel)->getTopic() == "")
+		{
+			_user.printMessage(331, channel);
+			return ;
+		}
+
+		if (_input.size() > 2)
+		{
+			std::string topic;
+			topic = _input[2];
+			for (unsigned long i = 3; i < _input.size(); i++)
+				topic += " " + _input[i];
+			std::string msg = "TOPIC #" + channel + " :" + topic + "\r\n";
+			_user.printMessage(msg);
+			_ircserv.getChannel(channel)->setTopic(topic, _user.getNickname());
+
+		}
+
 	}
 }

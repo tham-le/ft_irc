@@ -4,6 +4,7 @@
 
 Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100)
 {
+	_creationTime = setTime();
 }
 
 Channel::~Channel(){}
@@ -17,10 +18,18 @@ std::string		Channel::getName() const
 	return (_name);
 }
 
-void	Channel::setTopic(std::string const topic)
+void	Channel::setTopic(std::string const topic, std::string const nickname)
 {
 	this->_topic = topic;
+	this->_setTopicTime = setTime();
+	this->_setTopicUser = nickname;
 }
+
+std::string		Channel::getTopicUser() const
+{
+	return (_setTopicUser);
+}
+
 std::string		Channel::getTopic() const
 {
 	return (_topic);
@@ -248,20 +257,20 @@ bool			Channel::isEmptyOperator()
 	return (false);
 }
 
-void	Channel::setTime()
+std::string		Channel::setTime()
 {
 	time_t start = std::time(0);
 	char buffer[100];
 	std::strftime(buffer, sizeof(buffer), "%a %b %d  %H:%M:%S %Y", std::localtime(&start));
-	_creationTime = buffer;
+	return (buffer);
 }
 
-std::string		Channel::getCreationTime()
+std::string		Channel::getCreationTime() const
 {
 	return (_creationTime);
 }
 
-std::string		Channel::getTopicTime()
+std::string		Channel::getTopicTime() const
 {
 	return (_setTopicTime);
 }

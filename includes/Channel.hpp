@@ -27,7 +27,7 @@ class Channel
 		void			setName(std::string const name);
 		std::string		getName() const;
 
-		void			setTopic(std::string const topic);
+		void			setTopic(std::string const topic, std::string const nickname);
 		std::string		getTopic() const;
 
 		void			setMode(e_ChannelMode mode);
@@ -66,9 +66,10 @@ class Channel
 		bool			isOperator(std::string const nickname);
 		bool			isEmptyOperator();
 
-		void			setTime();
-		std::string		getCreationTime();
-		std::string		getTopicTime();
+		std::string			setTime();
+		std::string		getCreationTime() const;
+		std::string		getTopicTime() const;
+		std::string		getTopicUser()const;
 
 private:
 		friend class Command;
@@ -78,6 +79,7 @@ private:
 		std::string		_key;
 		std::string		_creationTime;
 		std::string		_setTopicTime;
+		std::string		_setTopicUser;
 
 		unsigned long			_maxUser;
 
