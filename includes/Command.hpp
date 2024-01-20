@@ -40,7 +40,7 @@ public:
 	void 		list(std::string const &channel); //Y
 	void		kick(std::string const &channel);//C
 	void		invite(std::string const &nickname, std::string const &channel);//C
-	void		topic(std::string const &msg);//C
+	void		topic(std::string const &str);//C
 	void		changeMode(std::string const &msg);
 	bool		isInChannel(std::string const &channel);
 	void 		version(std::string const &msg);

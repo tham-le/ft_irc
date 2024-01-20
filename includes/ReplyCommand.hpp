@@ -24,6 +24,7 @@
 # define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)\r\n")// 475
 # define ERR_NOTREGISTERED() (":You have not registered\r\n"); // 451
 # define ERR_TOOMANYCHANNELS(channel) (":You have joined too many channels\r\n") //405
+# define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator") //482
 
 
 
@@ -45,7 +46,7 @@
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " " + mode + "\r\n") //324
 # define RPL_CREATIONTIME(channel, date) (channel + " " + date + "\r\n") //329
 # define RPL_NOTOPIC(channel) (channel +  ":No topic is set\r\n") // 331
-# define RPL_TOPIC(channel, subject) ("Topic for #" + channel + ": " + subject + "\r\n") // 332
+# define RPL_TOPIC(channel, topic) (channel + " :" + topic + "\r\n") // 332
 # define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]" + "\r\n")// 333
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick + "\r\n") //353
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list\r\n") //366

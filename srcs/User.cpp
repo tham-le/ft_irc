@@ -328,13 +328,15 @@ void	User::printMessage(int code, std::string m1)
 		break;
 	case 471:
 		str += ERR_CHANNELISFULL(m1);
-		std::cout << str << std::endl;
 		break;
 	case 473:
 		str += ERR_INVITEONLYCHAN(m1);
 		break;
 	case 475:
 		str += ERR_BADCHANNELKEY(m1);
+		break;
+	case 482:
+		str += ERR_CHANOPRIVSNEEDED(m1);
 		break;
 	}
 	printMessage(str);
@@ -349,6 +351,7 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	switch (code) {
 	case 332:
 		str += RPL_TOPIC(m1, m2);
+		std::cout << "caca prout" << m1 << " " << m2 << std::endl;
 		break;
 	case 333:
 		str += RPL_TOPICWHOTIME(m1, m2);
