@@ -1,136 +1,105 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
 
-bool	Command::validNickname(std::string const nickname) const
+Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(msg), _user(user), _ircserv(ircserv)
 {
-	for (unsigned int i = 0; i < nickname.length(); i++) {
-		if (!(isalnum(nickname[i]) || nickname[i] == '-' || nickname[i] == '[' || nickname[i] == ']' || nickname[i] == '\\' || nickname[i] == '`' || nickname[i] == '^' || nickname[i] == '{' || nickname[i] == '}' || nickname[i] == '_' || nickname[i] == '|'))
-			return false;
+	initCmd();
+	parse(msg);
+	/*a supp*/
+	if (_user.getStatus() == User::PASSWORD_REQUIRED)
+		_user.setStatus(User::REGISTERED);
+	/**/
+	command();
+}
+
+Command::~Command()
+{}
+
+void		Command::initCmd()
+{
+	_func["ADMIN"] = &Command::admin;
+	_func["INFO"] = &Command::info; //->no channel
+	_func["JOIN"] =  &Command::join;
+	_func["NICK"] = &Command::nickname;
+	_func["NAMES"] = &Command::names;
+	_func["PART"] = &Command::part;
+	_func["QUIT"] = &Command::quit;
+	_func["LIST"] = &Command::list; //->no channel
+	_func["USER"] = &Command::user;
+	_func["WHOIS"] = &Command::whois;
+	// _func["KICK"] = &Command::kick;
+	// _func["INVITE"] = &Command::invite;
+	_func["TOPIC"] = &Command::topic;
+	// _func["MODE"] = &Command::changeMode;
+	// _func["VERSION"] = &Command::version; // -> no channel
+}
+
+void		Command::parse(std::string message)
+{
+	// //_input.push_back(message);
+	// //std::cout << "00 input[0] = " << _input[0] << std::endl;
+	// _input.clear();
+	_input = split(message, ' ');
+	//std::cout << _input << std::endl;
+	// for (unsigned int i = 0; i < _input.size(); i++)
+	// 	std::cout << "input[" << i << "] = " << _input[i] << std::endl;
+}
+
+
+
+void		Command::command()
+{
+	std::map<std::string, FuncType >::iterator it = _func.find(_input[0]);
+
+	if (it == _func.end())
+	{
+		if (_user.getStatus() == User::REGISTERED)
+			_user.printMessage(421, _input[0]);
 	}
-	return true;
+	else if (it != _func.end())
+		(this->*it->second)();
 }
 
-void		Command::admin(void)
+std::vector<std::string>	Command::split(std::string str, char separator)
 {
-	(void)_input[0];
-	_ircserv.writeToClient(_user.getFd(), "Admin: \n"); //+ to_string(_ircserv.getSocketFd())); //example
-	//_ircserv.writeToClient(_user.getFd(), _ircserv.getInfo());
-}
+	std::vector<std::string> input;
+	int start = 0;
 
-void		Command::info(void)
-{
-	(void)_input[0];
-	//_ircserv.writeToClient(_user.getFd(), _ircserv.getInfo());
-	//std::cout << Ircserv::getInfo() << std::endl; //info of server (name, version, date of creation, etc)
-}
-
-
-void		Command::nickname(void)
-{
-	std::string nickName;
-	if (!validNickname(_input[0])) {
-		_user.printMessage(432);
-		//_ircserv.writeToClient(_user.getFd(), ERR_ERRONEUSNICKNAME(_input[0]));
-		return ;
-	}
-	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
-		if (it->second->getNickname() == _input[0]) {
-			_user.printMessage(ERR_NICKNAMEINUSE(_input[0]));// replace later with _user.printMessage(433);
-			return ;
+	for (unsigned int i = 0; i <= str.size(); i++)
+	{
+		if (str[i] == separator || i == str.size())
+		{
+			std::string arg;
+			arg.append(str, start, i - start);
+			input.push_back(arg);
+			start = i + 1;
 		}
 	}
-	_user.printMessage(":" + _user.getPrefix() + " NICK " + _input[0] + "\r\n");
-	_user.setNickname(_input[0]);
-	nickName = _user.getNickname();
+	return (input);
 }
 
-void	Command::names(void)
+std::string		Command::toFormat(std::string cmd, std::string str)
 {
-	int idx = 0;
-	if (_input[0][0] == '#')
-		idx = 1;
-	// if (_user.getStatus() != User::ONLINE && _input.size() == 1) {
-	// 	_user.printMessage(ERR_NOTJOINEDANYCHANNEL());
-	// 	return ;
-	// }
-	if (_user.getStatus() != User::ONLINE && !_channels.empty()) { //need to update to take only first parameter and skip others
-		if (strcmp(_input[0].c_str(),_channels[&_input[0][idx]]->getName().c_str()) == 0) {
-				_user.printMessage(RPL_NAMREPLY(_channels[&_input[0][idx]]->getName(), _channels[&_input[0][idx]]->getUsersName())); //replace with later _user.printMessage(353);
-				_user.printMessage(RPL_ENDOFNAMES(_channels[&_input[0][idx]]->getName())); //replace with later _user.printMessage(366);
-			}
-			else
-				_user.printMessage(RPL_ENDOFNAMES(_input[0])); //replace later with _user.printMessage(366);
-	}
-	else if (_user.getStatus() == User::ONLINE) {
-		if (_channels.empty() || strcmp(_input[0].c_str(), _user.getLastChannel()->getName().c_str()) == 0) {
-			_user.printMessage(RPL_NAMREPLY(_user.getLastChannel()->getName(), _user.getLastChannel()->getUsersName())); //replace with later _user.printMessage(353);
-			_user.printMessage(RPL_ENDOFNAMES(_user.getLastChannel()->getName())); //replace later with _user.printMessage(366);
-		}
-		else if (strcmp(_input[0].c_str(),_channels[&_input[0][idx]]->getName().c_str()) == 0) {
-		_user.printMessage(RPL_NAMREPLY(_channels[&_input[0][idx]]->getName(), _channels[&_input[0][idx]]->getUsersName())); //replace with later _user.printMessage(353);
-		_user.printMessage(RPL_ENDOFNAMES(_channels[&_input[0][idx]]->getName())); //replace with later _user.printMessage(366);
-		}
-		else
-			_user.printMessage(RPL_ENDOFNAMES(_input[0])); //replace later with _user.printMessage(366);
-	}
+	std::string msg = ":" +  _user.getPrefix();
+	msg += " " + cmd + " ";
+	msg += str + "\r\n";
+	return (msg);
 }
 
-void	Command::quit(void)
+std::string		Command::toChannelName(std::string str)
 {
-	(void)_input[0];
-	//_user.setStatus(User::DELETED);
-	for (std::map<std::string, Channel *>::iterator it = _user._channels.begin(); it != _user._channels.end(); it++) {
-		if (std::find(it->second->_operators.begin(), it->second->_operators.end(), &_user) != it->second->_operators.end())
-			it->second->removeOperator(_user);
-	}
-	for (std::map<std::string, Channel *>::iterator it = _user._channels.begin(); it != _user._channels.end(); it++)
-		it->second->removeUser(_user);
-	_ircserv.disconnectClient(_user.getFd());
+	if (str[0] == '#')
+		return (&str[1]);
+	return (str);
 }
 
-void	Command::list(void)
+/*a supp*/
+void		Command::channelUsers(std::string channel)
 {
-	_user.printMessage(321);
-	if (_input.size() > 1 && _input[0] != _input.back() && _input[0][0] != '#') {
-		_user.printMessage(323);
-		return ;
-	}
-	if (_channels.empty())
-		_user.printMessage(ERR_NOCHANNNELS());
-	else {
-		int idx = 0;
-		if (_input[0][0] == '#')
-			idx = 1;
-		if (!_input[0].empty() && _channels.find(&_input[0][idx]) != _channels.end()) {
-			//_user.printMessage(322);
-			_user.printMessage(RPL_LIST(_channels[&_input[0][idx]]->getName(), to_string(_channels[&_input[0][idx]]->_users.size()),
-			_channels[&_input[0][idx]]->getTopic()));
-		}
-		else if (_input[0].empty()) {
-			//_user.printMessage(322);
-			for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-				_user.printMessage(RPL_LIST(it->first, to_string(it->second->_users.size()), it->second->getTopic()));
-		}
-	}
-	_user.printMessage(323);
-}
-
-void	Command::changeMode(void)
-{
-	if (_input[0].empty() || _input[0].size() < 2) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NEEDMOREPARAMS(_input[0])); //_input[0] sent to user but not on _input[0] if the user is on a _input[0]
-		return ;
-	}
-	int idx = 0;
-	if (_input[0][0] == '#')
-		idx = 1;
-	std::map<std::string, Channel *>::iterator it = _channels.find(&_input[0][idx]);
-	if (it == _channels.end()) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NOSUCHCHANNEL(_input[0])); //_input[0] sent to user but not on _input[0] if the user is on a _input[0]
-		return ;
-	}
-	if (_user.getStatus() != User::ONLINE && (_input[0][0] == '-' || _input[0][0] == '+')) {
-		_ircserv.writeToClient(_user.getFd(), ERR_NOTJOINEDANYCHANNEL()); //_input[0] sent to user but not on _input[0] if the user is on a _input[0]
-		return ;
-	}
+	std::map<int, User *> listUsers;
+	listUsers = _ircserv.getChannel(channel)->getUsers();
+	std::cout << "---------------------------------------------" << std::endl;
+	std::cout << "List users of channel #" << _ircserv.getChannel(channel)->getName() << std::endl;
+	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+		std::cout << "*" << it->second->getNickname() << std::endl;
+	std::cout << "---------------------------------------------" << std::endl;
 }

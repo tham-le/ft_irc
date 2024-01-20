@@ -53,6 +53,10 @@ public:
 	std::string	getHostname() const;
 	int getFd() const;
 
+	void		setMode(int mode);
+	int			getMode() const;
+
+
 	void	setOperator(bool isOperator);
 	bool	isOperator() const;
 
@@ -108,6 +112,7 @@ private:
 	bool		_isOperator;
 	bool		_isAway;
 	std::string	_awayMessage;
+	int			_mode;
 
 	std::string		_connectionTime;
 

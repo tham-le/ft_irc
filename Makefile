@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yuboktae <yuboktae@student.42.fr>          +#+  +:+       +#+         #
+#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/18 16:38:30 by yuboktae         ###   ########.fr        #
+#    Updated: 2024/01/20 21:49:52 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,22 @@ SRCS_DIR = ./srcs/
 OBJS_DIR = ./objs/
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 $(INCLUDES) -MMD -MP
+OPTI_FLAG = -O3
 DEBUG_FLAG = -g3
 RM = rm -rf
 
 
+SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp
 
-SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp Command.cpp Command1.cpp Command2.cpp
+COMMAND_DIR = Commands/
+COMMAND_FILES =  Command.cpp \
+				ADMIN.cpp  JOIN.cpp   LIST.cpp   TOPIC.cpp \
+				INFO.cpp NAMES.cpp  PART.cpp  WHOIS.cpp\
+				KICK.cpp MODE.cpp  NICK.cpp QUIT.cpp USER.cpp
+COMMAND_SRC = $(addprefix $(COMMAND_DIR), $(COMMAND_FILES))
+
+SRC_FILES += $(COMMAND_SRC)
+
 
 
 SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))
@@ -31,12 +41,14 @@ DEP = $(OBJ:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJ) Makefile
-		@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -o $(NAME)
+		@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OPTI_FLAG) $(OBJ) -o $(NAME)
 		@echo "\033[32m$(NAME) created\033[0m"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 			@mkdir -p $(OBJS_DIR)
-			@$(CC) $(CFLAGS) $(DEBUG_FLAG) -c $< -o $@
+			@mkdir -p $(OBJS_DIR)$(COMMAND_DIR)
+			
+			@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OPTI_FLAG) -c $< -o $@
 			@echo "\033[33m$@ object file created\033[0m"
 -include $(DEP)
 

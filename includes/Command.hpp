@@ -30,22 +30,22 @@ public:
 	void		parse(std::string msg);
 	// std::string	getName() const;
 
-	void		admin(std::string const &msg);//Y
-	void		info(std::string const &msg); //Y
-	void		join(std::string const &channel);//C
-	void		nickname(std::string const &msg);//Y
-	void		names(std::string const &channel); //Y
-	void		part(std::string const &channel);
-	void		quit(std::string const &msg); //Y
-	void 		list(std::string const &channel); //Y
-	void		kick(std::string const &channel);//C
-	void		invite(std::string const &nickname, std::string const &channel);//C
-	void		topic(std::string const &str);//C
-	void		changeMode(std::string const &msg);
-	bool		isInChannel(std::string const &channel);
-	void 		version(std::string const &msg);
-	void		user(std::string const &msg);
-	void		whois(std::string const &msg);
+	void		admin(void);
+	void		info(void); //Y
+	void		join(void);//C
+	void		nickname(void);//Y
+	void		names(void); //Y
+	void		part(void);
+	void		quit(void); //Y
+	void 		list(void); //Y
+	void		kick(void);//C
+	void		invite(void);//C
+	void		topic(void);//C
+	void		changeMode(void);
+	bool		isInChannel(void);
+	void 		version(void);
+	void		user(void);
+	void		whois(void);
 
 	std::vector<std::string>	split(std::string str, char separator);
 	void		command();
@@ -63,14 +63,14 @@ public:
 
 
 private:
-	std::string _msg;
-	User &_user;
-	Ircserv &_ircserv;
-	std::vector<std::string> _input;
-	typedef void (Command::*FuncType)(std::string const &);
-	std::map<std::string, FuncType > _func;
-	std::vector<Channel *> _lastChannels;
-	std::map<std::string, Channel *>	_channels;
+	std::string					_msg;
+	User						&_user;
+	Ircserv						&_ircserv;
+	std::vector<std::string>	_input;
+	typedef void 				(Command::*FuncType)();
+	std::map<std::string, FuncType >		_func;
+	std::vector<Channel *>					_lastChannels;
+	std::map<std::string, Channel *>		_channels;
 };
 
 /*Template to convert int to string*/
