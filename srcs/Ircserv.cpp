@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <cerrno>
 #include <iostream>
+#include "../includes/Color.h"
 
 bool	stop = false;
 
@@ -161,7 +162,7 @@ std::string		Ircserv::readFromClient(int fd)
 			throw std::runtime_error("Invalid fd");
 
 		int bytes = recv(fd, buf, BUFF_SIZE, 0);
-		std::cout << "<<< " << buf;
+		std::cout << BOLD RED"<<< " RESET << buf;
 
 		if (bytes < 0)
 		{

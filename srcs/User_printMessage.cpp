@@ -1,4 +1,11 @@
 #include "../includes/User.hpp"
+#include "../includes/Color.h"
+
+void	User::printMessage(std::string str) {
+	std::cout <<BOLD  GREEN << ">>> " RESET<< str;
+	if (write(_fd, str.c_str(), str.size()) < 0)
+		throw std::runtime_error("write() failed");
+}
 
 std::string	User::getPrefix() const
 {

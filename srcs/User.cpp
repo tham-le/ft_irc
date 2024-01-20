@@ -43,11 +43,6 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 
 User::~User() {}
 
-void	User::printMessage(std::string str) {
-	std::cout << ">>> "<< str;
-	if (write(_fd, str.c_str(), str.size()) < 0)
-		throw std::runtime_error("write() failed");
-}
 
 void User::setNickname(std::string nickname) {
 	try {
