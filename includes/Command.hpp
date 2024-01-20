@@ -53,14 +53,13 @@ public:
 	bool		validNickname(std::string const nickname) const;
 	// bool		isCmdNoUse(std::string const str) const;
 	std::string		toFormat(std::string cmd, std::string str);
-	std::string		toChannelName(std::string str);
+	// std::string		toChannelName(std::string str);
 	void		joinChannel(Channel *channel);
 
 
 	/*a supprimer , pour tester*/
 	void		channelUsers(std::string channel); //print la liste des users du channel
 	/**/
-
 
 private:
 	std::string					_msg;

@@ -35,7 +35,6 @@ public:
 		DELETED
 	};
 	friend class Command;
-	User();
 	~User();
 
 	User(int fd, struct sockaddr_in addr, Ircserv *ircserv);

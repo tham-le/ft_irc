@@ -85,12 +85,12 @@ std::string		Command::toFormat(std::string cmd, std::string str)
 	return (msg);
 }
 
-std::string		Command::toChannelName(std::string str)
-{
-	if (str[0] == '#')
-		return (&str[1]);
-	return (str);
-}
+// std::string		Command::toChannelName(std::string str)
+// {
+// 	if (str[0] == '#')
+// 		return (&str[1]);
+// 	return (str);
+// }
 
 /*a supp*/
 void		Command::channelUsers(std::string channel)

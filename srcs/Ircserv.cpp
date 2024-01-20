@@ -161,19 +161,14 @@ std::string		Ircserv::readFromClient(int fd)
 			throw std::runtime_error("Invalid fd");
 
 		int bytes = recv(fd, buf, BUFF_SIZE, 0);
-		std::cout << "Received " << bytes << " bytes from client " << fd << std::endl;
+		std::cout << "<<< " << buf;
 
 		if (bytes < 0)
 		{
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
-			{
 				return ("");
-			}
 			else
-			{
-				std::cout << "wtf" << std::endl;
 				throw std::runtime_error("recv() failed");
-			}
 		}
 		else if (bytes == 0)
 			throw DisconnectedUser(fd);
@@ -187,14 +182,8 @@ std::string		Ircserv::readFromClient(int fd)
 			user._buffer.erase(0, pos + delim.length());
 			if (!msg.length())
 				continue ;
-			handleMessage(fd, msg);
+			handleMessage(user, msg);
 		}
-/*		if (containEOL(buf))
-		{
-			std::string msg = std::string(buf, buf + strcspn(buf, "\r\n") + 2);
-			handleMessage(fd, msg);
-			return (msg);
-		}*/
 	}
 	catch (const DisconnectedUser& e) {
 		disconnectClient(e._fd);
@@ -266,12 +255,9 @@ void			Ircserv::connectClient()
 	}
 }
 
-void		Ircserv::handleMessage(int fd, std::string const &msg)
+void		Ircserv::handleMessage(User &user, std::string const &msg)
 {
-	User &user = getUser(fd);
 	Command cmd(msg, user, *this);
-	std::cout << "Message from client " << fd << ": " << msg << std::endl;
-	//writeToClient(fd, "OK\n");
 }
 
 void		Ircserv::readFromAllClients()

@@ -6,7 +6,7 @@
 #    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/20 21:49:52 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/20 22:45:30 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ DEBUG_FLAG = -g3
 RM = rm -rf
 
 
-SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp
+SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp\
+			User_printMessage.cpp
 
 COMMAND_DIR = Commands/
 COMMAND_FILES =  Command.cpp \
@@ -38,7 +39,9 @@ SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))
 OBJ = $(addprefix $(OBJS_DIR), $(SRC_FILES:.cpp=.o))
 DEP = $(OBJ:.o=.d)
 
-all: $(NAME)
+all: $(NAME) 
+	./ircserv 6667 we
+
 
 $(NAME): $(OBJ) Makefile
 		@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OPTI_FLAG) $(OBJ) -o $(NAME)
@@ -47,7 +50,7 @@ $(NAME): $(OBJ) Makefile
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 			@mkdir -p $(OBJS_DIR)
 			@mkdir -p $(OBJS_DIR)$(COMMAND_DIR)
-			
+
 			@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OPTI_FLAG) -c $< -o $@
 			@echo "\033[33m$@ object file created\033[0m"
 -include $(DEP)

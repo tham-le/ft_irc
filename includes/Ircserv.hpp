@@ -43,7 +43,7 @@ class Ircserv
 		void			disconnectClient(int fd);
 		void			closeAllSocket();
 
-		void			handleMessage(int fd, std::string const &msg);
+		void			handleMessage(User &user, std::string const &msg);
 
 		void			putStrFd(int fd, std::string const &str);
 

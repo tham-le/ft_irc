@@ -1,5 +1,5 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
+#include <vector>
 
 void		Command::joinChannel(Channel *channel)
 {
@@ -25,14 +25,13 @@ void		Command::join(void)
 	int	flag = 0;
 	std::vector<std::string> str(_input.begin() + 1, _input.end());
 	
+	std::vector<std::string> channelToJoin;
 	std::vector<std::string> key;
-
-	if (_input.size() > 2)
-		key = split(_input[2], ',');
+	
 
 	for (unsigned long i = 0; i < str.size(); i++)
 	{
-		str[i] = toChannelName(str[i]);
+		// str[i] = toChannelName(str[i]);
 
 		if (!_ircserv.isChannel(str[i]))
 		{

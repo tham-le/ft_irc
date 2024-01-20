@@ -2,7 +2,6 @@
 #include "../includes/ReplyCommand.hpp"
 
 void    Command::user() {
-    std::cout << "user" << std::endl;
     if (_input.empty() || _input.size() < 5) {
         _user.printMessage(461);
         return ;
@@ -19,7 +18,6 @@ void    Command::user() {
     	realname += _input[i];
     }
     _user.setRealname(realname);
-		
     std::cout << "User " << _user.getUsername() << " is now registered" << std::endl;
 }
 
