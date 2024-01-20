@@ -2,7 +2,7 @@
 #include <vector>
 
 
-Channel::Channel(std::string name): _name(name), _topic("caca"), _mode(PUBLIC), _key(""), _maxUser(100)
+Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100)
 {
 }
 

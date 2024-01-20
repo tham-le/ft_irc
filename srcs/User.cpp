@@ -290,6 +290,9 @@ void	User::printMessage(int code)
 	case 462:
 		str += ERR_ALREADYREGISTRED();
 		break;
+	case 451:
+		str += ERR_NOTREGISTERED();
+		break;
 	}
 	printMessage(str);
 }
@@ -302,20 +305,30 @@ void	User::printMessage(int code, std::string m1)
 	std::string str = getTarget(code);
 
 	switch (code) {
-	// case 311:
-	// 	str += RPL_WHOISUSER(m1, _username, _hostname, _realname); //EXAMPLE, DONT USE
-	// 	break;
+	case 331:
+		str += RPL_NOTOPIC(m1);
+		break;
 	case 366:
 		str += RPL_ENDOFNAMES(m1);
 		break;
+	case 403:
+		str += ERR_NOSUCHCHANNEL(m1);
+		break;
+	case 405:
+		str += ERR_TOOMANYCHANNELS(m1);
+		break;
 	case 421:
 		str += ERR_UNKNOWNCOMMAND(m1);
+		break;
+	case 442:
+		str += ERR_NOTONCHANNEL(m1);
 		break;
 	case 461:
 		str += ERR_NEEDMOREPARAMS(m1);
 		break;
 	case 471:
 		str += ERR_CHANNELISFULL(m1);
+		std::cout << str << std::endl;
 		break;
 	case 473:
 		str += ERR_INVITEONLYCHAN(m1);
@@ -334,6 +347,9 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	str += " ";
 
 	switch (code) {
+	case 332:
+		str += RPL_TOPIC(m1, m2);
+		break;
 	case 333:
 		str += RPL_TOPICWHOTIME(m1, m2);
 		break;

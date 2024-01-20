@@ -21,7 +21,9 @@
 # define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters\r\n") // 461
 # define ERR_ALREADYREGISTRED() (" :You may not reregister\r\n") // 462
 # define ERR_NOTJOINEDANYCHANNEL() (" :Not joined to any channel\r\n") //notre propre message d'erreur, n'existe pas dans le doc d'IRC
-# define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")// 475
+# define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)\r\n")// 475
+# define ERR_NOTREGISTERED() (":You have not registered\r\n"); // 451
+# define ERR_TOOMANYCHANNELS(channel) (":You have joined too many channels\r\n") //405
 
 
 
