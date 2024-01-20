@@ -39,9 +39,9 @@ void		Command::initCmd()
 
 void		Command::parse(std::string message)
 {
-	//_input.push_back(message);
-	//std::cout << "00 input[0] = " << _input[0] << std::endl;
-	_input.clear();
+	// //_input.push_back(message);
+	// //std::cout << "00 input[0] = " << _input[0] << std::endl;
+	// _input.clear();
 	_input = split(message, ' ');
 	//std::cout << _input << std::endl;
 	// for (unsigned int i = 0; i < _input.size(); i++)
@@ -57,20 +57,19 @@ void		Command::command()
 	if (it == _func.end())
 	{
 		if (_user.getStatus() == User::REGISTERED)
-		{
 			_user.printMessage(421, _input[0]);
-		}
-		return ;
 	}
-	else // if (it == _func.end() && (_user.getStatus() == REGISTRED || _user.getStatus() == ONLINE))
+	else if (it != _func.end())
 	{
-		if (_user.getStatus() == User::ONLINE || _user.getStatus() == User::REGISTERED)
-		{
+		// if (_user.getStatus() == User::PASSWORD_REQUIRED)
+		// 	_user.printMessage(451);
+		// else
+		// {
 			if (_input.size() > 1)
 				(this->*(it->second))(_input[1]);
 			else
 				(this->*(it->second))("");
-		}
+		// }
 	}
 }
 
@@ -92,74 +91,109 @@ std::vector<std::string>	Command::split(std::string str, char separator)
 	return (input);
 }
 
+std::string		Command::toFormat(std::string cmd, std::string str)
+{
+	std::string msg = " :" +  _user.getPrefix();
+	msg += " " + cmd + " ";
+	msg += str + "\r\n";
+	return (msg);
+}
+
+std::string		Command::toChannelName(std::string str)
+{
+	if (str[0] == '#')
+		return (&str[1]);
+	return (str);
+}
+
+/*a supp*/
+void		Command::channelUsers(std::string channel)
+{
+	std::map<int, User *> listUsers;
+	listUsers = _ircserv.getChannel(channel)->getUsers();
+	std::cout << "---------------------------------------------" << std::endl;
+	std::cout << "List users of channel #" << _ircserv.getChannel(channel)->getName() << std::endl;
+	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+		std::cout << "*" << it->second->getNickname() << std::endl;
+	std::cout << "---------------------------------------------" << std::endl;
+}
+
+/**/
+
+
+void		Command::joinChannel(Channel *channel)
+{
+	if (channel->getUsers().size() + 1 > channel->getMaxUser())
+	{
+		_user.printMessage(471, channel->getName());
+		return;
+	}
+	channel->addUser(_user);
+	_user.addChannel(channel);
+	_user.addLastChannel(channel);
+	_user.setStatus(User::ONLINE);
+}
+
 void		Command::join(std::string const &channel)
 {
-	int idx = 0;
-	int	flag = 0;
-	std::vector<std::string> str;
-	std::vector<std::string> key;
 	if (channel.empty())
 	{
 		_user.printMessage(461, _input[0]);
 		return ;
 	}
+
+	int	flag = 0;
+	std::vector<std::string> str;
+	std::vector<std::string> key;
 	str = split(channel, ',');
 	if (_input.size() > 2)
 		key = split(_input[2], ',');
 
 	for (unsigned long i = 0; i < str.size(); i++)
 	{
-		idx = 0;
-		if (str[i][0] == '#')
-			idx = 1;
+		str[i] = toChannelName(str[i]);
 
-		if (!_ircserv.isChannel(&str[i][idx]))
+		if (!_ircserv.isChannel(str[i]))
 		{
-			_ircserv.addChannel(&str[i][idx]);
-			if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 > _ircserv.getChannel(&str[i][idx])->getMaxUser())
-			{
-				_user.printMessage(471, std::string(&str[i][idx]));
-				return; //return ou else
-			}
-			_ircserv.getChannel(&str[i][idx])->addUser(_user);
-			_ircserv.getChannel(&str[i][idx])->addOperator(_user);
+			_ircserv.addChannel(str[i]);
+			joinChannel(_ircserv.getChannel(str[i]));
+			// if (_ircserv.getChannel(str[i])->getUsers().size() + 1 > _ircserv.getChannel(str[i])->getMaxUser())
+			// {
+			// 	_user.printMessage(471, str[i]);
+			// 	return;
+			// }
+			// _ircserv.getChannel(str[i])->addUser(_user);
+			// _user.addChannel(_ircserv.getChannel(str[i]));
+			// _user.addLastChannel((_ircserv.getChannel(str[i])));
+			// _user.setStatus(User::ONLINE);
+			_ircserv.getChannel(str[i])->addOperator(_user);
 		}
 		else
 		{
-			if (_user.isInLastChannels(_ircserv.getChannel(&str[i][idx])))
+			if (_user.isInLastChannels(_ircserv.getChannel(str[i])))
 				break;
-			if (_ircserv.getChannel(&str[i][idx])->getMode() == Channel::INVITE_ONLY)
-			{
-				if (!_ircserv.getChannel(&str[i][idx])->isInvited(_user))
-				{
-					_user.printMessage(473, std::string(&str[i][idx]));
-					flag = 1;
-				}
-				else if (!key.empty())
-				{
-					if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(&str[i][idx])->isGoodKey(key[i])))
-					{
-						_user.printMessage(std::string(&str[i][idx]));
-						flag = 1;
-					}
-				}
-			}
-			if (!_ircserv.getChannel(&str[i][idx])->isUserInChannel(_user) && flag == 0)
-			{
-				if (_ircserv.getChannel(&str[i][idx])->getUsers().size() + 1 >= _ircserv.getChannel(&str[i][idx])->getMaxUser())
-					_user.printMessage(471, std::string(&str[i][idx]));
-				else
-					_ircserv.getChannel(&str[i][idx])->addUser(_user);
-			}
-		}
-		if (_ircserv.getChannel(&str[i][idx])->isUserInChannel(_user))
-		{
-			_user.addChannel(_ircserv.getChannel(&str[i][idx]));
-			_user.addLastChannel((_ircserv.getChannel(&str[i][idx])));
-			_user.setStatus(User::ONLINE);
-			// if (_ircserv.getChannel(&str[i][idx])->getTopic() != "")
+			// if (_ircserv.getChannel(str[i])->getMode() == Channel::INVITE_ONLY)
 			// {
-				_user.printMessage(332);
+			// 	if (!_ircserv.getChannel(str[i])->isInvited(_user))
+			// 	{
+			// 		_user.printMessage(473, str[i]);
+			// 		flag = 1;
+			// 	}
+			// 	else if (!key.empty())
+			// 	{
+			// 		if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(str[i])->isGoodKey(key[i])))
+			// 		{
+			// 			_user.printMessage(str[i]);
+			// 			flag = 1;
+			// 		}
+			// 	}
+			// }
+			if (!_ircserv.getChannel(str[i])->isUserInChannel(_user) && flag == 0)
+
+		}
+		if (_ircserv.getChannel(str[i])->isUserInChannel(_user))
+		{
+
 				std::map<int, User *> listUsers;
 				listUsers = _user.getLastChannel()->getUsers();
 				std::map<int, User *>::iterator it;
@@ -167,17 +201,22 @@ void		Command::join(std::string const &channel)
 				for (it = listUsers.begin(); it != listUsers.end(); it++)
 				{
 					s += "[";
-					if (_ircserv.getChannel(&str[i][idx])->isOperator(it->second->getNickname()))
+					if (_ircserv.getChannel(str[i])->isOperator(it->second->getNickname()))
 						s += "@";
 					s += it->second->getNickname() + "] ";
-					// std::cout << s << std::endl;
 				}
-				std::cout << "OUUUUUUUUUUUUUUUUUUU " << std::endl;
-				_user.printMessage(333, _ircserv.getChannel(&str[i][idx])->getCreationTime());
-				_user.printMessage(353, std::string(&str[i][idx]), s);
-				_user.printMessage(366, std::string(&str[i][idx]));
-			// }
+
+				_user.printMessage(toFormat(_input[0], "#" + std::string(str[i])));
+				_user.printMessage(332);
+				_user.printMessage(333, _ircserv.getChannel(str[i])->getCreationTime());
+				_user.printMessage(353, str[i], s);
+				_user.printMessage(366, str[i]);
+				_user.printMessage("now in chanel");
 		}
+
+		/*a supprimer*/
+		channelUsers(str[i]);
+		/**/
 	}
 }
 void		Command::part(std::string const &channel)
@@ -195,6 +234,7 @@ void		Command::part(std::string const &channel)
 		{
 			if (it->second->getStatus() == User::ONLINE)
 				break;
+
 		}
 		if (it == listUsers.end())
 		{
@@ -202,6 +242,11 @@ void		Command::part(std::string const &channel)
 			_ircserv.removeChannel(_user.getLastChannel()->getName());
 			_user.getLastChannel()->removeOperator(_user);
 		}
+		std::string msg;
+		msg = toFormat("PART","#" + _user.getLastChannel()->getName());
+
+		std::cout << msg ;
+		_user.printMessage(msg);
 		_user.removeLastChannel();
 	}
 	else

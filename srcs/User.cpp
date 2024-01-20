@@ -290,6 +290,9 @@ void	User::printMessage(int code)
 	case 462:
 		str += ERR_ALREADYREGISTRED();
 		break;
+	case 451:
+		str += ERR_NOTREGISTERED();
+		break;
 	}
 	printMessage(str);
 }
@@ -311,6 +314,9 @@ void	User::printMessage(int code, std::string m1)
 	case 403:
 		str += ERR_NOSUCHCHANNEL(m1);
 		break;
+	case 405:
+		str += ERR_TOOMANYCHANNELS(m1);
+		break;
 	case 421:
 		str += ERR_UNKNOWNCOMMAND(m1);
 		break;
@@ -322,6 +328,7 @@ void	User::printMessage(int code, std::string m1)
 		break;
 	case 471:
 		str += ERR_CHANNELISFULL(m1);
+		std::cout << str << std::endl;
 		break;
 	case 473:
 		str += ERR_INVITEONLYCHAN(m1);
