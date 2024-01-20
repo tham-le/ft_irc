@@ -157,39 +157,30 @@ void		Command::join(std::string const &channel)
 		{
 			_ircserv.addChannel(str[i]);
 			joinChannel(_ircserv.getChannel(str[i]));
-			// if (_ircserv.getChannel(str[i])->getUsers().size() + 1 > _ircserv.getChannel(str[i])->getMaxUser())
-			// {
-			// 	_user.printMessage(471, str[i]);
-			// 	return;
-			// }
-			// _ircserv.getChannel(str[i])->addUser(_user);
-			// _user.addChannel(_ircserv.getChannel(str[i]));
-			// _user.addLastChannel((_ircserv.getChannel(str[i])));
-			// _user.setStatus(User::ONLINE);
 			_ircserv.getChannel(str[i])->addOperator(_user);
 		}
 		else
 		{
 			if (_user.isInLastChannels(_ircserv.getChannel(str[i])))
 				break;
-			// if (_ircserv.getChannel(str[i])->getMode() == Channel::INVITE_ONLY)
-			// {
-			// 	if (!_ircserv.getChannel(str[i])->isInvited(_user))
-			// 	{
-			// 		_user.printMessage(473, str[i]);
-			// 		flag = 1;
-			// 	}
-			// 	else if (!key.empty())
-			// 	{
-			// 		if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(str[i])->isGoodKey(key[i])))
-			// 		{
-			// 			_user.printMessage(str[i]);
-			// 			flag = 1;
-			// 		}
-			// 	}
-			// }
+			if (_ircserv.getChannel(str[i])->getMode() == Channel::INVITE_ONLY)
+			{
+				if (!_ircserv.getChannel(str[i])->isInvited(_user))
+				{
+					_user.printMessage(473, str[i]);
+					flag = 1;
+				}
+				else if (!key.empty())
+				{
+					if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(str[i])->isGoodKey(key[i])))
+					{
+						_user.printMessage(str[i]);
+						flag = 1;
+					}
+				}
+			}
 			if (!_ircserv.getChannel(str[i])->isUserInChannel(_user) && flag == 0)
-
+				joinChannel(_ircserv.getChannel(str[i]));
 		}
 		if (_ircserv.getChannel(str[i])->isUserInChannel(_user))
 		{
