@@ -31,7 +31,7 @@ public:
 	{
 		PASSWORD_REQUIRED,
 		REGISTERED,
-		 ONLINE,
+		ONLINE,
 		DELETED
 	};
 	friend class Command;

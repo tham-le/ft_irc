@@ -74,6 +74,7 @@ void	Channel::addUser(User &user)
 			}
 		}
 		_users[user.getFd()] = &user;
+		user.addChannel(this);
 		// for (std::map<int, User *>::iterator i = _users.begin(); i != _users.end(); i++)
 		// {
 		// 	std::cout << "-List users of channel " << _name << std::endl;
@@ -214,7 +215,10 @@ void			Channel::addOperator(User &user)
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
 	if (it == _operators.end())
+	{
+		user.setOperator(true);
 		_operators.push_back(&user);
+	}
 }
 
 

@@ -6,7 +6,7 @@
 #    By: christine <christine@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/21 13:30:38 by christine        ###   ########.fr        #
+#    Updated: 2024/01/21 19:03:48 by christine        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ COMMAND_DIR = Commands/
 COMMAND_FILES =  Command.cpp \
 				ADMIN.cpp  JOIN.cpp   LIST.cpp   TOPIC.cpp \
 				INFO.cpp NAMES.cpp  PART.cpp  WHOIS.cpp\
-				KICK.cpp MODE.cpp  NICK.cpp QUIT.cpp USER.cpp
+				KICK.cpp MODE.cpp  NICK.cpp QUIT.cpp USER.cpp \
+				PASS.cpp CAP.cpp
 COMMAND_SRC = $(addprefix $(COMMAND_DIR), $(COMMAND_FILES))
 
 SRC_FILES += $(COMMAND_SRC)

@@ -33,7 +33,7 @@
 # define RPL_YOURHOST(servername, version) ("Your host is " + servername + ", running version " + version ) //002
 # define RPL_CREATED(date) ("This server was created " + date ); //003
 # define RPL_MYINFO(servername, version, usr_modes, chann_modes) (":" + servername + " " + version + " " + usr_modes + " " + chann_modes ) //004
-# define RPL_ISUPPORT() (":005") //005
+# define RPL_ISUPPORT() (": You are registered now, start your adventure") //005
 
 # define RPL_BOUNCE(server_name, port) ("010 " + "Try server " + server_name + ", port " + port ) //010
 # define RPL_WHOISUSER(nick, user, host, real_name) (nick + " " + user + " " + host + " * :" + real_name ) //311

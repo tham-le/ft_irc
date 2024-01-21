@@ -1,5 +1,4 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
 
 void    Command::user() {
     if (_input.empty() || _input.size() < 5) {
@@ -18,6 +17,5 @@ void    Command::user() {
     	realname += _input[i];
     }
     _user.setRealname(realname);
-    std::cout << "User " << _user.getUsername() << " is now registered" << std::endl;
 }
 

@@ -27,8 +27,21 @@ public:
 	~Command();
 
 	void		run(int fd, Ircserv &ircserv);
-	void		parse(std::string msg);
 	// std::string	getName() const;
+
+
+	void		pass(void);
+	void		cap(void);
+
+	
+	void		who(void);
+	void		ping(void);
+	void		pong(void);
+	void		privmsg(void);
+	void		notice(void);
+	
+	
+
 
 	void		admin(void);
 	void		info(void); //Y
@@ -64,7 +77,6 @@ public:
 	/**/
 
 private:
-	std::string					_msg;
 	User						&_user;
 	Ircserv						&_ircserv;
 	std::vector<std::string>	_input;

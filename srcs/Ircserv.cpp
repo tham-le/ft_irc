@@ -295,24 +295,6 @@ void			Ircserv::sendPing()
 
 }
 
-/*void			Ircserv::sendPendingMessages()
-{
-	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
-	{
-		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
-		{
-			User &user = getUser(it->fd);
-			if (user._input.size() > 0)
-			{
-				std::string msg = user._input.front();
-				user._input.pop();
-				writeToClient(it->fd, msg);
-			}
-		}
-	}
-}*/
-
-
 
 void			Ircserv::run()
 {
@@ -322,7 +304,6 @@ void			Ircserv::run()
 			signal(SIGINT, sighandler);
 			waitForEvent();
 			connectClient();
-			//sendPendingMessages();
 			readFromAllClients();
 			if (stop == true)
 			{
@@ -333,7 +314,6 @@ void			Ircserv::run()
 			if (std::time(0) - _lastPing > _config.getPingInterval())
 			{
 				_lastPing = std::time(0);
-				// std::cout << "Sending ping to all clients" << std::endl;
 				sendPing();
 			}
 		}
