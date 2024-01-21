@@ -21,6 +21,8 @@ void		Command::joinChannel(Channel *channel)
 	_user.addLastChannel(channel);
 	_user.setStatus(User::ONLINE);
 	_user.printMessage(toFormat("JOIN", channelName));
+	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
+	_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	_user.printMessage(353, channelName, _user.getNickname()); // RPL_NAMREPLY
 	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
 

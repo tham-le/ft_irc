@@ -159,7 +159,6 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	switch (code) {
 	case 332:
 		str += RPL_TOPIC(m1, m2);
-		std::cout << "caca prout" << m1 << " " << m2 << std::endl;
 		break;
 	case 333:
 		str += RPL_TOPICWHOTIME(m1, m2);
