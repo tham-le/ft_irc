@@ -55,6 +55,8 @@ public:
 	std::string		toFormat(std::string cmd, std::string str);
 	// std::string		toChannelName(std::string str);
 	void		joinChannel(Channel *channel);
+	void		topicChannel(Channel *channel, int idx);
+	void		topicCheck(Channel *channel, int idx);
 
 
 	/*a supprimer , pour tester*/
