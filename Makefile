@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
+#    By: christine <christine@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/21 00:23:12 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/21 13:30:38 by christine        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ SRC = $(addprefix $(SRCS_DIR), $(SRC_FILES))
 OBJ = $(addprefix $(OBJS_DIR), $(SRC_FILES:.cpp=.o))
 DEP = $(OBJ:.o=.d)
 
-all: $(NAME) 
+all: $(NAME)
 	./ircserv 6667 we
 
 

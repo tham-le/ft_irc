@@ -2,9 +2,10 @@
 #include <vector>
 
 
-Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100)
+Channel::Channel(std::string name): _name(name), _topic("ursula"), _mode(PUBLIC), _key(""), _maxUser(100)
 {
 	_creationTime = setTime();
+	_setTopicTime = setTime();
 }
 
 Channel::~Channel(){}

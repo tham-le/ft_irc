@@ -24,10 +24,10 @@ void		Command::join(void)
 
 	int	flag = 0;
 	std::vector<std::string> str(_input.begin() + 1, _input.end());
-	
+
 	std::vector<std::string> channelToJoin;
 	std::vector<std::string> key;
-	
+
 
 	for (unsigned long i = 0; i < str.size(); i++)
 	{
@@ -79,7 +79,11 @@ void		Command::join(void)
 
 				_user.printMessage(toFormat(_input[i], "#" + std::string(str[i])));
 				_user.printMessage(353, "= #" + std::string(str[i]), s);
-				_user.printMessage(366, "#" + std::string(str[i]));			
+				_user.printMessage(366, "#" + std::string(str[i]));
+				std::string msg = ":" + _user.getPrefix() + " TOPIC #" + str[i] + " :" + _ircserv.getChannel(str[i])->getTopic() + "\r\n";
+				_user.printMessage(msg);
+				_user.printMessage(332, str[i], _ircserv.getChannel(str[i])->getTopic());
+				_user.printMessage(333, _user.getNickname(), _ircserv.getChannel(str[i])->getTopicTime());
 		}
 		/*a supprimer*/
 		channelUsers(str[i]);

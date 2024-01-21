@@ -1,5 +1,6 @@
 #include "../includes/User.hpp"
 #include "../includes/Color.h"
+#include <unistd.h>
 
 void	User::printMessage(std::string str) {
 	std::cout <<BOLD  GREEN << ">>> " RESET<< str;
@@ -198,7 +199,7 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	}
 	(void)m4;
 
-	
+
 	printMessage(str);
 }
 
