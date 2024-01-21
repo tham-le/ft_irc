@@ -403,6 +403,17 @@ bool			Ircserv::isUser(std::string nickname) const
 	return (false);
 }
 
+User			*Ircserv::getUser(std::string nickname) const
+{
+	std::map<int, User *>::const_iterator it;
+	for ( it = _users.begin(); it != _users.end(); it++)
+	{
+		if (it->second->getNickname() == nickname)
+			break;
+	}
+	return (it->second);
+}
+
 
 
 /*	int pingInterval = _config.getPingInterval();

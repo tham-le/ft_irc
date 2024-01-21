@@ -2,7 +2,7 @@
 #include <vector>
 
 
-Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _maxUser(100)
+Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _modeCmd("+"), _maxUser(100)
 {
 	_creationTime = setTime();
 }
@@ -279,4 +279,14 @@ std::string		Channel::getCreationTime() const
 std::string		Channel::getTopicTime() const
 {
 	return (_setTopicTime);
+}
+
+std::string		Channel::getModeCmd() const
+{
+	return (_modeCmd);
+}
+
+void			Channel::setModeCmd(std::string mode)
+{
+	_modeCmd += mode;
 }

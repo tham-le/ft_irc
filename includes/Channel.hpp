@@ -24,7 +24,7 @@ class Channel
 			INVITE_ONLY,
 			PRIVATE,
 			PUBLIC,
-			PROTECTED 
+			PROTECTED
 		};
 		// Channel();
 		Channel(std::string name);
@@ -76,6 +76,9 @@ class Channel
 		std::string		getCreationTime() const;
 		std::string		getTopicTime() const;
 		std::string		getTopicUser()const;
+		std::string		getModeCmd() const;
+		void			setModeCmd(std::string mode);
+
 
 private:
 		friend class Command;
@@ -86,6 +89,7 @@ private:
 		std::string		_creationTime;
 		std::string		_setTopicTime;
 		std::string		_setTopicUser;
+		std::string		_modeCmd;
 
 		unsigned long			_maxUser;
 

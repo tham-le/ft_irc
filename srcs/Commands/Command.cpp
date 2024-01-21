@@ -40,8 +40,8 @@ void		Command::initCmd()
 	// _func["KICK"] = &Command::kick;
 	_func["INVITE"] = &Command::invite;
 	_func["TOPIC"] = &Command::topic;
-	// _func["MODE"] = &Command::changeMode;
-	// _func["VERSION"] = &Command::version; // -> no channel
+	_func["MODE"] = &Command::changeMode;
+	_func["VERSION"] = &Command::version; // -> no channel
 }
 
 

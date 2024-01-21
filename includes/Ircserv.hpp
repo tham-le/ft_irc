@@ -69,6 +69,7 @@ class Ircserv
 		std::map<int, User *>	getUsers() const;
 
 		bool			isUser(std::string nickname) const;
+		User			*getUser(std::string nickname) const;
 
 
 
