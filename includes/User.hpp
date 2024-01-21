@@ -119,6 +119,7 @@ private:
 
 	void	receive(Ircserv *ircserv);
 
+	
 	std::vector<Channel *> _lastChannels;
 	std::map<std::string, Channel *> _channels;
 };

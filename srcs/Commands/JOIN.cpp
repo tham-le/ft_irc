@@ -21,19 +21,28 @@ void		Command::joinChannel(Channel *channel)
 	_user.addLastChannel(channel);
 	_user.setStatus(User::ONLINE);
 	_user.printMessage(toFormat("JOIN", channelName));
+	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
+	_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	//353
+	// std::map<int, User *> listUsers = channel->getUsers();
+	// std::map<int, User *>::iterator it;
+	// std::string s;
+	// for (it = listUsers.begin(); it != listUsers.end(); it++)
+	// {
+	// 	s += "[";
+	// 	if (channel->isOperator(it->second->getUsername()))
+	// 		s += "@";
+	// 	s += it->second->getUsername() + "] ";
+	// }
 	std::map<int, User *> listUsers = channel->getUsers();
-	std::map<int, User *>::iterator it;
-	std::string s;
-	for (it = listUsers.begin(); it != listUsers.end(); it++)
+	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
-		s += "[";
-		if (channel->isOperator(it->second->getUsername()))
-			s += "@";
-		s += it->second->getUsername() + "] ";
+		if (channel->isOperator(it->second->getNickname()))
+			_user.printMessage(353, "= " + channelName, "@@" + it->second->getNickname()); // RPL_NAMREPLY
+		else
+			_user.printMessage(353, "= " + channelName, it->second->getNickname()); // RPL_NAMREPLY
 	}
-
-	_user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
+	// _user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
 	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
 
 }
@@ -46,12 +55,12 @@ void		Command::join(void)
 		return ;
 	}
 	if (_input.size() < 2)
-	{ 
+	{
 		_user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
 		return ;
 	}
 	std::vector<std::string> params(_input.begin() + 1, _input.end());
-	
+
 	std::vector<std::string> channelToJoin;
 	std::vector<std::string> key;
 
@@ -114,7 +123,7 @@ void		Command::join(void)
 		else //if channel doesn't exist, create it
 		{
 			//if max channels of server reached
-			if (_ircserv.getNbChannels() + 1 > _ircserv.getConfig().getMaxChannels()) 
+			if (_ircserv.getNbChannels() + 1 > _ircserv.getConfig().getMaxChannels())
 			{
 				_user.printMessage(405, channelToJoin[i]); // ERR_TOOMANYCHANNELS
 				continue;
@@ -128,7 +137,7 @@ void		Command::join(void)
 }
 
 
-	
+
 
 	// for (unsigned long i = 0; i < str.size(); i++)
 	// {
@@ -180,7 +189,7 @@ void		Command::join(void)
 
 	// 			_user.printMessage(toFormat(_input[i], "#" + std::string(str[i])));
 	// 			_user.printMessage(353, "= #" + std::string(str[i]), s);
-	// 			_user.printMessage(366, "#" + std::string(str[i]));			
+	// 			_user.printMessage(366, "#" + std::string(str[i]));
 	// 	}
 	// 	/*a supprimer*/
 	// 	channelUsers(str[i]);

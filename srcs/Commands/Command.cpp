@@ -22,11 +22,11 @@ void		Command::initCmd()
 	_func["CAP"] = &Command::cap;
 	// _func["PING"] = &Command::ping;
 	// _func["PONG"] = &Command::pong;
-	
+
 	// _func["PRIVMSG"] = &Command::privmsg;
 	// _func["NOTICE"] = &Command::notice;
 	// _func["WHO"] = &Command::who;
-	
+
 	_func["ADMIN"] = &Command::admin;
 	_func["INFO"] = &Command::info; //->no channel
 	_func["JOIN"] =  &Command::join;
@@ -38,7 +38,7 @@ void		Command::initCmd()
 	_func["USER"] = &Command::user;
 	_func["WHOIS"] = &Command::whois;
 	// _func["KICK"] = &Command::kick;
-	// _func["INVITE"] = &Command::invite;
+	_func["INVITE"] = &Command::invite;
 	_func["TOPIC"] = &Command::topic;
 	// _func["MODE"] = &Command::changeMode;
 	// _func["VERSION"] = &Command::version; // -> no channel
@@ -48,7 +48,9 @@ void		Command::initCmd()
 void		Command::command()
 {
 	std::map<std::string, FuncType >::iterator it = _func.find(_input[0]);
-
+	// if (_input[0] == _user.getMode() == User::PASSWORD_REQUIRED)
+	// 	_user.printMessage(451);
+	// else
 	if (it == _func.end())
 	{
 		if (_user.getStatus() == User::REGISTERED)

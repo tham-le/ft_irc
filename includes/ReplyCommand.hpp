@@ -50,6 +50,7 @@
 # define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]" )// 333
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick ) //353
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list") //366
+# define RPL_INVITING(nick, channel) ("Inviting " + nick + "to " + channel); // 341
 
 
 // enum ReplyCode

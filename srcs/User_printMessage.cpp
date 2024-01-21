@@ -115,6 +115,9 @@ void	User::printMessage(int code, std::string m1)
 	case 366:
 		str += RPL_ENDOFNAMES(m1);
 		break;
+	case 401:
+		str += ERR_NOSUCHNICK(m1);
+		break;
 	case 403:
 		str += ERR_NOSUCHCHANNEL(m1);
 		break;
@@ -159,13 +162,18 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	switch (code) {
 	case 332:
 		str += RPL_TOPIC(m1, m2);
-		std::cout << "caca prout" << m1 << " " << m2 << std::endl;
 		break;
 	case 333:
 		str += RPL_TOPICWHOTIME(m1, m2);
 		break;
+	case 341:
+		str += RPL_INVITING(m1, m2);
+		break;
 	case 353:
 		str += RPL_NAMREPLY(m1, m2);
+		break;
+	case 443:
+		str += ERR_USERONCHANNEL(m1, m2);
 		break;
 
 	}
@@ -254,7 +262,7 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	(void)m5;
 	(void)m6;
 	(void)m7;
-	
+
 	str += "\r\n";
 	printMessage(str);
 }
