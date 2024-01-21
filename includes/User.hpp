@@ -89,7 +89,8 @@ public:
 	std::string	getPrefix() const;
 	std::string	getTarget(int code);
 	std::string	getNameChannels() const;
-
+	size_t		getNbChannelsofUser() const;
+	size_t		getMaxChannelofUser() const;
 
 	std::string		_buffer;
 	time_t			_lastPing;
@@ -112,6 +113,7 @@ private:
 	bool		_isAway;
 	std::string	_awayMessage;
 	int			_mode;
+	int			_MaxChannelofUser;
 
 	std::string		_connectionTime;
 

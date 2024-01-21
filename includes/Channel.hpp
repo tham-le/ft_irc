@@ -22,8 +22,9 @@ class Channel
 		enum	e_ChannelMode
 		{
 			INVITE_ONLY,
+			PRIVATE,
 			PUBLIC,
-			PROTECTED
+			PROTECTED 
 		};
 		// Channel();
 		Channel(std::string name);

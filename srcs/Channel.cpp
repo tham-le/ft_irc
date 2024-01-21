@@ -202,6 +202,8 @@ bool			Channel::isInvited(User &user)
 
 bool			Channel::isGoodKey(std::string key)
 {
+	if (_key == "")
+		return (true);
 	if (key == _key)
 		return (true);
 	return (false);

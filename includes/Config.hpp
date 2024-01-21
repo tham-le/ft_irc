@@ -1,6 +1,7 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+#include <cstddef>
 #include <map>
 #include <string>
 
@@ -28,10 +29,10 @@ public:
 	int						getPingTimeout() const;
 
 	void					setMaxClients(int const maxClients);
-	int						getMaxClients() const;
+	size_t						getMaxClients() const;
 
 	void					setMaxChannels(int const maxChannels);
-	int						getMaxChannels() const;
+	size_t						getMaxChannels() const;
 
 private:
 	// std::map<std::string, std::string>	_configList;
@@ -39,8 +40,8 @@ private:
 	std::string							_password;
 	int									_pingInterval;
 	int									_pingTimeout;
-	int									_maxClients;
-	int									_maxChannels;
+	size_t									_maxClients;
+	size_t									_maxChannels;
 
 };
 

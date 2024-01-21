@@ -1,5 +1,6 @@
 #include "../includes/User.hpp"
 #include "../includes/Color.h"
+#include <unistd.h>
 
 void	User::printMessage(std::string str) {
 	std::cout <<BOLD  GREEN << ">>> " RESET<< str;
@@ -96,6 +97,7 @@ void	User::printMessage(int code)
 		str += ERR_NOTREGISTERED();
 		break;
 	}
+	str += "\r\n";
 	printMessage(str);
 }
 
@@ -144,6 +146,7 @@ void	User::printMessage(int code, std::string m1)
 		str += ERR_CHANOPRIVSNEEDED(m1);
 		break;
 	}
+	str += "\r\n";
 	printMessage(str);
 
 }
@@ -166,6 +169,7 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 		break;
 
 	}
+	str += "\r\n";
 	printMessage(str);
 }
 
@@ -180,6 +184,7 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 		str += RPL_LIST(m1, m2, m3); //EXAMPLE, DONT USE
 		break;
 	}
+	str += "\r\n";
 	printMessage(str);
 }
 
@@ -198,7 +203,7 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	}
 	(void)m4;
 
-	
+	str += "\r\n";
 	printMessage(str);
 }
 
@@ -215,7 +220,7 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	(void)m3;
 	(void)m4;
 	(void)m5;
-
+	str += "\r\n";
 	printMessage(str);
 }
 
@@ -231,7 +236,7 @@ void User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	}
 	(void)m5;
 	(void)m6;
-
+	str += "\r\n";
 	printMessage(str);
 }
 
@@ -249,7 +254,8 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	(void)m5;
 	(void)m6;
 	(void)m7;
-
+	
+	str += "\r\n";
 	printMessage(str);
 }
 

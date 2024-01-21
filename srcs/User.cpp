@@ -1,4 +1,5 @@
 #include "../includes/User.hpp"
+#include <cstddef>
 #include <iostream>
 #include <fcntl.h>
 #include <iostream>
@@ -23,6 +24,7 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	_username = "*";
 	_realname = "*";
 	_ircserv = ircserv;
+	_MaxChannelofUser = 50;
 
 	time_t start = std::time(0);
 	char buffer[100];
@@ -42,6 +44,16 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 }
 
 User::~User() {}
+
+size_t		User::getMaxChannelofUser() const
+{
+	return (_MaxChannelofUser);
+}
+
+size_t		User::getNbChannelsofUser() const
+{
+	return (_channels.size());
+}
 
 
 void User::setNickname(std::string nickname) {
