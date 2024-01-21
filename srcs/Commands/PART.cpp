@@ -25,7 +25,6 @@ void		Command::part(void)
 	std::string					reason;
 	if (_input.size() > 2)
 	{
-		std::cout << "reason" << std::endl;
 		//concat the rest of input as reason of PART
 		for (size_t i = 2; i < _input.size(); i++)
 		{
@@ -34,10 +33,6 @@ void		Command::part(void)
 			
 		}
 	}
-	
-	std::cout << "reason = " << reason << std::endl;
-	std::cout << "listChannel size = " << listChannel.size() << std::endl;
-	//std::cout << "listChannel[0] = " << listChannel[0] << std::endl;
 
 	for (unsigned long i = 0; i < listChannel.size(); i++)
 	{

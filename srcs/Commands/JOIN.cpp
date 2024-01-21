@@ -1,3 +1,4 @@
+
 #include "../includes/Command.hpp"
 #include <string>
 #include <vector>
@@ -17,13 +18,23 @@ void		Command::joinChannel(Channel *channel)
 		return;
 	}
 	channel->addUser(_user);
-	_user.addChannel(channel);
 	_user.addLastChannel(channel);
 	_user.setStatus(User::ONLINE);
 	_user.printMessage(toFormat("JOIN", channelName));
-	_user.printMessage(353, channelName, _user.getNickname()); // RPL_NAMREPLY
-	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
+	//353
+	std::map<int, User *> listUsers = channel->getUsers();
+	std::map<int, User *>::iterator it;
+	std::string s;
+	for (it = listUsers.begin(); it != listUsers.end(); it++)
+	{
+		s += "[";
+		if (channel->isOperator(it->second->getUsername()))
+			s += "@";
+		s += it->second->getUsername() + "] ";
+	}
 
+	_user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
+	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
 
 }
 
@@ -64,15 +75,6 @@ void		Command::join(void)
 		_user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
 		return ;
 	}
-
-	// for (unsigned long i = 0; i < channelToJoin.size(); i++)
-	// {
-	// 	std::cout << "channelToJoin[" << i << "] = " << channelToJoin[i] << std::endl;
-	// }
-	// for (unsigned long i = 0; i < key.size(); i++)
-	// {
-	// 	std::cout << "key[" << i << "] = " << key[i] << std::endl;
-	// }
 
 	for (unsigned long i = 0; i < channelToJoin.size(); i++)
 	{
@@ -120,8 +122,8 @@ void		Command::join(void)
 			_ircserv.addChannel(channelToJoin[i]);
 			_ircserv.getChannel(channelToJoin[i])->addOperator(_user);
 			joinChannel(_ircserv.getChannel(channelToJoin[i]));
-			// _user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
-			// _user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
+			//_user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
+			//_user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
 		}
 }
 

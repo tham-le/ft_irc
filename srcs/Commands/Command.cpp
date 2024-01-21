@@ -1,13 +1,15 @@
 #include "../includes/Command.hpp"
+#include <ctype.h>
 
-Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _msg(msg), _user(user), _ircserv(ircserv)
+Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _user(user), _ircserv(ircserv)
 {
 	initCmd();
-	parse(msg);
-	/*a supp*/
-	if (_user.getStatus() == User::PASSWORD_REQUIRED)
-		_user.setStatus(User::REGISTERED);
-	/**/
+	_input = split(msg, ' ');
+	//turn input[ 0] to uppercas
+	if (_input.size() < 1)
+		return ;
+	for (size_t i = 0; i < _input[0].size(); i++)
+		_input[0][i] = toupper(_input[0][i]);
 	command();
 }
 
@@ -16,6 +18,15 @@ Command::~Command()
 
 void		Command::initCmd()
 {
+	_func["PASS"] = &Command::pass;
+	_func["CAP"] = &Command::cap;
+	// _func["PING"] = &Command::ping;
+	// _func["PONG"] = &Command::pong;
+	
+	// _func["PRIVMSG"] = &Command::privmsg;
+	// _func["NOTICE"] = &Command::notice;
+	// _func["WHO"] = &Command::who;
+	
 	_func["ADMIN"] = &Command::admin;
 	_func["INFO"] = &Command::info; //->no channel
 	_func["JOIN"] =  &Command::join;
@@ -32,18 +43,6 @@ void		Command::initCmd()
 	// _func["MODE"] = &Command::changeMode;
 	// _func["VERSION"] = &Command::version; // -> no channel
 }
-
-void		Command::parse(std::string message)
-{
-	// //_input.push_back(message);
-	// //std::cout << "00 input[0] = " << _input[0] << std::endl;
-	// _input.clear();
-	_input = split(message, ' ');
-	//std::cout << _input << std::endl;
-	// for (unsigned int i = 0; i < _input.size(); i++)
-	// 	std::cout << "input[" << i << "] = " << _input[i] << std::endl;
-}
-
 
 
 void		Command::command()
