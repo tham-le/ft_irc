@@ -21,19 +21,23 @@ void		Command::nickname(void)
 		_user.printMessage(431); //ERR_NONICKNAMEGIVEN 
 		return ;
 	}
+	if (_input[1].length() > 30)
+	{
+		_user.printMessage("Nickname too long, truncated to 30 characters");
+		_input[1] = _input[1].substr(0, 30);
+	}
 	if (!validNickname(_input[1]))
 	{
-
 		_user.printMessage(432, _input[1]); //ERR_ERRONEUSNICKNAME 
 		return ;
 	}
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
 		if (it->second->getNickname() == _input[1]) {
-			_user.printMessage(443, _input[1]);
+			_user.printMessage(443, _input[1]); //ERR_NICKNAMEINUSE
 			return ;
 		}
 	}
-	//_user.printMessage(":" + _user.getPrefix() + " NICK " + _input[1] + "\r\n");
+	//EVERYTHING IS OK, CHANGE NICKNAME
 	_user.printMessage(toFormat("NICK", _input[1]));
 	_user.setNickname(_input[1]);
 }

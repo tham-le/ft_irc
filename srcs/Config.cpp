@@ -1,4 +1,5 @@
 #include "Config.hpp"
+#include <cstddef>
 #include <stdlib.h>
 #include <exception>
 #include <stdexcept>
@@ -65,7 +66,7 @@ void	Config::setMaxClients(int const maxClients)
 	this->_maxClients = maxClients;
 }
 
-int		Config::getMaxClients() const
+size_t		Config::getMaxClients() const
 {
 	return  (_maxClients);
 }
@@ -75,7 +76,7 @@ void	Config::setMaxChannels(int const maxChannels)
 	this->_maxChannels = maxChannels;
 }
 
-int		Config::getMaxChannels() const
+size_t		Config::getMaxChannels() const
 {
 	return (_maxChannels);
 }

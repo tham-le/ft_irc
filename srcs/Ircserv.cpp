@@ -17,6 +17,7 @@
 #include <cerrno>
 #include <iostream>
 #include "../includes/Color.h"
+#include <csignal>
 
 bool	stop = false;
 
@@ -232,6 +233,17 @@ void			Ircserv::closeAllSocket()
 
 }
 
+std::map<std::string, Channel *>	Ircserv::getChannels() const
+{
+	return (_channels);
+}
+
+std::map<int, User *>	Ircserv::getUsers() const
+{
+	return (_users);
+}
+
+
 void			Ircserv::connectClient()
 {
 	if (_pollfds[0].revents & POLLIN)
@@ -242,7 +254,7 @@ void			Ircserv::connectClient()
 			closeAllSocket();
 			return ;
 		}
-		if ((int)_users.size() == _config.getMaxClients())
+		if (_users.size() == _config.getMaxClients())
 			throw std::runtime_error("Max clients reached");
 		struct sockaddr_in addr;
 		socklen_t len = sizeof(addr);
@@ -385,6 +397,24 @@ std::string		Ircserv::getChannelsName() const
 		channelsName += it->first + " , ";
 	return (channelsName);
 }
+
+size_t			Ircserv::getNbClients() const
+{
+	return (_users.size());
+}
+
+size_t			Ircserv::getNbChannels() const
+{
+	return (_channels.size());
+}
+
+Config			Ircserv::getConfig() const
+{
+	return (_config);
+}
+
+
+
 
 /*	int pingInterval = _config.getPingInterval();
 	int pingTimeout = _config.getPingTimeout();

@@ -14,8 +14,6 @@
 #include "Channel.hpp"
 #include "Config.hpp"
 #include <poll.h>
-#include <csignal>
-
 class User;
 class Channel;
 class Command;
@@ -64,6 +62,14 @@ class Ircserv
 
 		std::string		getHostName() const;
 		std::string		getVersion() const;
+		size_t			getNbClients() const;
+		size_t			getNbChannels() const;
+		Config			getConfig() const;
+		std::map<std::string, Channel *>	getChannels() const;
+		std::map<int, User *>	getUsers() const;
+
+
+
 
 /*		Config			getConfig() const;
 		void			setConfig(Config const &config);
