@@ -24,18 +24,25 @@ void		Command::joinChannel(Channel *channel)
 	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
 	_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	//353
+	// std::map<int, User *> listUsers = channel->getUsers();
+	// std::map<int, User *>::iterator it;
+	// std::string s;
+	// for (it = listUsers.begin(); it != listUsers.end(); it++)
+	// {
+	// 	s += "[";
+	// 	if (channel->isOperator(it->second->getUsername()))
+	// 		s += "@";
+	// 	s += it->second->getUsername() + "] ";
+	// }
 	std::map<int, User *> listUsers = channel->getUsers();
-	std::map<int, User *>::iterator it;
-	std::string s;
-	for (it = listUsers.begin(); it != listUsers.end(); it++)
+	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
-		s += "[";
-		if (channel->isOperator(it->second->getUsername()))
-			s += "@";
-		s += it->second->getUsername() + "] ";
+		if (channel->isOperator(it->second->getNickname()))
+			_user.printMessage(353, "= " + channelName, "@@" + it->second->getNickname()); // RPL_NAMREPLY
+		else
+			_user.printMessage(353, "= " + channelName, it->second->getNickname()); // RPL_NAMREPLY
 	}
-
-	_user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
+	// _user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
 	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
 
 }

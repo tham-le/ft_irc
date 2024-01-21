@@ -33,14 +33,14 @@ public:
 	void		pass(void);
 	void		cap(void);
 
-	
+
 	void		who(void);
 	void		ping(void);
 	void		pong(void);
 	void		privmsg(void);
 	void		notice(void);
-	
-	
+
+
 
 
 	void		admin(void);
@@ -68,8 +68,8 @@ public:
 	std::string		toFormat(std::string cmd, std::string str);
 	// std::string		toChannelName(std::string str);
 	void		joinChannel(Channel *channel);
-	void		topicChannel(Channel *channel, int idx);
-	void		topicCheck(Channel *channel, int idx);
+	void		topicChannel(Channel *channel);
+	void		topicCheck(Channel *channel);
 
 
 	/*a supprimer , pour tester*/

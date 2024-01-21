@@ -393,6 +393,15 @@ Config			Ircserv::getConfig() const
 	return (_config);
 }
 
+bool			Ircserv::isUser(std::string nickname) const
+{
+	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		if (it->second->getNickname() == nickname)
+			return (true);
+	}
+	return (false);
+}
 
 
 
