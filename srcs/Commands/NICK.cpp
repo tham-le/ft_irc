@@ -33,7 +33,7 @@ void		Command::nickname(void)
 	}
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
 		if (it->second->getNickname() == _input[1]) {
-			_user.printMessage(443, _input[1]); //ERR_NICKNAMEINUSE
+			_user.printMessage(433, _input[1]); //ERR_NICKNAMEINUSE
 			return ;
 		}
 	}

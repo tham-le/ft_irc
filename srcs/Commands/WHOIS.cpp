@@ -10,7 +10,6 @@ void    Command::whois() {
         }
         return ;
     }
-    //std::vector<std::string> str = split(msg, ' ');
     std::vector<std::string>::reverse_iterator rit = _input.rbegin();
     std::vector<std::string>::reverse_iterator rend = _input.rend() - 1;
     for (; rit != rend; ++rit) {;

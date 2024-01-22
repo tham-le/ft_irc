@@ -13,6 +13,7 @@ void	Channel::setName(std::string const name)
 {
 	this->_name = name;
 }
+
 std::string		Channel::getName() const
 {
 	return (_name);
@@ -49,6 +50,7 @@ void	Channel::setKey(std::string const key)
 {
 	this->_key = key;
 }
+
 std::string		Channel::getKey() const
 {
 	return (_key);
@@ -58,6 +60,7 @@ void	Channel::setMaxUser(int maxUser)
 {
 	this->_maxUser = maxUser;
 }
+
 unsigned long		Channel::getMaxUser() const
 {
 	return (_maxUser);
@@ -117,7 +120,7 @@ std::map<int, User *>	Channel::getUsers()
 	return (_users);
 }
 
-std::string Channel::getUsersName() const
+std::string Channel::getUsersName() const //pour le RPL_NAMREPLY 353
 {
 	std::string str = "";
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
@@ -145,7 +148,6 @@ bool			Channel::isUserInChannel(User const &user) const
 		return (true);
 	return (false);
 }
-
 
 void			Channel::Invite(User &user)
 {
@@ -220,7 +222,6 @@ void			Channel::addOperator(User &user)
 		_operators.push_back(&user);
 	}
 }
-
 
 void			Channel::removeOperator(User &user)
 {

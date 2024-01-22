@@ -7,8 +7,6 @@
 
 void		Command::part(void)
 {
-	
-
 	if (_input.size() < 2 || _input[1].empty())
 	{
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS

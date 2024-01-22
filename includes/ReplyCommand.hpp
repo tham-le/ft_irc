@@ -2,30 +2,37 @@
 # define REPLYCOMMAND_HPP
 
 /*ERROR FOR COMMAND*/
+# define ERR_NOCHANNNELS() (" :No channel created") //notre propre message d'erreur, n'existe pas dans le doc d'IRC
+# define ERR_NOTJOINEDANYCHANNEL() (" :Not joined to any channel") //notre propre message d'erreur, n'existe pas dans le doc d'IRC
+# define ERR_NOSUCHNICK(name) (name + " :No such nick/channel") // 401
+# define ERR_NOSUCHSERVER(server) (server + " :No such server") // 402
+# define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel") // 403
+# define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel") // 404
+# define ERR_TOOMANYCHANNELS(channel) (":You have joined too many channels") //405
+# define ERR_TOOMANYTARGETS() (" :To many recipients. No message delivered") // 407
+# define ERR_NORECIPIENT(command) (command + " :No recipient given (" + command + ")") // 411
+# define ERR_NOTEXTTOSEND() (":No text to send") // 412
+# define ERR_NOTOPLEVEL(mask) (mask + " :No toplevel domain specified") // 413
+# define ERR_WILDTOPLEVEL(mask) (mask + " :Wildcard in toplevel domain") // 414
 # define ERR_INPUTTOOLONG() (" :Input line too long") // 417
+# define ERR_UNKNOWNCOMMAND(command) (command + " :Unknown command") // 421
 # define ERR_NONICKNAMEGIVEN() (" :No nickname given") // 431
 # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneus nickname") // 432
 # define ERR_NICKNAMEINUSE(nick) (nick + " : Nickname is already in use") // 433
 # define ERR_NICKCOLLISION(nick) (nick + " : Nickname collision KILL") // 436
-# define ERR_NOSUCHNICK(name) (name + " :No such nick/channel") // 401
-# define ERR_UNKNOWNCOMMAND(command) (command + " :Unknown command") // 421
-# define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel") // 403
-# define ERR_NOCHANNNELS() (" :No channel created") //notre propre message d'erreur, n'existe pas dans le doc d'IRC
 # define ERR_USERNOTINCHANNEL(nick, channel) (nick + " " + channel + " :They aren't on that channel") // 441 quand on veut kick ou change mode d'un user qui n'est pas dans le channel
 # define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel") // 442
 # define ERR_USERONCHANNEL(nick, channel) (nick + " " + channel + " :is already on channel") // 443
-# define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)") // 471
-# define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (You must be invited)(+i)") // 473
-# define ERR_UMODEKNOWNFLAG() (" :Unknown MODE flag") // 501
-# define ERR_INVALIDMODEPARAM() (" :Invalid MODE parameter") // 696
+# define ERR_NOTREGISTERED() (":You have not registered"); // 451
 # define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters") // 461
 # define ERR_ALREADYREGISTRED() (" :You may not reregister") // 462
-# define ERR_NOTJOINEDANYCHANNEL() (" :Not joined to any channel") //notre propre message d'erreur, n'existe pas dans le doc d'IRC
+# define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)") // 471
+# define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (You must be invited)(+i)") // 473
 # define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")// 475
-# define ERR_NOTREGISTERED() (":You have not registered"); // 451
-# define ERR_TOOMANYCHANNELS(channel) (":You have joined too many channels") //405
 # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator") //482
+# define ERR_UMODEUKNOWNFLAG() (" :Unknown MODE flag") // 501
 # define ERR_USERSDONTMATCH() (" :Cant change mode for other users"); //502
+# define ERR_INVALIDMODEPARAM() (" :Invalid MODE parameter") // 696
 
 
 
@@ -37,6 +44,11 @@
 # define RPL_ISUPPORT() (": You are registered now, start your adventure") //005
 
 # define RPL_BOUNCE(server_name, port) ("010 " + "Try server " + server_name + ", port " + port ) //010
+# define RPL_ADMINME(server_name, version) (":Administrative info about " + server_name + " " + version ) // 256
+# define RPL_ADMINLOC1(location) (": Server located in " + location ) // 257
+# define RPL_ADMINLOC2(host) (": Server located at " + host ) // 258
+# define RPL_ADMINEMAIL(email) (":Admin email is " + email ) // 259
+# define RPL_AWAY(nick, away_message) (nick + " :" + away_message ) // 301
 # define RPL_WHOISUSER(nick, user, host, real_name) (nick + " " + user + " " + host + " * :" + real_name ) //311
 # define RPL_WHOISSERVER(nick, servername, version) (nick + " " + servername + " :" + version ) //312
 # define RPL_WHOISCHANNELS(nick, channels) (nick + " :" + channels ) //319
@@ -49,9 +61,12 @@
 # define RPL_NOTOPIC(channel) (channel +  ":No topic is set") // 331
 # define RPL_TOPIC(channel, topic) (channel + " :" + topic ) // 332
 # define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]" )// 333
+# define RPL_VERSION(version, servername) (": " + version + " " + servername) //351
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick ) //353
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list") //366
 # define RPL_INVITING(nick, channel) ("Inviting " + nick + "to " + channel); // 341
+# define RPL_INFO(version, date) (":This server is running an IRC server: " + version + ". Created: " + date); // 371
+# define RPL_ENDOFINFO() (":End of /INFO list"); // 374
 
 
 // enum ReplyCode

@@ -81,11 +81,20 @@ void	User::printMessage(int code)
 	case 321:
 		str += RPL_LISTSTART();
 		break;
-	case 322:
-		str += RPL_LIST(getLastChannel()->getName(), getLastChannel()->getUsersName(), getLastChannel()->getTopic());
-		break;
 	case 323:
 		str += RPL_LISTEND();
+		break;
+	case 374:
+		str += RPL_ENDOFINFO();
+		break;
+	case 407:
+		str += ERR_TOOMANYTARGETS();
+		break;
+	case 412:
+		str += ERR_NOTEXTTOSEND();
+		break;
+	case 417:
+		str += ERR_INPUTTOOLONG();
 		break;
 	case 431:
 		str += ERR_NONICKNAMEGIVEN();
@@ -96,6 +105,9 @@ void	User::printMessage(int code)
 	case 451:
 		str += ERR_NOTREGISTERED();
 		break;
+	case 501:
+		str += ERR_UMODEUKNOWNFLAG();
+		break;
 	case 502:
 		str += ERR_USERSDONTMATCH()
 		break;
@@ -104,14 +116,20 @@ void	User::printMessage(int code)
 	printMessage(str);
 }
 
-
-
-
 void	User::printMessage(int code, std::string m1)
 {
 	std::string str = getTarget(code);
 
 	switch (code) {
+	case 257:
+		str += RPL_ADMINLOC1(m1);
+		break;
+	case 258:
+		str += RPL_ADMINLOC2(m1);
+		break;
+	case 259:
+		str += RPL_ADMINEMAIL(m1);
+		break;
 	case 331:
 		str += RPL_NOTOPIC(m1);
 		break;
@@ -121,17 +139,32 @@ void	User::printMessage(int code, std::string m1)
 	case 401:
 		str += ERR_NOSUCHNICK(m1);
 		break;
+	case 402:
+		str += ERR_NOSUCHSERVER(m1);
+		break;
 	case 403:
 		str += ERR_NOSUCHCHANNEL(m1);
 		break;
 	case 405:
 		str += ERR_TOOMANYCHANNELS(m1);
 		break;
+	case 413:
+		str += ERR_NOTOPLEVEL(m1);
+		break;
+	case 414:
+		str += ERR_WILDTOPLEVEL(m1);
+		break;
 	case 421:
 		str += ERR_UNKNOWNCOMMAND(m1);
 		break;
 	case 432:
 		str += ERR_ERRONEUSNICKNAME(m1);
+		break;
+	case 433:
+		str += ERR_NICKNAMEINUSE(m1);
+		break;
+	case 436:
+		str += ERR_NICKCOLLISION(m1);
 		break;
 	case 442:
 		str += ERR_NOTONCHANNEL(m1);
@@ -163,6 +196,9 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	str += " ";
 
 	switch (code) {
+	case 256:
+		str += RPL_ADMINME(m1, m2);
+		break;
 	case 324:
 		str += RPL_CHANNELMODEIS(m1, m2);
 		break;
@@ -178,13 +214,21 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	case 341:
 		str += RPL_INVITING(m1, m2);
 		break;
+	case 351:
+		str += RPL_VERSION(m1, m2);
+		break;
 	case 353:
 		str += RPL_NAMREPLY(m1, m2);
+		break;
+	case 371:
+		str += RPL_INFO(m1, m2);
+		break;
+	case 441:
+		str += ERR_USERNOTINCHANNEL(m1, m2);
 		break;
 	case 443:
 		str += ERR_USERONCHANNEL(m1, m2);
 		break;
-
 	}
 	str += "\r\n";
 	printMessage(str);

@@ -144,7 +144,6 @@ void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
 }
 
 /* */
-
 std::string		Ircserv::readFromClient(int fd)
 {
 	try
@@ -243,7 +242,6 @@ std::map<int, User *>	Ircserv::getUsers() const
 	return (_users);
 }
 
-
 void			Ircserv::connectClient()
 {
 	if (_pollfds[0].revents & POLLIN)
@@ -295,7 +293,6 @@ void			Ircserv::sendPing()
 
 }
 
-
 void			Ircserv::run()
 {
 	while (stop == false)
@@ -334,6 +331,7 @@ void			Ircserv::run()
 
 
 }
+
 std::string	Ircserv::getStartTime()
 {
 	return (_startTime);

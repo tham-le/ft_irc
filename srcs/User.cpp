@@ -55,7 +55,6 @@ size_t		User::getNbChannelsofUser() const
 	return (_channels.size());
 }
 
-
 void User::setNickname(std::string nickname) {
 	try {
 		if (nickname.length() > 9)
@@ -145,12 +144,6 @@ void	User::setMode(int mode)
 int		User::getMode() const
 {
 	return (_mode);
-}
-
-
-void User::sendMessage(User *user, std::string message) {
-	std::cout << "Sending message to " << user->getNickname() << ": " << message << std::endl;
-	// send(user->getFd(), message.c_str(), message.length(), 0);
 }
 
 void	User::addChannel(Channel *channel)
