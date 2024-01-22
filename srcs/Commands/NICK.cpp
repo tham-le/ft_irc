@@ -4,10 +4,10 @@
 bool	Command::validNickname(std::string const nickname) const
 {
 	for (unsigned int i = 0; i < nickname.length(); i++) {
-		if (!(isalnum(nickname[i]) || nickname[i] == '-' || nickname[i] == '[' \
+		if (!((isalnum(nickname[i]) || nickname[i] == '-' || nickname[i] == '[' \
 			 || nickname[i] == ']' || nickname[i] == '\\' || nickname[i] == '`' \
 			 || nickname[i] == '^' || nickname[i] == '{' || nickname[i] == '}' \
-			 || nickname[i] == '_' || nickname[i] == '|'))
+			 || nickname[i] == '_' || nickname[i] == '|')))
 			return false;
 	}
 	return true;
