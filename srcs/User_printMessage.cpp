@@ -96,6 +96,9 @@ void	User::printMessage(int code)
 	case 451:
 		str += ERR_NOTREGISTERED();
 		break;
+	case 502:
+		str += ERR_USERSDONTMATCH()
+		break;
 	}
 	str += "\r\n";
 	printMessage(str);
@@ -160,8 +163,14 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	str += " ";
 
 	switch (code) {
+	case 324:
+		str += RPL_CHANNELMODEIS(m1, m2);
+		break;
 	case 332:
 		str += RPL_TOPIC(m1, m2);
+		break;
+	case 329:
+		str += RPL_CREATIONTIME(m1, m2);
 		break;
 	case 333:
 		str += RPL_TOPICWHOTIME(m1, m2);

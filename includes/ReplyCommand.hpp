@@ -25,6 +25,7 @@
 # define ERR_NOTREGISTERED() (":You have not registered"); // 451
 # define ERR_TOOMANYCHANNELS(channel) (":You have joined too many channels") //405
 # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator") //482
+# define ERR_USERSDONTMATCH() (" :Cant change mode for other users"); //502
 
 
 
