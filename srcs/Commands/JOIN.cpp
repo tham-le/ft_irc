@@ -18,11 +18,14 @@ void		Command::joinChannel(Channel *channel)
 		return;
 	}
 	channel->addUser(_user);
+	// for (std::map<int, User *>::iterator i = channel->_users.begin(); i != channel->_users.end(); i++) {
+	// 		i->second->printMessage(toFormat("JOIN", channelName));
+	// }
 	_user.addLastChannel(channel);
 	_user.setStatus(User::ONLINE);
 	_user.printMessage(toFormat("JOIN", channelName));
-	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
-	_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
+	
+
 	//353
 	// std::map<int, User *> listUsers = channel->getUsers();
 	// std::map<int, User *>::iterator it;
@@ -44,6 +47,8 @@ void		Command::joinChannel(Channel *channel)
 	}
 	// _user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
 	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
+	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
+	_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 
 }
 

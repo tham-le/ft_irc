@@ -2,8 +2,10 @@
 #include "../includes/ReplyCommand.hpp"
 
 void		Command::privmsg(void) {
-    if (_input.size() > 7)
-        _user.printMessage(407); // ERR_TOOMANYTARGETS (5 targets max, 7th is the message)
+    if (_input.size() < 3) {
+        _user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
+        return ;
+    }
     for (unsigned int i = 1; i < _input.size() - 1; i++) {
         std::string target = _input[i];
         if (target[0] == '#')
