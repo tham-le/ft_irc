@@ -17,34 +17,35 @@ void		Command::joinChannel(Channel *channel)
 		_user.printMessage(471, channelName); // ERR_CHANNELISFULL
 		return;
 	}
+
+
 	channel->addUser(_user);
-	_user.addLastChannel(channel);
+
+	//_user.addLastChannel(channel);
 	_user.setStatus(User::ONLINE);
-	_user.printMessage(toFormat("JOIN", channelName));
-	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
-	_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
-	//353
-	// std::map<int, User *> listUsers = channel->getUsers();
-	// std::map<int, User *>::iterator it;
-	// std::string s;
-	// for (it = listUsers.begin(); it != listUsers.end(); it++)
-	// {
-	// 	s += "[";
-	// 	if (channel->isOperator(it->second->getUsername()))
-	// 		s += "@";
-	// 	s += it->second->getUsername() + "] ";
-	// }
+	//_user.printMessage(toFormat("JOIN", channelName));
+	//
+	std::string s = toFormat("JOIN", channelName);
+	std::string listUsersNames;
+
 	std::map<int, User *> listUsers = channel->getUsers();
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
-		if (channel->isOperator(it->second->getNickname()))
-			_user.printMessage(353, "= " + channelName, "@" + it->second->getNickname()); // RPL_NAMREPLY
+		if (channel->isOperator(*it->second))
+			listUsersNames += "@" + it->second->getNickname() + " ";
 		else
-			_user.printMessage(353, "= " + channelName, it->second->getNickname()); // RPL_NAMREPLY
+			listUsersNames += it->second->getNickname() + " ";
 	}
-	// _user.printMessage(353, "= " + channelName, s); // RPL_NAMREPLY
-	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
+	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+	{
+		it->second->printMessage(s + "\r\n");
 
+
+	}
+	_user.printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
+	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
+	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
+	// _user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 }
 
 void		Command::join(void)
@@ -130,69 +131,12 @@ void		Command::join(void)
 			}
 			_ircserv.addChannel(channelToJoin[i]);
 			_ircserv.getChannel(channelToJoin[i])->addOperator(_user);
+			std::cout << "IS OPERATOR ? " << _ircserv.getChannel(channelToJoin[i])->isOperator(_user) << std::endl;
 			joinChannel(_ircserv.getChannel(channelToJoin[i]));
-			// _user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
+			//_user.printMessage(toFormat("MODE", channelToJoin[i] + " +o")); // RPL_CHANNELMODEIS
+			//_user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
 			//_user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
 		}
 }
 
-
-
-
-	// for (unsigned long i = 0; i < str.size(); i++)
-	// {
-	// 	// str[i] = toChannelName(str[i]);
-
-	// 	if (!_ircserv.isChannel(str[i]))
-	// 	{
-	// 		_ircserv.addChannel(str[i]);
-	// 		joinChannel(_ircserv.getChannel(str[i]));
-	// 		_ircserv.getChannel(str[i])->addOperator(_user);
-	// 	}
-	// 	else
-	// 	{
-	// 		if (_user.isInLastChannels(_ircserv.getChannel(str[i])))
-	// 			break;
-	// 		if (_ircserv.getChannel(str[i])->getMode() == Channel::INVITE_ONLY)
-	// 		{
-	// 			if (!_ircserv.getChannel(str[i])->isInvited(_user))
-	// 			{
-	// 				_user.printMessage(473, str[i]);
-	// 				flag = 1;
-	// 			}
-	// 			else if (!key.empty())
-	// 			{
-	// 				if (i >= key.size() || (i < key.size() && !_ircserv.getChannel(str[i])->isGoodKey(key[i])))
-	// 				{
-	// 					_user.printMessage(str[i]);
-	// 					flag = 1;
-	// 				}
-	// 			}
-	// 		}
-	// 		if (!_ircserv.getChannel(str[i])->isUserInChannel(_user) && flag == 0)
-	// 			joinChannel(_ircserv.getChannel(str[i]));
-	// 	}
-	// 	if (_ircserv.getChannel(str[i])->isUserInChannel(_user))
-	// 	{
-
-	// 			std::map<int, User *> listUsers;
-	// 			listUsers = _user.getLastChannel()->getUsers();
-	// 			std::map<int, User *>::iterator it;
-	// 			std::string s;
-	// 			for (it = listUsers.begin(); it != listUsers.end(); it++)
-	// 			{
-	// 				s += "[";
-	// 				if (_ircserv.getChannel(str[i])->isOperator(it->second->getUsername()))
-	// 					s += "@";
-	// 				s += it->second->getUsername() + "] ";
-	// 			}
-
-	// 			_user.printMessage(toFormat(_input[i], "#" + std::string(str[i])));
-	// 			_user.printMessage(353, "= #" + std::string(str[i]), s);
-	// 			_user.printMessage(366, "#" + std::string(str[i]));
-	// 	}
-	// 	/*a supprimer*/
-	// 	channelUsers(str[i]);
-	// 	/**/
-	// }
 }

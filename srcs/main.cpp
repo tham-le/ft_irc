@@ -6,7 +6,7 @@
 /*   By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 20:50:16 by thi-le            #+#    #+#             */
-/*   Updated: 2024/01/14 17:35:18 by thi-le           ###   ########.fr       */
+/*   Updated: 2024/01/22 20:56:11 by thi-le           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include <cstdlib>
 #include <Ircserv.hpp>
-
 
 static int toInt(char const *port)
 {
@@ -28,7 +27,6 @@ static int toInt(char const *port)
 	}
 	return (atoi(port));
 }
-
 
 int main(int argc, char **argv)
 {

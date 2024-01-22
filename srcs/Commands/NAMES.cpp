@@ -16,8 +16,8 @@ void	Command::names(void)
 				_user.printMessage(353, _channels[&_input[1][idx]]->getName(), _channels[&_input[1][idx]]->getUsersName()); //RPL_NAMREPLY
 				_user.printMessage(366, _channels[&_input[1][idx]]->getName()); //RPL_ENDOFNAMES
 			}
-			else
-				_user.printMessage(366, _input[1]); //RPL_ENDOFNAMES
+		else
+			_user.printMessage(366, _input[1]); //RPL_ENDOFNAMES
 	}
 	else if (_user.getStatus() == User::ONLINE) {
 		if (_channels.empty() || strcmp(_input[1].c_str(), _user.getLastChannel()->getName().c_str()) == 0) {

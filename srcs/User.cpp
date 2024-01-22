@@ -57,10 +57,10 @@ size_t		User::getNbChannelsofUser() const
 
 void User::setNickname(std::string nickname) {
 	try {
-		if (nickname.length() > 9)
-			throw std::runtime_error("Nickname too long");
-		else if (nickname.length() < 1)
-			throw std::runtime_error("Nickname too short");
+		// if (nickname.length() > 9)
+		// 	throw std::runtime_error("Nickname too long");
+		// else if (nickname.length() < 1)
+		// 	throw std::runtime_error("Nickname too short");
 		for (std::string::iterator it = nickname.begin(); it != nickname.end(); it++)
 			if (std::isspace(*it))
 				throw std::runtime_error("Nickname cannot contain spaces");
@@ -149,12 +149,6 @@ int		User::getMode() const
 void	User::addChannel(Channel *channel)
 {
 	_channels[channel->getName()] = channel;
-
-	// for (std::map<std::string, Channel *>::iterator i = _channels.begin(); i != _channels.end(); i++)
-	// {
-	// 	std::cout << "-List of channel of user " << _nickname << std::endl;
-	// 	std::cout << "- " << (i->second)->getName() << std::endl;
-	// }
 }
 
 void	User::removeChannel(std::string channel)

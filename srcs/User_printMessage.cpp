@@ -196,7 +196,6 @@ void	User::printMessage(int code, std::string m1)
 void	User::printMessage(int code, std::string m1, std::string m2)
 {
 	std::string str = getTarget(code);;
-	str += " ";
 
 	switch (code) {
 	case 256:
@@ -240,7 +239,6 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3)
 {
 	std::string str = getTarget(code);;
-	str += " ";
 
 	switch (code) {
 
@@ -255,7 +253,6 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4)
 {
 	std::string str = getTarget(code);;
-	str += " ";
 
 	switch (code) {
 	case 319:
@@ -274,7 +271,6 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5)
 {
 	std::string str = getTarget(code);;
-	str += " ";
 
 	switch (code) {
 	case 353:
