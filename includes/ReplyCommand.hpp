@@ -33,6 +33,7 @@
 # define ERR_UMODEUKNOWNFLAG() (" :Unknown MODE flag") // 501
 # define ERR_USERSDONTMATCH() (" :Cant change mode for other users"); //502
 # define ERR_INVALIDMODEPARAM() (" :Invalid MODE parameter") // 696
+# define ERR_UNKNOWNMODE(modechar) ("is unknown mode character " + modechar) // 472
 
 
 

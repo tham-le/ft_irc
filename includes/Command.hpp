@@ -70,6 +70,7 @@ public:
 	void		joinChannel(Channel *channel);
 	void		topicChannel(Channel *channel);
 	void		topicCheck(Channel *channel);
+	void		modeFind(std::string modeCmd, std::string mode, Channel *channel);
 
 	/*a supprimer , pour tester*/
 	void		channelUsers(std::string channel); //print la liste des users du channel

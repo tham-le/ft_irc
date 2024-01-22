@@ -175,6 +175,9 @@ void	User::printMessage(int code, std::string m1)
 	case 471:
 		str += ERR_CHANNELISFULL(m1);
 		break;
+	case 472:
+		str += ERR_UNKNOWNMODE(m1);
+		break;
 	case 473:
 		str += ERR_INVITEONLYCHAN(m1);
 		break;

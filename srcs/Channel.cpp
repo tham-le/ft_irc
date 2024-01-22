@@ -151,23 +151,9 @@ bool			Channel::isUserInChannel(User const &user) const
 
 void			Channel::Invite(User &user)
 {
-	std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
+	// std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
 
-	if (isUserInChannel(user) == true)
-	{
-		std::cout << user.getNickname() << " is already in the channel." << std::endl;
-		return ;
-	}
-	// if (isBanned(user) == true)
-	// 	Unban(user);
-
-	if (it != _invitedUsers.end())
-		std::cout << user.getNickname() << " is already invited." << std::endl;
-	else
-	{
-		_invitedUsers.push_back(&user);
-		std::cout << user.getNickname() << " is now invited." << std::endl;
-	}
+	_invitedUsers.push_back(&user);
 }
 
 void			Channel::Uninvite(User &user)
@@ -289,5 +275,5 @@ std::string		Channel::getModeCmd() const
 
 void			Channel::setModeCmd(std::string mode)
 {
-	_modeCmd += mode;
+	_modeCmd = mode;
 }

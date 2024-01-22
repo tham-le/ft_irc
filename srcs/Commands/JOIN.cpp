@@ -17,8 +17,8 @@ void		Command::joinChannel(Channel *channel)
 		_user.printMessage(471, channelName); // ERR_CHANNELISFULL
 		return;
 	}
-	
-	
+
+
 	channel->addUser(_user);
 
 	//_user.addLastChannel(channel);
@@ -27,7 +27,7 @@ void		Command::joinChannel(Channel *channel)
 	//
 	std::string s = toFormat("JOIN", channelName);
 	std::string listUsersNames;
-	
+
 	std::map<int, User *> listUsers = channel->getUsers();
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
