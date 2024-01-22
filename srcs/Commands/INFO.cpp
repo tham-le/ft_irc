@@ -4,7 +4,6 @@
 
 void		Command::info(void)
 {
-	(void)_input[0];
-	//_ircserv.writeToClient(_user.getFd(), _ircserv.getInfo());
-	//std::cout << Ircserv::getInfo() << std::endl; //info of server (name, version, date of creation, etc)
+	_user.printMessage(371, _ircserv.getVersion(), _ircserv.getStartTime());
+	_user.printMessage(374);
 }

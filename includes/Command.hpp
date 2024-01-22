@@ -71,7 +71,6 @@ public:
 	void		topicChannel(Channel *channel);
 	void		topicCheck(Channel *channel);
 
-
 	/*a supprimer , pour tester*/
 	void		channelUsers(std::string channel); //print la liste des users du channel
 	/**/

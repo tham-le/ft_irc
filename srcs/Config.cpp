@@ -4,9 +4,6 @@
 #include <exception>
 #include <stdexcept>
 
-
-
-
 Config::Config()
 {
 	this->_port = 6667;
@@ -16,9 +13,8 @@ Config::Config()
 	this->_maxClients = 100;
 	this->_maxChannels = 100;
 }
-Config::~Config()
-{
-}
+
+Config::~Config(){}
 
 void	Config::setPort(int port)
 {
@@ -26,6 +22,7 @@ void	Config::setPort(int port)
 	if (this->_port < 6660 || this->_port > 7000)
 		throw std::invalid_argument("Invalid <port> : <port> must be between 6660 and 7000");
 }
+
 void	Config::setPassword(std::string const password)
 {
 	this->_password = password;

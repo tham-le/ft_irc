@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: christine <christine@student.42.fr>        +#+  +:+       +#+         #
+#    By: yuboktae <yuboktae@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/21 23:37:29 by christine        ###   ########.fr        #
+#    Updated: 2024/01/22 14:43:24 by yuboktae         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ COMMAND_FILES =  Command.cpp \
 				ADMIN.cpp  JOIN.cpp   LIST.cpp   TOPIC.cpp \
 				INFO.cpp NAMES.cpp  PART.cpp  WHOIS.cpp\
 				KICK.cpp MODE.cpp  NICK.cpp QUIT.cpp USER.cpp \
-				PASS.cpp CAP.cpp INVITE.cpp VERSION.cpp
+				PASS.cpp CAP.cpp INVITE.cpp VERSION.cpp \
+				PRIVMSG.cpp
 COMMAND_SRC = $(addprefix $(COMMAND_DIR), $(COMMAND_FILES))
 
 SRC_FILES += $(COMMAND_SRC)

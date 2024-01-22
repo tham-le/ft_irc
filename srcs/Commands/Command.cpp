@@ -23,7 +23,7 @@ void		Command::initCmd()
 	// _func["PING"] = &Command::ping;
 	// _func["PONG"] = &Command::pong;
 
-	// _func["PRIVMSG"] = &Command::privmsg;
+	_func["PRIVMSG"] = &Command::privmsg;
 	// _func["NOTICE"] = &Command::notice;
 	// _func["WHO"] = &Command::who;
 
