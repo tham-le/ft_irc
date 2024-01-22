@@ -20,6 +20,7 @@ void	Command::invite(void)
 		_user.printMessage(443, _input[1], _input[2]); //ERR_USERONCHANNEL
 	else
 	{
+		_ircserv.getChannel(_input[2])->Invite(_user);
 		std::string msg;
 		msg = ":" + _user.getPrefix() + " INVITE " + _input[1] + " " + _input[2] + "\r\n";
 		_user.printMessage(msg);

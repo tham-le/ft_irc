@@ -38,7 +38,7 @@ void		Command::joinChannel(Channel *channel)
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
 		if (channel->isOperator(it->second->getNickname()))
-			_user.printMessage(353, "= " + channelName, "@@" + it->second->getNickname()); // RPL_NAMREPLY
+			_user.printMessage(353, "= " + channelName, "@" + it->second->getNickname()); // RPL_NAMREPLY
 		else
 			_user.printMessage(353, "= " + channelName, it->second->getNickname()); // RPL_NAMREPLY
 	}
@@ -131,7 +131,7 @@ void		Command::join(void)
 			_ircserv.addChannel(channelToJoin[i]);
 			_ircserv.getChannel(channelToJoin[i])->addOperator(_user);
 			joinChannel(_ircserv.getChannel(channelToJoin[i]));
-			//_user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
+			// _user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
 			//_user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
 		}
 }
