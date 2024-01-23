@@ -66,6 +66,7 @@ public:
 	bool		validNickname(std::string const nickname) const;
 	// bool		isCmdNoUse(std::string const str) const;
 	std::string		toFormat(std::string cmd, std::string str);
+	std::string		toFormat(std::string cmd, std::string channel, std::string msg);
 	// std::string		toChannelName(std::string str);
 	void		joinChannel(Channel *channel);
 	void		topicChannel(Channel *channel);
