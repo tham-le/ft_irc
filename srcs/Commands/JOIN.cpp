@@ -32,20 +32,22 @@ void		Command::joinChannel(Channel *channel)
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
 		if (channel->isOperator(*it->second))
-			listUsersNames += "@" + it->second->getNickname() + " ";
+			listUsersNames += "@@" + it->second->getNickname() + " ";
 		else
 			listUsersNames += it->second->getNickname() + " ";
 	}
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
 		it->second->printMessage(s + "\r\n");
-
-
+	}
+	if (channel->getTopic() != "")
+	{
+		_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
+		_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	}
 	_user.printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
 	_user.printMessage(366, channelName);	// RPL_ENDOFNAMES
-	_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
-	// _user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
+	_user.printMessage(329, channel->getName(), channel->getCreationTime()); //RPL_CREATIONTIME
 }
 
 void		Command::join(void)

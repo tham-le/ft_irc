@@ -2,17 +2,17 @@
 #include "../includes/ReplyCommand.hpp"
 
 void		Command::privmsg(void) {
+
     if (_input.size() < 3) {
         _user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
         return ;
     }
+
     for (unsigned int i = 1; i < _input.size() - 1; i++) {
         std::string target = _input[i];
-        if (target[0] == '#')
-            target = target.substr(1);
-        else if (target[0] == '@' && target[1] == '%' && target[2] == '#') // @%#channel to send msg to opers on channel
+        if (target[0] == '@' && target[1] == '%' && target[2] == '#') // @%#channel to send msg to opers on channel
             target = target.substr(3);
-        if (!_ircserv.isUser(target) || !_ircserv.isChannel(target)) {
+        if (!_ircserv.isUser(target) && !_ircserv.isChannel(target)) {
                 _user.printMessage(401, target); // ERR_NOSUCHNICK
                 return ;
             }
