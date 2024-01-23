@@ -65,7 +65,7 @@
 # define RPL_VERSION(version, servername) (": " + version + " " + servername) //351
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick ) //353
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list") //366
-# define RPL_INVITING(nick, channel) (nick + channel); // 341
+# define RPL_INVITING(nick, channel) (nick + " " +  channel); // 341
 # define RPL_INFO(version, date) (":This server is running an IRC server: " + version + ". Created: " + date); // 371
 # define RPL_ENDOFINFO() (":End of /INFO list"); // 374
 

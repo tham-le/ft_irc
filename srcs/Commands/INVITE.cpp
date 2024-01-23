@@ -22,7 +22,8 @@ void	Command::invite(void)
 	{
 		_ircserv.getChannel(_input[2])->Invite(_user);
 		std::string msg;
-		msg = ":" + _user.getPrefix() + " INVITE " + _input[1] + " " + _input[2] + "\r\n";
+		msg = ":" + _user.getPrefix() + " INVITE " + _input[1] + " :" + _input[2] + "\r\n";
+		std::cout << msg << std::endl;
 		_ircserv.getUser(_input[1])->printMessage(msg);
 		_user.printMessage(341, _input[1], _input[2]); //RPL_INVITING
 	}
