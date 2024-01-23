@@ -54,7 +54,7 @@ void	Command::changeMode(void)
 	// }
 	if (_user.getStatus() != User::ONLINE)
 	{
-		std::cout << "atchoum" << std::endl;
+		// std::cout << "atchoum" << std::endl;
 		if (_input[1].empty())
 			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
 		else if (!_ircserv.isChannel(_input[1]))

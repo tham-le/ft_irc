@@ -28,30 +28,31 @@ void		Command::part(void)
 		{
 			reason += " ";
 			reason += _input[i];
-			
+
 		}
 	}
 
 	for (unsigned long i = 0; i < listChannel.size(); i++)
 	{
-		std::cout << "listChannel[" << i << "] = " << listChannel[i] << std::endl;
 		if (_ircserv.isChannel(listChannel[i]))
 		{
 			if (_ircserv.getChannel(listChannel[i])->isUserInChannel(_user))
 			{
-				_ircserv.getChannel(listChannel[i])->removeUser(_user);
-				_user.removeChannel(listChannel[i]);
+				std::map<int, User *> users = _ircserv.getChannel(listChannel[i])->getUsers();
 				//_user.removeLastChannel();
 				std::string msg = toFormat("PART",listChannel[i] + reason);
-				_user.printMessage(msg);
+				for (std::map<int, User *>::iterator it = users.begin(); it != users.end(); it++)
+					it->second->printMessage(msg + "\r\n");
+				_ircserv.getChannel(listChannel[i])->removeUser(_user);
+				_user.removeChannel(listChannel[i]);
+				if (users.size() == 1)
+					_ircserv.removeChannel(listChannel[i]);
 			}
 			else
 				_user.printMessage(442, std::string(listChannel[i])); // ERR_NOTONCHANNEL
 		}
 		else
-		{
 			_user.printMessage(403, std::string(listChannel[i])); // ERR_NOSUCHCHANNEL
-		}
 	}
 }
 
