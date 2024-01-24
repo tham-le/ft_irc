@@ -212,14 +212,16 @@ void			Channel::addOperator(User &user)
 void			Channel::removeOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
-
+	if (it == _operators.end())
+		return ;
 	_operators.erase(it);
 }
 
 void			Channel::removeOperator(std::string const nickname)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), getUser(nickname));
-
+	if (it == _operators.end())
+		return ;
 	_operators.erase(it);
 	removeUser(nickname);
 	// std::cout << nickname << " is not Operator now." << std::endl;

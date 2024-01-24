@@ -1,5 +1,6 @@
 #include "../includes/Command.hpp"
 #include "../includes/Ircserv.hpp"
+#include "User.hpp"
 
 bool	Command::validNickname(std::string const nickname) const
 {
@@ -32,9 +33,18 @@ void		Command::nickname(void)
 		return ;
 	}
 	for (std::map<int, User *>::iterator it = _ircserv._users.begin(); it != _ircserv._users.end(); it++) {
-		if (it->second->getNickname() == _input[1]) {
-			_user.printMessage(433, _input[1]); //ERR_NICKNAMEINUSE
-			return ;
+		if (it->second->getNickname() == _input[1] && it->second->getStatus() != User::DELETED) {
+			int i = 0;
+			while (it->second->getNickname() == _input[1]) {
+				_input[1] += "_";
+				i++;
+				if (i > 10)
+				{
+					_user.printMessage(433, _input[1]); //ERR_NICKNAMEINUSE
+					return ;
+				}
+			}
+			_user.printMessage("Nickname is already in use, changed to " + _input[1]);
 		}
 	}
 	//EVERYTHING IS OK, CHANGE NICKNAME

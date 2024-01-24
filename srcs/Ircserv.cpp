@@ -17,6 +17,7 @@
 #include <cerrno>
 #include <iostream>
 #include "../includes/Color.h"
+#include "User.hpp"
 #include <csignal>
 
 bool	stop = false;
@@ -25,7 +26,7 @@ class	SigintException : public std::exception
 {
 	public:
 		virtual const char * what() const throw(){
-			return ("SIGINT received");
+			return ("SIGINT");
 		}
 };
 
@@ -39,6 +40,16 @@ static void	sighandler(int signum)
 
 Ircserv::~Ircserv()
 {
+	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		std::cout << "Deleting user " << it->first << std::endl;
+		delete it->second;
+	}
+	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
+	{
+		std::cout << "Deleting channel " << it->first << std::endl;
+		delete it->second;
+	}
 	std::cout << "Bye bye" << std::endl;
 }
 
@@ -110,10 +121,7 @@ void			Ircserv::init()
 void			Ircserv::waitForEvent() {
 	int ret = poll(&_pollfds[0], _pollfds.size(), -1);
 	if (stop == true)
-	{
-		std::cout << "poll() interrupted by SIGINT" << std::endl;
-		return ;
-	}
+		throw SigintException();
 	if (ret < 0)
 		throw std::runtime_error("poll() failed");
 
@@ -154,7 +162,6 @@ std::string		Ircserv::readFromClient(int fd)
 
 		if (stop == true)
 		{
-			std::cout << "SIGINT received here" << std::endl;
 			closeAllSocket();
 			return ("");
 		}
@@ -212,7 +219,8 @@ void			Ircserv::disconnectClient(int fd)
 	{
 		std::cout << "Client " << fd << " disconnected" << std::endl;
 		//delete it->second;
-		_users.erase(it);
+		it->second->setStatus(User::DELETED);
+		//_users.erase(it);
 	}
 	else
 		std::cout << "Client " << fd << " disconnected" << std::endl;
@@ -227,6 +235,7 @@ void			Ircserv::closeAllSocket()
 		{
 			std::cout << "Disconnecting socket " << it->fd << std::endl;
 			close(it->fd);
+
 		}
 	}
 
@@ -247,11 +256,7 @@ void			Ircserv::connectClient()
 	if (_pollfds[0].revents & POLLIN)
 	{
 		if (stop == true)
-		{
-			std::cout << "SIGINT received here" << std::endl;
-			closeAllSocket();
-			return ;
-		}
+			throw SigintException();
 		if (_users.size() == _config.getMaxClients())
 			throw std::runtime_error("Max clients reached");
 		struct sockaddr_in addr;
@@ -303,11 +308,7 @@ void			Ircserv::run()
 			connectClient();
 			readFromAllClients();
 			if (stop == true)
-			{
-				std::cout << "SIGINT received here" << std::endl;
-				closeAllSocket();
-				break ;
-			}
+				throw SigintException();
 			if (std::time(0) - _lastPing > _config.getPingInterval())
 			{
 				_lastPing = std::time(0);
@@ -321,6 +322,15 @@ void			Ircserv::run()
 			std::cerr << e.what() << '\n';
 			break ;
 		}
+		catch (const SigintException& e)
+		{
+
+			closeAllSocket();
+			std::cerr << e.what() << '\n';
+			return ;
+		
+		}
+
 		catch (const std::exception& e)
 		{
 			closeAllSocket();
@@ -339,7 +349,7 @@ std::string	Ircserv::getStartTime()
 
 Ircserv::DisconnectedUser::DisconnectedUser(int fd): _fd(fd) {}
 
-Ircserv::DisconnectedUser::~DisconnectedUser() throw(){}
+Ircserv::DisconnectedUser::~DisconnectedUser()  throw(){}
 
 const char * Ircserv::DisconnectedUser::what() const throw()
 {
@@ -360,6 +370,7 @@ bool			Ircserv::isChannel(std::string const channel) const
 
 void			Ircserv::removeChannel(std::string const channel)
 {
+	delete _channels[channel];
 	_channels.erase(channel);
 }
 

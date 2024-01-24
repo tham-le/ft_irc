@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yuboktae <yuboktae@student.42.fr>          +#+  +:+       +#+         #
+#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/22 14:43:24 by yuboktae         ###   ########.fr        #
+#    Updated: 2024/01/24 17:05:28 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,8 @@ OBJ = $(addprefix $(OBJS_DIR), $(SRC_FILES:.cpp=.o))
 DEP = $(OBJ:.o=.d)
 
 all: $(NAME)
-	./ircserv 6667 we
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=all ./ircserv 6667 we
+
 
 
 $(NAME): $(OBJ) Makefile
