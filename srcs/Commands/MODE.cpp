@@ -108,6 +108,12 @@ void	Command::changeMode(void)
 {
 	std::string mode = "itkol";
 
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
+
 	for (unsigned long i = 0; i != _input.size(); i++)
 		std::cout << "input[" << i << "] = " << _input[i]  << "." << std::endl;
 
@@ -122,7 +128,7 @@ void	Command::changeMode(void)
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)
 		{
 			_user.printMessage(324, _input[1], _ircserv.getChannel(_input[1])->getModeCmd()); // RPL_CHANNELMODEIS
-			_user.printMessage(329, _input[1], _ircserv.getChannel(_input[1])->getCreationTime()); // RPL_CREATIONTIME
+			//_user.printMessage(329, _input[1], _ircserv.getChannel(_input[1])->getCreationTime()); // RPL_CREATIONTIME
 		}
 		// else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
 		// 	_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
@@ -134,7 +140,7 @@ void	Command::changeMode(void)
 		if (_input[1].empty() || (_ircserv.isChannel(_input[1]) && _input.size() == 2))
 		{
 			_user.printMessage(324, _input[1], _ircserv.getChannel(_input[1])->getModeCmd()); // RPL_CHANNELMODEIS
-			_user.printMessage(329, _input[1], _ircserv.getChannel(_input[1])->getCreationTime()); // RPL_CREATIONTIME
+			//_user.printMessage(329, _input[1], _ircserv.getChannel(_input[1])->getCreationTime()); // RPL_CREATIONTIME
 		}
 		else
 			modeFind(_ircserv.getChannel(_input[1]));

@@ -7,11 +7,10 @@ void	Command::invite(void)
 	// for (unsigned long i = 0; i != _input.size(); i++)
 	// 	std::cout << "input[" << i << "] = " << _input[i] << std::endl;
 
-	if (_user.getStatus() == User::PASSWORD_REQUIRED)
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
 	{
-		_user.printMessage(451); //ERR_NOTREGISTERED
+		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
-	
 	}
 
 	if (_input[1].empty())

@@ -4,6 +4,11 @@
 
 void	Command::list(void)
 {
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
 	_user.printMessage(321); // RPL_LISTSTART
 	if (_input.size() > 1 && _input[1] != _input.back() && _input[1][0] != '#') {
 		_user.printMessage(323); // RPL_LISTEND

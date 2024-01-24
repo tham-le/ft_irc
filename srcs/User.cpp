@@ -72,6 +72,7 @@ void User::setNickname(std::string nickname) {
 	_nickname = nickname;
 }
 
+
 void User::setUsername(std::string username) {
 	_username = username;
 }
@@ -188,6 +189,12 @@ std::string User::getNameChannels() const
 		str += " ";
 	}
 	return (str);
+}
+
+
+std::map<std::string, Channel *>	User::getChannels() const
+{
+	return (_channels);
 }
 
 

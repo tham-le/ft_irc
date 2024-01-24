@@ -2,6 +2,11 @@
 #include "../includes/ReplyCommand.hpp"
 
 void    Command::kick(void) {
+        if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+    {
+        _user.printMessage(451); //ERR_NOTREGISTEREd
+        return ;
+    }
     if (_input.size() < 3) {
         _user.printMessage(461);
         return ;

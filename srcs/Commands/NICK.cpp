@@ -48,6 +48,21 @@ void		Command::nickname(void)
 		}
 	}
 	//EVERYTHING IS OK, CHANGE NICKNAME
-	_user.printMessage(toFormat("NICK", _input[1]));
+	std::string msg = toFormat("NICK", _input[1]);
+	_user.printMessage(msg);
 	_user.setNickname(_input[1]);
+	std::map<std::string,Channel *> channels = _user.getChannels();
+	if (channels.size() > 0)
+	{
+		for (std::map<std::string,Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
+		{
+			std::map<int, User *> users = it->second->getUsers();
+			for (std::map<int, User *>::iterator it2 = users.begin(); it2 != users.end(); it2++)
+			{
+				if (it2->second->getNickname() != _user.getNickname())
+					it2->second->printMessage(msg + "\r\n");
+			}
+		}
+	}
+
 }
