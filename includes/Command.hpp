@@ -69,9 +69,9 @@ public:
 	void		joinChannel(Channel *channel);
 	void		topicChannel(Channel *channel);
 	void		topicCheck(Channel *channel);
-	void		modeFind(std::string modeInput, Channel *channel);
+	void		modeFind(Channel *channel);
 	bool		cInStr(char c, std::string str);
-	void		modeParseParam(std::string modeToChange, Channel *channel);
+	unsigned long		modeParseParam(std::string sign, char c, unsigned long paramIndex);
 
 	/*a supprimer , pour tester*/
 	void		channelUsers(std::string channel); //print la liste des users du channel
