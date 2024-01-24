@@ -37,7 +37,7 @@ void		Command::initCmd()
 	_func["LIST"] = &Command::list; //->no channel
 	_func["USER"] = &Command::user;
 	_func["WHOIS"] = &Command::whois;
-	// _func["KICK"] = &Command::kick;
+	_func["KICK"] = &Command::kick;
 	_func["INVITE"] = &Command::invite;
 	_func["TOPIC"] = &Command::topic;
 	_func["MODE"] = &Command::changeMode;

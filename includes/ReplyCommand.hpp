@@ -27,13 +27,14 @@
 # define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters") // 461
 # define ERR_ALREADYREGISTRED() (" :You may not reregister") // 462
 # define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)") // 471
+# define ERR_UNKNOWNMODE(modechar) ("is unknown mode character " + modechar) // 472
 # define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (You must be invited)(+i)") // 473
 # define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")// 475
+# define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask") // 476
 # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator") //482
 # define ERR_UMODEUKNOWNFLAG(flag) (" :Unknown MODE flag") // 501
 # define ERR_USERSDONTMATCH() (" :Cant change mode for other users"); //502
 # define ERR_INVALIDMODEPARAM() (" :Invalid MODE parameter") // 696
-# define ERR_UNKNOWNMODE(modechar) ("is unknown mode character " + modechar) // 472
 
 
 
