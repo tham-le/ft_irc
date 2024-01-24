@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cqin <cqin@student.42.fr>                  +#+  +:+       +#+         #
+#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/24 19:23:59 by cqin             ###   ########.fr        #
+#    Updated: 2024/01/24 17:33:39 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ircserv
+NAME = sillyBot
 INCLUDES = -I./includes/
 SRCS_DIR = ./srcs/
 OBJS_DIR = ./objs/
@@ -21,17 +21,7 @@ DEBUG_FLAG = -g3
 RM = rm -rf
 
 
-SRC_FILES = main.cpp Ircserv.cpp User.cpp Config.cpp Channel.cpp\
-			User_printMessage.cpp
-
-COMMAND_DIR = Commands/
-COMMAND_FILES =  Command.cpp \
-				ADMIN.cpp  JOIN.cpp   LIST.cpp   TOPIC.cpp \
-				INFO.cpp NAMES.cpp  PART.cpp  WHOIS.cpp\
-				KICK.cpp MODE.cpp  NICK.cpp QUIT.cpp USER.cpp \
-				PASS.cpp CAP.cpp INVITE.cpp VERSION.cpp \
-				PRIVMSG.cpp PINGPONG.cpp
-
+SRC_FILES = main.cpp 
 COMMAND_SRC = $(addprefix $(COMMAND_DIR), $(COMMAND_FILES))
 
 SRC_FILES += $(COMMAND_SRC)

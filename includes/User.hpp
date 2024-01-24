@@ -30,6 +30,7 @@ public:
 	enum	e_status
 	{
 		PASSWORD_REQUIRED,
+		PASSWORD_MATCH,
 		REGISTERED,
 		ONLINE,
 		DELETED

@@ -5,7 +5,7 @@ void    Command::user() {
         _user.printMessage(461);
         return ;
     }
-    if (_user.getStatus() == User::ONLINE) {
+    if (_user.getStatus() == User::REGISTERED || _user.getStatus() == User::ONLINE) {
         _user.printMessage(462);
         return ;
     }
@@ -17,5 +17,15 @@ void    Command::user() {
     	realname += _input[i];
     }
     _user.setRealname(realname);
+
+    if (_user.getStatus() == User::PASSWORD_MATCH) {
+        _user.setStatus(User::REGISTERED);
+        _user.printMessage(001);
+        _user.printMessage(003);
+        _user.printMessage(004);
+        _user.printMessage(005);
+    }
+    else
+        _user.printMessage("Pass required\r\n");
 }
 
