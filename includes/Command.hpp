@@ -64,14 +64,14 @@ public:
 	void		command();
 	void		initCmd();
 	bool		validNickname(std::string const nickname) const;
-	// bool		isCmdNoUse(std::string const str) const;
 	std::string		toFormat(std::string cmd, std::string str);
 	std::string		toFormat(std::string cmd, std::string channel, std::string msg);
-	// std::string		toChannelName(std::string str);
 	void		joinChannel(Channel *channel);
 	void		topicChannel(Channel *channel);
 	void		topicCheck(Channel *channel);
-	void		modeFind(std::string modeCmd, std::string mode, Channel *channel);
+	void		modeFind(std::string modeInput, Channel *channel);
+	bool		cInStr(char c, std::string str);
+	void		modeParseParam(std::string modeToChange, Channel *channel);
 
 	/*a supprimer , pour tester*/
 	void		channelUsers(std::string channel); //print la liste des users du channel
