@@ -1,8 +1,6 @@
 #include "../includes/Command.hpp"
 #include "Ircserv.hpp"
 #include <cstddef>
-#include <iostream>
-#include <iterator>
 #include <string>
 
 void		Command::part(void)
@@ -39,7 +37,6 @@ void		Command::part(void)
 			if (_ircserv.getChannel(listChannel[i])->isUserInChannel(_user))
 			{
 				std::map<int, User *> users = _ircserv.getChannel(listChannel[i])->getUsers();
-				//_user.removeLastChannel();
 				std::string msg = toFormat("PART", listChannel[i] + reason);
 				for (std::map<int, User *>::iterator it = users.begin(); it != users.end(); it++)
 					it->second->printMessage(msg + "\r\n");
