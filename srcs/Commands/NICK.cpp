@@ -44,7 +44,7 @@ void		Command::nickname(void)
 					return ;
 				}
 			}
-			_user.printMessage("Nickname is already in use, changed to " + _input[1]);
+			_user.printMessage("Nickname is already in use, trying " + _input[1] + "\r\n");
 		}
 	}
 	//EVERYTHING IS OK, CHANGE NICKNAME

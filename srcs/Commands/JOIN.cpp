@@ -62,6 +62,26 @@ void		Command::join(void)
 		_user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
 		return ;
 	}
+
+	//if JOIN 0 => PART ALL CHANNELS
+	if (_input[1] == "0")
+	{
+		std::map<std::string, Channel *> channels = _ircserv.getChannels();
+		for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
+		{
+			if (it->second->isUserInChannel(_user))
+			{
+				_input.clear();
+				_input.push_back("PART");
+				_input.push_back(it->first);
+				part();			
+			}
+		}
+		return ;
+	}
+
+
+
 	std::vector<std::string> params(_input.begin() + 1, _input.end());
 
 	std::vector<std::string> channelToJoin;
@@ -133,10 +153,9 @@ void		Command::join(void)
 			}
 			_ircserv.addChannel(channelToJoin[i]);
 			_ircserv.getChannel(channelToJoin[i])->addOperator(_user);
-			std::cout << "IS OPERATOR ? " << _ircserv.getChannel(channelToJoin[i])->isOperator(_user) << std::endl;
 			joinChannel(_ircserv.getChannel(channelToJoin[i]));
-			//_user.printMessage(toFormat("MODE", channelToJoin[i] + " +o")); // RPL_CHANNELMODEIS
-			//_user.printMessage(324, channelToJoin[i], "+nt"); // RPL_CHANNELMODEIS
+			_user.printMessage(toFormat("MODE", channelToJoin[i] + " +nt")); // RPL_CHANNELMODEIS
+			_user.printMessage(324, channelToJoin[i], "+o");
 			//_user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
 		}
 }

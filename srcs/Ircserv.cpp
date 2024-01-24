@@ -212,7 +212,7 @@ void			Ircserv::disconnectClient(int fd)
 		if (itfd->fd == fd)
 			break ;
 	if (itfd != _pollfds.end())
-		itfd->fd = -1;
+		itfd->fd = -42;
 
 	std::map<int, User *>::iterator it = _users.find(fd);
 	if (it != _users.end())
@@ -264,6 +264,17 @@ void			Ircserv::connectClient()
 		int fd = accept(_sockfd, (struct sockaddr *)&addr, &len);
 		if (fd < 0)
 			throw std::runtime_error("accept() failed");
+		std::map<int, User *>::iterator it = _users.find(fd);
+		if (it != _users.end())
+		{
+			if (it->second->getStatus() == User::DELETED)
+			{
+				delete it->second;
+				_users.erase(it);
+			}
+			else
+				throw std::runtime_error("Client already connected");
+		}
 		_users[fd] = new User(fd, addr, this);
 		// User	newUser(fd, addr, this);
 		// _users[fd] = &newUser;
@@ -291,7 +302,7 @@ void			Ircserv::sendPing()
 	{
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
 		{
-			// write(it->fd, "PING\n", 5);
+			write(it->fd, "PING\n", 5);
 		}
 	}
 
