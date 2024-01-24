@@ -32,7 +32,7 @@
 # define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")// 475
 # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask") // 476
 # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator") //482
-# define ERR_UMODEUKNOWNFLAG() (" :Unknown MODE flag") // 501
+# define ERR_UMODEUKNOWNFLAG(flag) (" :Unknown MODE flag") // 501
 # define ERR_USERSDONTMATCH() (" :Cant change mode for other users"); //502
 # define ERR_INVALIDMODEPARAM() (" :Invalid MODE parameter") // 696
 
