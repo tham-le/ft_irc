@@ -37,6 +37,12 @@ void		Command::topicCheck(Channel *channel)
 
 void		Command::topic()
 {
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
+
 	if (_user.getStatus() == User::ONLINE)
 	{
 		for (unsigned long i = 0; i != _input.size(); i++)

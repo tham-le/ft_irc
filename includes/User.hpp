@@ -90,6 +90,7 @@ public:
 	std::string	getPrefix() const;
 	std::string	getTarget(int code);
 	std::string	getNameChannels() const;
+	std::map<std::string, Channel *>	getChannels() const;
 	size_t		getNbChannelsofUser() const;
 	size_t		getMaxChannelofUser() const;
 

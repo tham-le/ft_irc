@@ -4,6 +4,13 @@
 
 void	Command::names(void)
 {
+
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
+	
 	int idx = 0;
 	if (_input[1][0] == '#')
 		idx = 1;

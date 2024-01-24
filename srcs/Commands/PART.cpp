@@ -5,14 +5,16 @@
 
 void		Command::part(void)
 {
+
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
+	
 	if (_input.size() < 2 || _input[1].empty())
 	{
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
-		return ;
-	}
-	if (_user.getStatus() == User::PASSWORD_REQUIRED)
-	{
-		_user.printMessage(451); //NOT REGISRTED
 		return ;
 	}
 	std::vector<std::string>	listChannel = split(_input[1], ',');
