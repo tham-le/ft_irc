@@ -184,6 +184,9 @@ void	User::printMessage(int code, std::string m1)
 	case 475:
 		str += ERR_BADCHANNELKEY(m1);
 		break;
+	case 476:
+		str += ERR_BADCHANMASK(m1);
+		break;
 	case 482:
 		str += ERR_CHANOPRIVSNEEDED(m1);
 		break;
