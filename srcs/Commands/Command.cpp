@@ -20,8 +20,8 @@ void		Command::initCmd()
 {
 	_func["PASS"] = &Command::pass;
 	_func["CAP"] = &Command::cap;
-	// _func["PING"] = &Command::ping;
-	// _func["PONG"] = &Command::pong;
+	_func["PING"] = &Command::ping;
+	_func["PONG"] = &Command::pong;
 
 	_func["PRIVMSG"] = &Command::privmsg;
 	// _func["NOTICE"] = &Command::notice;

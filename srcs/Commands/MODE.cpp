@@ -75,10 +75,12 @@ void	Command::changeMode(void)
 	for (unsigned long i = 0; i != _input.size(); i++)
 		std::cout << "input[" << i << "] = " << _input[i]  << "." << std::endl;
 
-	if (_user.getStatus() != User::ONLINE)
+	if (_user.getStatus() != User::DELETED)
 	{
 		if (_input[1].empty())
 			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
+		else if (_ircserv.isUser(_input[1]))
+			return;
 		else if (!_ircserv.isChannel(_input[1]))
 			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)

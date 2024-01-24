@@ -4,6 +4,11 @@
 
 void		Command::admin(void)
 {
+	if (_user.getStatus() == User::PASSWORD_REQUIRED)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
 	// if (_input.empty()) {
 	// 	_user.printMessage(256, _ircserv.getHostName(), _ircserv.getVersion()); //RPL_ADMINME
 	// 	_user.printMessage(258, _ircserv.getHostName()); //RPL_ADMINLOC2

@@ -94,6 +94,7 @@ class Ircserv
 		int 							_sockfd;
 		std::vector <pollfd>			_pollfds;
 		time_t							_lastPing;
+		time_t							_lastPong;
 
 		std::string						_startTime;
 		bool							_stopSignal;

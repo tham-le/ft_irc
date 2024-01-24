@@ -17,20 +17,6 @@ void	Command::pass(void)
 		_user.printMessage(464); //ERR_PASSWDMISMATCH
 		return ;
 	}
-	_user.setStatus(User::REGISTERED);
-	_user.printMessage(001);
-	_user.printMessage(002);
-	_user.printMessage(003);
-	_user.printMessage(004);
-	_user.printMessage(005);
-
-	// _user.printMessage(251, _user.getNickname()); //RPL_LUSERCLIENT
-	// _user.printMessage(252, _user.getNickname()); //RPL_LUSEROP
-	// _user.printMessage(253, _user.getNickname()); //RPL_LUSERUNKNOWN
-	// _user.printMessage(254, _user.getNickname()); //RPL_LUSERCHANNELS
-	// _user.printMessage(255, _user.getNickname()); //RPL_LUSERME
-	// _user.printMessage(375, _user.getNickname()); //RPL_MOTDSTART
-	// _user.printMessage(372, _user.getNickname()); //RPL_MOTD
-	// _user.printMessage(376, _user.getNickname()); //RPL_ENDOFMOTD
-
+	_user.setStatus(User::PASSWORD_MATCH);
+	
 }
