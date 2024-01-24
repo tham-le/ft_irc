@@ -7,7 +7,7 @@ void    Command::whois() {
         _user.printMessage(451); //ERR_NOTREGISTEREd
         return ;
     }
-    
+
     if (_input[0].empty()) {
         _user.printMessage(311);
         _user.printMessage(312);

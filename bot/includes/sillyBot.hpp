@@ -2,7 +2,7 @@
 
 
 
-class sillyBot : puclic User {
+class sillyBot : {
 	public:
 		sillyBot();
 		~sillyBot();
