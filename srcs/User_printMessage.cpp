@@ -3,7 +3,10 @@
 #include <unistd.h>
 
 void	User::printMessage(std::string str) {
+
 	_ircserv->log("fd " + to_string(_fd) + "<<<<<<<< "+str);
+	if (_status == DELETED)
+		return ;
 	if (write(_fd, str.c_str(), str.size()) < 0)
 		throw std::runtime_error("write() failed");
 }
