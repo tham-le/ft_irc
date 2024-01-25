@@ -86,7 +86,7 @@ std::string		Command::toFormat(std::string cmd, std::string str)
 std::string		Command::toFormat(std::string cmd, std::string channel, std::string msg)
 {
 	std::string out = ":" +  _user.getPrefix();
-	out += " " + cmd + " " + channel + " ";
+	out += " " + cmd + " " + channel + " :";
 	out += msg + "\r\n";
 	return (out);
 }

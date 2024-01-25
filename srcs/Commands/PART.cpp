@@ -41,7 +41,11 @@ void		Command::part(void)
 				std::map<int, User *> users = _ircserv.getChannel(listChannel[i])->getUsers();
 				std::string msg = toFormat("PART", listChannel[i] + reason);
 				for (std::map<int, User *>::iterator it = users.begin(); it != users.end(); it++)
+				{
+					if (it->second->getStatus() == User::DELETED)
+						continue;
 					it->second->printMessage(msg + "\r\n");
+				}
 				_ircserv.getChannel(listChannel[i])->removeUser(_user);
 				_user.removeChannel(listChannel[i]);
 				if (users.size() == 1)

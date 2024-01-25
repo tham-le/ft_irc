@@ -131,30 +131,35 @@ void	sillyBot::run()
 
 		if ( _motdEnd && message.find("PRIVMSG") != std::string::npos)
 		{
-			sendMessage("PRIVMSG #sillyBot :Hello, I'm sillyBot\r\n");
+			std::string sender = message.substr(1, message.find("!") - 1);
+			std::string channel = message.substr(message.find("PRIVMSG") + 8, message.find(":") - 1);
 			
-			// std::string sender = message.substr(1, message.find("!") - 1);
-			// std::string channel = message.substr(message.find("PRIVMSG") + 8, message.find(":", message.find("PRIVMSG")) - message.find("PRIVMSG") - 9);
-			// std::string msg = message.substr(message.find(":", message.find("PRIVMSG")) + 1);
-			// if (msg.find("!joke") != std::string::npos)
-			// {
-			// 	int index = rand() % _jokes.size();
-			// 	sendMessage("PRIVMSG " + channel + " :" + _jokes[index] + "\r\n");
-			// }
-			// else if (msg.find("!quote") != std::string::npos)
-			// {
-			// 	int index = rand() % _quotes.size();
-			// 	sendMessage("PRIVMSG " + channel + " :" + _quotes[index] + "\r\n");
-			// }
-			// else if (msg.find("!astro") != std::string::npos)
-			// {
-			// 	int index = rand() % _astro.size();
-			// 	sendMessage("PRIVMSG " + channel + " :" + _astro[index] + "\r\n");
-			// }
-			// else if (msg.find("!help") != std::string::npos)
-			// {
-			// 	sendMessage("PRIVMSG " + channel + " :Commands: !joke, !quote, !astro, !help\r\n");
-			// }
+			std::string msg = message.substr(message.find(":", message.find("PRIVMSG")) + 1);
+			std::cout << "Sender: " << sender << std::endl;
+			std::cout << "Channel: " << channel << std::endl;
+			std::cout << "Message: " << msg << std::endl;
+			if (msg == "!joke")
+			{
+				std::cout << "Sending joke" << std::endl;
+
+				sendMessage("PRIVMSG " + channel + " :" + _jokes[rand() % _jokes.size()] + "\r\n");
+			}
+			else if (msg == "!astro")
+			{
+				std::cout << "Sending astro" << std::endl;
+
+				sendMessage("PRIVMSG " + channel + " :" + _astro[rand() % _astro.size()] + "\r\n");
+			}
+			else if (msg.find("!quote") != std::string::npos)
+			
+			{
+				std::cout << "Sending quote" << std::endl;
+
+
+				sendMessage("PRIVMSG " + channel + " :" + _quotes[rand() % _quotes.size()] + "\r\n");
+			}
+			else if (msg == "!help")
+				sendMessage("PRIVMSG " + channel + " :!joke, !astro, !quote\r\n");
 		}
 	}
 }

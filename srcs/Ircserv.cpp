@@ -266,8 +266,6 @@ void			Ircserv::disconnectClient(int fd)
 		it->second->setStatus(User::DELETED);
 		//_users.erase(it);
 	}
-	else
-		std::cout << "Client " << fd << " disconnected" << std::endl;
 }
 
 void			Ircserv::closeAllSocket()

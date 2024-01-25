@@ -54,6 +54,8 @@ static std::string	convert3digits(int n)
 
 void	User::printMessage(int code)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);
 
 	switch (code) {
@@ -127,6 +129,8 @@ void	User::printMessage(int code)
 
 void	User::printMessage(int code, std::string m1)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);
 
 	switch (code) {
@@ -210,6 +214,8 @@ void	User::printMessage(int code, std::string m1)
 
 void	User::printMessage(int code, std::string m1, std::string m2)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);;
 
 	switch (code) {
@@ -256,6 +262,8 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);;
 
 	switch (code) {
@@ -273,6 +281,8 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);;
 
 	switch (code) {
@@ -291,6 +301,8 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);;
 
 	switch (code) {
@@ -307,6 +319,8 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 void User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5, std::string m6)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);;
 	str += " ";
 
@@ -324,6 +338,8 @@ void User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 void	User::printMessage(int code, std::string m1, std::string m2, std::string m3, std::string m4, std::string m5, std::string m6, std::string m7)
 {
+	if (_status == DELETED)
+		return ;
 	std::string str = getTarget(code);;
 	str += " ";
 

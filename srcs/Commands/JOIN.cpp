@@ -5,6 +5,14 @@
 
 void		Command::joinChannel(Channel *channel)
 {
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+	{
+		_user.printMessage(451); //ERR_NOTREGISTEREd
+		return ;
+	}
+	if (_user.getStatus() == User::DELETED)
+		return ;
+	
 	std::string channelName = channel->getName();
 	if (_user.getNbChannelsofUser() + 1 > _user.getMaxChannelofUser())
 	{
@@ -25,6 +33,8 @@ void		Command::joinChannel(Channel *channel)
 	std::map<int, User *> listUsers = channel->getUsers();
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
+		// if (it->second->getStatus() == User::DELETED)
+		// 	continue;
 		if (channel->isOperator(*it->second))
 			listUsersNames += "@" + it->second->getNickname() + " ";
 		else
@@ -32,6 +42,9 @@ void		Command::joinChannel(Channel *channel)
 	}
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
+		// if (it->second->getStatus() == User::DELETED)
+		// 	continue;
+
 		it->second->printMessage(toFormat("JOIN", channelName) + "\r\n");
 		it->second->printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
 		it->second->printMessage(366, channelName);	// RPL_ENDOFNAMES
