@@ -25,7 +25,7 @@ void    Command::kick(void) {
                 return ;
             }
             if (!_ircserv.isChannel(channel)) {
-                _user.printMessage(472, channel);
+                _user.printMessage(476, channel);
                 return ;
             }
             if (!_ircserv.getChannel(channel)->isUserInChannel(listUser[i])) {

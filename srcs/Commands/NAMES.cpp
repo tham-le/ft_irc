@@ -18,7 +18,7 @@ void	Command::names(void)
 	// 	_user.printMessage(ERR_NOTJOINEDANYCHANNEL());
 	// 	return ;
 	// }
-	if (_user.getStatus() != User::ONLINE && !_channels.empty()) { //need to update to take only first parameter and skip others
+	if (_user.getStatus() != User::ONLINE && _user.getStatus() != User::DELETED && !_channels.empty()) { //need to update to take only first parameter and skip others
 		if (strcmp(_input[1].c_str(),_channels[&_input[1][idx]]->getName().c_str()) == 0) {
 				_user.printMessage(353, _channels[&_input[1][idx]]->getName(), _channels[&_input[1][idx]]->getUsersName()); //RPL_NAMREPLY
 				_user.printMessage(366, _channels[&_input[1][idx]]->getName()); //RPL_ENDOFNAMES

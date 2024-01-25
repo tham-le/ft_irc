@@ -25,7 +25,7 @@ void		Command::topicCheck(Channel *channel)
 		_user.printMessage(442, _input[1]); //ERR_NOTONCHANNEL
 	else if (!_input[2].empty() && !channel->isOperator(_user))
 		_user.printMessage(482, channel->getName());// ERR_CHANOPRIVSNEEDED
-	else if (!_input[2].empty() && channel->isOperator(_user))
+	else if (!_input[2].empty() && ((channel->isOperator(_user) && Command::cInStr('t', channel->getModeCmd())) || !Command::cInStr('t', channel->getModeCmd())))
 		topicChannel(channel);
 	else
 	{

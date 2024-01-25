@@ -59,6 +59,14 @@ public:
 	void 		version(void);
 	void		user(void);
 	void		whois(void);
+	void		modeI(std::string &sign);
+	void		modeT(std::string &sign);
+	void		modeKpositive(std::string &param);
+	void		modeKnegative(void);
+	void		modeLpositive(std::string &param);
+	void		modeLnegative(void);
+	void		modeOpositive(std::string &param);
+	void		modeOnegative(std::string &param);
 
 	std::vector<std::string>	split(std::string str, char separator);
 	void		command();
