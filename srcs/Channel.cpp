@@ -122,7 +122,7 @@ std::map<int, User *>	Channel::getUsers()
 	return (_users);
 }
 
-std::string Channel::getUsersName() const //pour le RPL_NAMREPLY 353
+std::string Channel::getUsersName() const
 {
 	std::string str = "";
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
@@ -180,8 +180,6 @@ bool			Channel::isGoodKey(std::string key)
 {
 	// if (_key == "")
 	// 	return (true);
-	std::cout << "key = " << key << std::endl;
-	std::cout << "_key = " << _key << std::endl;
 	if (key == _key)
 		return (true);
 	return (false);
@@ -213,7 +211,6 @@ void			Channel::removeOperator(std::string const nickname)
 		return ;
 	_operators.erase(it);
 	removeUser(nickname);
-	// std::cout << nickname << " is not Operator now." << std::endl;
 }
 
 bool			Channel::isOperator(User &user)
