@@ -83,9 +83,6 @@ public:
 	unsigned long		modeParseParam(std::string sign, char c, unsigned long paramIndex);
 	void		joinChannel(std::vector<std::string> channelToJoin, std::vector<std::string> key);
 
-	/*a supprimer , pour tester*/
-	void		channelUsers(std::string channel); //print la liste des users du channel
-	/**/
 
 private:
 	User						&_user;

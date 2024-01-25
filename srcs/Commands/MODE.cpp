@@ -19,7 +19,7 @@ std::string		Command::parseParamL(std::string str, char c)
 			{
 				std::string flag(1, c);
 				_user.printMessage(500, _input[1], flag); // ERR_CMODE
-				return (0);
+				return ("false");
 			}
 			else
 				str = str.substr(0, i);
@@ -60,14 +60,12 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 		}
 		else if (c == 'l') {
 			std::string tmp = parseParamL(_input[paramIndex], c);
-			if (tmp == "0")
+			if (tmp == "false")
 				return (paramIndex);
 			else if (tmp != _input[paramIndex])
 				_input[paramIndex] = tmp;
-			std::cout << _input[paramIndex] << "." << std::endl;
-			modeLpositive(_input[paramIndex]);
-			// if (modeLpositive(_input[paramIndex]) == false)
-			// 	return (paramIndex);
+			if (modeLpositive(_input[paramIndex]) == false)
+				return (paramIndex);
 		}
 		paramIndex++;
 	}
@@ -89,7 +87,7 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 		else if (c == 'l') {
 			modeLnegative();
 		}
-		paramIndex++;
+		paramIndex--;
 	}
 
 	return (paramIndex);
@@ -108,7 +106,7 @@ void	Command::modeFind(Channel *channel)
 
 	for (unsigned long i = 0; i < input.size(); i++)
 	{
-		if ((input[i] != '+' && input[i] != '-') && (input[i] != 'l' && sign == "+" && cInStr(input[i], channel->getModeCmd())))
+		if ((input[i] != '+' && input[i] != '-') && (input[i] != 'l' && input[i] != 'l' && sign == "+" && cInStr(input[i], channel->getModeCmd())))
 			;
 		else if ((input[i] != '+' && input[i] != '-') && (input[i] != 'o' && sign == "-" && !cInStr(input[i], channel->getModeCmd())))
 			;
@@ -122,7 +120,10 @@ void	Command::modeFind(Channel *channel)
 			if (input[i] == '+' || input[i] == '-')
 			{
 				sign = input[i];
-				modeInputClear += input[i];
+				if ((i != 0 && (modeInputClear[modeInputClear.size() - 1] == '+' || modeInputClear[modeInputClear.size() - 1] == '-')))
+					modeInputClear[modeInputClear.size() - 1] = input[i];
+				else
+					modeInputClear += input[i];
 			}
 			else
 			{
@@ -139,6 +140,8 @@ void	Command::modeFind(Channel *channel)
 	}
 	if (modeInputClear.length() > 1)
 	{
+		if ((modeInputClear[modeInputClear.size() - 1] == '+' || modeInputClear[modeInputClear.size() - 1] == '-'))
+			modeInputClear.erase(modeInputClear.size() - 1, 1);
 		param = ":" + _user.getPrefix() + " MODE " + _input[1] + " " + modeInputClear + param;
 		std::map<int, User *> listUsers = channel->getUsers();
 		for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
@@ -170,6 +173,8 @@ void	Command::changeMode(void)
 			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)
 			_user.printMessage(324, _input[1], _ircserv.getChannel(_input[1])->getModeCmd()); // RPL_CHANNELMODEIS
+		else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isUserInChannel(_user))
+			_user.printMessage(442, _input[1]); //ERR_NOTONCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
 			_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
 		else

@@ -70,23 +70,10 @@ unsigned long		Channel::getMaxUser() const
 
 void	Channel::addUser(User &user)
 {
-		if (_mode == INVITE_ONLY)
-		{
-			if (!isInvited(user))
-			{
-				// _ircserv.writeToClient(_user.getFd(), _name + ERR_INVITEONLYCHAN + "\n");
-				return ;
-			}
-		}
-		_users[user.getFd()] = &user;
-		user.addChannel(this);
-		// for (std::map<int, User *>::iterator i = _users.begin(); i != _users.end(); i++)
-		// {
-		// 	std::cout << "-List users of channel " << _name << std::endl;
-		// 	std::cout << "- " << (i->second)->getHostname() << std::endl;
-		// }
-		if (_mode == INVITE_ONLY)
-			Uninvite(user);
+	_users[user.getFd()] = &user;
+	user.addChannel(this);
+	if (_mode == INVITE_ONLY)
+		Uninvite(user);
 }
 
 void	Channel::removeUser(User &user)
@@ -178,8 +165,6 @@ bool			Channel::isInvited(User &user)
 
 bool			Channel::isGoodKey(std::string key)
 {
-	// if (_key == "")
-	// 	return (true);
 	if (key == _key)
 		return (true);
 	return (false);

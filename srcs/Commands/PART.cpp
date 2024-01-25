@@ -11,7 +11,7 @@ void		Command::part(void)
 		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
 	}
-	
+
 	if (_input.size() < 2 || _input[1].empty())
 	{
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
@@ -54,54 +54,3 @@ void		Command::part(void)
 			_user.printMessage(403, std::string(listChannel[i])); // ERR_NOSUCHCHANNEL
 	}
 }
-
-
-
-
-	// if (_user.getStatus() == User::ONLINE)
-	// {
-	// 	_user.setStatus(User::REGISTERED);
-
-	// 	std::map<int, User *> listUsers;
-	// 	listUsers = _user.getLastChannel()->getUsers();
-	// 	std::map<int, User *>::iterator it;
-	// 	for (it = listUsers.begin(); it != listUsers.end(); it++)
-	// 	{
-	// 		if (it->second->getStatus() == User::ONLINE)
-	// 			break;
-
-	// 	}
-	// 	if (it == listUsers.end())
-	// 	{
-	// 		_user.removeChannel(_user.getLastChannel()->getName());
-	// 		_ircserv.removeChannel(_user.getLastChannel()->getName());
-	// 		_user.getLastChannel()->removeOperator(_user);
-	// 	}
-	// 	std::string msg;
-	// 	msg = toFormat("PART","#" + _user.getLastChannel()->getName());
-
-	// 	std::cout << msg ;
-	// 	_user.printMessage(msg);
-	// 	_user.removeLastChannel();
-	// }
-	// else
-	// {
-	// 	for (unsigned long i = 0; i < listChannel.size(); i++)
-	// 	{
-	// 		int j = 0;
-	// 		if (listChannel[i] == '#')
-	// 			j = 1;
-	// 		// std::cout << listChannel[i] << std::endl;
-	// 		if (_ircserv.isChannel(listChannel[i]))
-	// 		{
-	// 			if (_ircserv.getChannel(listChannel[i])->isUserInChannel(_user))
-	// 				_user.printMessage(442, std::string(listChannel[i]));
-
-	// 		}
-	// 		else
-	// 		{
-	// 			_user.printMessage(403, std::string(listChannel[i]));
-	// 			return;
-	// 		}
-	// 	}
-	// }

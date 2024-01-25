@@ -53,7 +53,6 @@ void		Command::topic()
 	}
 	else
 	{
-		std::cout << _input.size() << "." << std::endl;
 		if (_input[1] == "")
 			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
 		else if (_input[1][0] != '#' || (_input[1][0] == '#' && !_ircserv.isChannel(_input[1])))

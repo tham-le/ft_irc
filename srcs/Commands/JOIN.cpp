@@ -76,8 +76,6 @@ void		Command::joinChannel(std::vector<std::string> channelToJoin, std::vector<s
 						_user.printMessage(475, channel->getName()); // ERR_BADCHANNELKEY
 						continue;
 					}
-					else if (channel->getMode() == Channel::INVITE_ONLY)
-						channel->Uninvite(_user);
 				}
 				joinChannel(channel);
 			}
