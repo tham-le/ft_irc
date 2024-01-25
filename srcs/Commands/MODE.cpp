@@ -112,11 +112,6 @@ void	Command::modeFind(Channel *channel)
 			;
 		else if ((input[i] != '+' && input[i] != '-') && (input[i] != 'o' && sign == "-" && !cInStr(input[i], channel->getModeCmd())))
 			;
-<<<<<<< HEAD
-=======
-		if ((input[i] != '+' && input[i] != '-') && (input[i] != 'o' && sign == "-" && !cInStr(input[i], channel->getModeCmd())))
-			;
->>>>>>> f93133d40738ad3c91affd022c3b64aa0f5c907d
 		else if ((input[i] != '+' && input[i] != '-') && cInStr(input[i], modeKnown) == false)
 		{
 			std::string s(1, input[i]);

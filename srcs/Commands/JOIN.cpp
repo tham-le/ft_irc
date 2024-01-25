@@ -133,90 +133,13 @@ void		Command::join(void)
 	std::vector<std::string> channelToJoin;
 	std::vector<std::string> key;
 
-<<<<<<< HEAD
 	channelToJoin = split(params[0], ',');
 	if (params.size() >= 2)
 		key = split(params[0], ',');
-=======
-	if (params.size() == 1)
-	{
-		channelToJoin = split(params[0], ',');
-	}
-	else if (params.size() >= 2)
-	{
-		channelToJoin = split(params[0], ',');
-		key = split(params[1], ',');
-		// while (params[1].find(',') != std::string::npos)
-		// {
-		// 	key = split(params[1], ',');
-		// 	// key.push_back(params[1].substr(0, params[1].find(',')));
-		// 	params[1] = params[1].substr(params[1].find(',') + 1);
-		// 	if (params[1].size() == 0)
-		// 		break;
-		// }
-	}
->>>>>>> f93133d40738ad3c91affd022c3b64aa0f5c907d
 	if (channelToJoin.size() == 0)
 	{
 		_user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
 		return ;
 	}
-<<<<<<< HEAD
 	joinChannel(channelToJoin, key);
-=======
-
-	for (unsigned long i = 0; i < channelToJoin.size(); i++)
-	{
-		if (channelToJoin[i].size() == 0)
-			continue;
-		if (channelToJoin[i][0] != '#' && channelToJoin[i][0] != '&')
-		{
-			_user.printMessage(476, channelToJoin[i]); // ERR_BADCHANMASK
-			continue;
-		}
-		//if channel exist
-		if (_ircserv.isChannel(channelToJoin[i]))
-		{
-			Channel *channel = _ircserv.getChannel(channelToJoin[i]);
-			if (channel->getMode() == Channel::INVITE_ONLY)  //if channel is invite only
-			{
-				if (!channel->isInvited(_user))
-				{
-					_user.printMessage(473, channel->getName()); // ERR_INVITEONLYCHAN
-					continue;
-				}
-			}
-			if (!channel->isUserInChannel(_user))
-			{
-				if (channel->getKey() != "") //if channel has a key
-				{
-					std::cout << "KEY = " << channel->getKey() << std::endl;
-					std::cout << "KEY SIZE = " << key.size() << std::endl;
-					if (i >= key.size() || !channel->isGoodKey(key[i]))
-					{
-						_user.printMessage(475, channel->getName()); // ERR_BADCHANNELKEY
-						continue;
-					}
-				}
-				joinChannel(channel);
-			}
-		}
-		else //if channel doesn't exist, create it
-		{
-			//if max channels of server reached
-			if (_ircserv.getNbChannels() + 1 > _ircserv.getConfig().getMaxChannels())
-			{
-				_user.printMessage(405, channelToJoin[i]); // ERR_TOOMANYCHANNELS
-				continue;
-			}
-			_ircserv.addChannel(channelToJoin[i]);
-			_ircserv.getChannel(channelToJoin[i])->addOperator(_user);
-			joinChannel(_ircserv.getChannel(channelToJoin[i]));
-			if (_ircserv.getChannel(_input[1])->getModeCmd() != "+")
-				_user.printMessage(324, channelToJoin[i], _ircserv.getChannel(_input[1])->getModeCmd()); //RPL_CHANNELMODEIS
-			//_user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
-		}
-}
-
->>>>>>> f93133d40738ad3c91affd022c3b64aa0f5c907d
 }

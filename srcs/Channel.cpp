@@ -151,15 +151,8 @@ bool			Channel::isUserInChannel(User const &user) const
 	return (false);
 }
 
-<<<<<<< HEAD
-void			Channel::Invite(User *user)
-{
-	// std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
-
-=======
 void			Channel::Invite(User* user)
 {
->>>>>>> f93133d40738ad3c91affd022c3b64aa0f5c907d
 	_invitedUsers.push_back(user);
 }
 
@@ -189,7 +182,7 @@ bool			Channel::isGoodKey(std::string key)
 	// 	return (true);
 	std::cout << "key = " << key << std::endl;
 	std::cout << "_key = " << _key << std::endl;
-	if (key == _key) 
+	if (key == _key)
 		return (true);
 	return (false);
 }
