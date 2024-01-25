@@ -153,9 +153,8 @@ void		Command::join(void)
 			_ircserv.addChannel(channelToJoin[i]);
 			_ircserv.getChannel(channelToJoin[i])->addOperator(_user);
 			joinChannel(_ircserv.getChannel(channelToJoin[i]));
-			// if (_ircserv.getChannel(_input[1])->getModeCmd() != "+")
-			// 	_user.printMessage(toFormat("MODE", channelToJoin[i] + _ircserv.getChannel(_input[1])->getModeCmd() )); // RPL_CHANNELMODEIS
-			_user.printMessage(324, channelToJoin[i], "+o");
+			if (_ircserv.getChannel(_input[1])->getModeCmd() != "+")
+				_user.printMessage(324, channelToJoin[i], _ircserv.getChannel(_input[1])->getModeCmd()); //RPL_CHANNELMODEIS
 			//_user.printMessage(329, channelToJoin[i], to_string(_ircserv.getChannel(channelToJoin[i])->getCreationTime())); // RPL_CREATIONTIME
 		}
 }
