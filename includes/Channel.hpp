@@ -49,7 +49,7 @@ class Channel
 		bool			isUserInChannel(User const &user) const;
 
 
-		void			Invite(User &user);
+		void			Invite(User* user);
 		void			Uninvite(User &user);
 		void			Uninvite(std::string const nickname);
 		bool			isInvited(User &user);
