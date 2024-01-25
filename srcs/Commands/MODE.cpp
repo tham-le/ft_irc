@@ -37,7 +37,9 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 			modeKpositive(_input[paramIndex]);
 		}
 		else if (c == 'o') {
-			modeOpositive(_input[paramIndex]);
+			std::cout << "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO AVEC " << _input[paramIndex] << std::endl;
+			if (modeOpositive(_input[paramIndex]) == false)
+				return (paramIndex);
 		}
 		else if (c == 'l') {
 			for (unsigned long i = 0; i < _input[paramIndex].size(); i++)
@@ -97,7 +99,9 @@ void	Command::modeFind(Channel *channel)
 			;
 		else if ((_input[2][i] != '+' && _input[2][i] != '-') && (_input[2][i] != 'o' && sign == "-" && !cInStr(_input[2][i], channel->getModeCmd())))
 			;
-		else if ((_input[2][i] != '+' && _input[2][i] != '-') && cInStr(_input[2][i], modeKnown) == false)
+		if ((input[i] != '+' && input[i] != '-') && (input[i] != 'o' && sign == "-" && !cInStr(input[i], channel->getModeCmd())))
+			;
+		else if ((input[i] != '+' && input[i] != '-') && cInStr(input[i], modeKnown) == false)
 		{
 			std::string s(1, _input[2][i]);
 			_user.printMessage(472, s); //ERR_UNKNOWNMODE
@@ -114,11 +118,10 @@ void	Command::modeFind(Channel *channel)
 				unsigned long tmp = modeParseParam(sign, _input[2][i], paramIndex);
 				if (paramIndex != tmp)
 				{
-					modeInputClear += _input[2][i];
+					modeInputClear += input[i];
 					if (tmp > paramIndex)
 						param = " " + _input[paramIndex++];
 				}
-
 			}
 
 		}
@@ -272,29 +275,20 @@ void	Command::modeLnegative(void) {
 		;
 }
 
-void	Command::modeOpositive(std::string &param) {
-	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
-	if (cInStr('o', _ircserv.getChannel(_input[1])->getModeCmd())) {
+bool	Command::modeOpositive(std::string &param) {
+	if (_ircserv.getChannel(_input[1])->isUserInChannel(param)) {
 		if (_ircserv.getChannel(_input[1])->isOperator(param))
-			;
+			return false;
 		else {
 			_ircserv.getChannel(_input[1])->addOperator(*_ircserv.getUser(param));
+			return true;
 		}
 	}
-	else {
-		mode += "o";
-		_ircserv.getChannel(_input[1])->setModeCmd(mode);
-		_ircserv.getChannel(_input[1])->addOperator(*_ircserv.getUser(param));
-	}
+	return false;
 }
 
 void	Command::modeOnegative(std::string &param) {
-	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
-	if (cInStr('o', _ircserv.getChannel(_input[1])->getModeCmd())) {
-		size_t found = mode.find('o');
-		if (found != std::string::npos)
-			mode.erase(found, 1);
-		_ircserv.getChannel(_input[1])->setModeCmd(mode);
+	if  (_ircserv.getChannel(_input[1])->isUserInChannel(param) && _ircserv.getChannel(_input[1])->isOperator(param)) {
 		_ircserv.getChannel(_input[1])->removeOperator(param);
 	}
 	else

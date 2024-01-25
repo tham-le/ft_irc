@@ -94,13 +94,15 @@ void		Command::join(void)
 	else if (params.size() >= 2)
 	{
 		channelToJoin = split(params[0], ',');
-		while (params[1].find(',') != std::string::npos)
-		{
-			key.push_back(params[1].substr(0, params[1].find(',')));
-			params[1] = params[1].substr(params[1].find(',') + 1);
-			if (params[1].size() == 0)
-				break;
-		}
+		key = split(params[1], ',');
+		// while (params[1].find(',') != std::string::npos)
+		// {
+		// 	key = split(params[1], ',');
+		// 	// key.push_back(params[1].substr(0, params[1].find(',')));
+		// 	params[1] = params[1].substr(params[1].find(',') + 1);
+		// 	if (params[1].size() == 0)
+		// 		break;
+		// }
 	}
 	if (channelToJoin.size() == 0)
 	{
@@ -131,9 +133,11 @@ void		Command::join(void)
 			}
 			if (!channel->isUserInChannel(_user))
 			{
-				if (channel->getKey().size() > 0) //if channel has a key
+				if (channel->getKey() != "") //if channel has a key
 				{
-					if (i >= key.size() || (i < key.size() && !channel->isGoodKey(key[i])))
+					std::cout << "KEY = " << channel->getKey() << std::endl;
+					std::cout << "KEY SIZE = " << key.size() << std::endl;
+					if (i >= key.size() || !channel->isGoodKey(key[i]))
 					{
 						_user.printMessage(475, channel->getName()); // ERR_BADCHANNELKEY
 						continue;
