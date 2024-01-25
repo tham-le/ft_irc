@@ -34,14 +34,19 @@ public:
 	void					setMaxChannels(int const maxChannels);
 	size_t						getMaxChannels() const;
 
+	void					setOpPassword(std::string const opPassword);
+	std::string				getOpPassword() const;
+
 private:
 	// std::map<std::string, std::string>	_configList;
 	int									_port;
 	std::string							_password;
+	std::string							_opPassword;
 	int									_pingInterval;
 	int									_pingTimeout;
 	size_t									_maxClients;
 	size_t									_maxChannels;
+
 
 };
 

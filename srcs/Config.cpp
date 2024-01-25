@@ -78,3 +78,15 @@ size_t		Config::getMaxChannels() const
 	return (_maxChannels);
 }
 
+void	Config::setOpPassword(std::string const opPassword)
+{
+	this->_opPassword = opPassword;
+}
+
+std::string		Config::getOpPassword() const
+{
+	return (_opPassword);
+}
+
+
+

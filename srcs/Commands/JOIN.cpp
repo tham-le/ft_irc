@@ -45,16 +45,16 @@ void		Command::joinChannel(Channel *channel)
 	if (channel->getTopic() != "")
 	{
 		_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
-		_user.printMessage(332, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
+		_user.printMessage(333, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	}
 	_user.printMessage(329, channel->getName(), channel->getCreationTime()); //RPL_CREATIONTIME
 }
 
 void		Command::join(void)
 {
-	if (_user.getStatus() == User::PASSWORD_REQUIRED)
+	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
 	{
-		_user.printMessage(451); // ERR_NOTREGISTERED
+		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
 	}
 	if (_input.size() < 2)
@@ -110,7 +110,6 @@ void		Command::join(void)
 
 	for (unsigned long i = 0; i < channelToJoin.size(); i++)
 	{
-		//std::cout << "THIS shit channelToJoin[" << i << "] = " << channelToJoin[i] << std::endl;
 		if (channelToJoin[i].size() == 0)
 			continue;
 		if (channelToJoin[i][0] != '#' && channelToJoin[i][0] != '&')

@@ -22,7 +22,7 @@ class Ircserv
 {
 	public:
 		~Ircserv();
-		Ircserv(int port, std::string password);
+		Ircserv(int port, std::string password, std::string opPassword);
 
 		void			init();
 		void			run();
@@ -70,19 +70,6 @@ class Ircserv
 
 		bool			isUser(std::string nickname) const;
 		User			*getUser(std::string nickname) const;
-
-
-
-
-/*		Config			getConfig() const;
-		void			setConfig(Config const &config);
-
-		void			addUser(User *user);
-		void			removeUser(User *user);
-		void			removeUser(std::string const nickname);
-
-		std::map<std::string, Channel>	getChannels() const;*/
-
 
 	private:
 		friend class Command;

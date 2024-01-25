@@ -2,6 +2,12 @@
 #include "../includes/ReplyCommand.hpp"
 
 void    Command::whois() {
+    if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+    {
+        _user.printMessage(451); //ERR_NOTREGISTEREd
+        return ;
+    }
+
     if (_input[0].empty()) {
         _user.printMessage(311);
         _user.printMessage(312);

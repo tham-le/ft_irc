@@ -2,6 +2,13 @@
 #include "../includes/ReplyCommand.hpp"
 
 void		Command::privmsg(void) {
+
+    if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
+    {
+        _user.printMessage(451); //ERR_NOTREGISTEREd
+        return ;
+    }
+    
     std::string msg;
     bool colon = false;
     for (unsigned long i = 0; i != _input.size(); i++) {

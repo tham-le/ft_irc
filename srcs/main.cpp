@@ -6,7 +6,7 @@
 /*   By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 20:50:16 by thi-le            #+#    #+#             */
-/*   Updated: 2024/01/24 17:05:30 by thi-le           ###   ########.fr       */
+/*   Updated: 2024/01/24 20:31:21 by thi-le           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,15 @@ int main(int argc, char **argv)
 
 	try
 	{
-		if (argc != 3)
-			throw std::invalid_argument("Usage: ./ircserv <port> <password>");
+		if (argc != 4 && argc != 3)
+			throw std::invalid_argument("Usage: ./ircserv <port> <password> [optional: Operator password]");
 		int port = toInt(argv[1]);
 		std::string password = argv[2];
-
-		Ircserv ircserv(port, password);
+		std::string opPassword = "";
+		if (argc == 4)
+			opPassword = argv[3];
+	
+		Ircserv ircserv(port, password, opPassword);
 		ircserv.init();
 		ircserv.run();
 	}
