@@ -160,8 +160,8 @@ void	Command::changeMode(void)
 		return ;
 	}
 
-	for (unsigned long i = 0; i != _input.size(); i++)
-		std::cout << "input[" << i << "] = " << _input[i]  << "." << std::endl;
+	// for (unsigned long i = 0; i != _input.size(); i++)
+	// 	std::cout << "input[" << i << "] = " << _input[i]  << "." << std::endl;
 
 	if (_user.getStatus() != User::DELETED && !_ircserv.isUser(_input[1]))
 	{
