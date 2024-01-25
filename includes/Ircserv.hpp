@@ -23,7 +23,7 @@ class Ircserv
 {
 	public:
 		~Ircserv();
-		Ircserv(int port, std::string password, std::string opPassword);
+		Ircserv(int port, std::string password);
 
 		void			init();
 		void			run();

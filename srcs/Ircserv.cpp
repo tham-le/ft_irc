@@ -59,7 +59,7 @@ Ircserv::~Ircserv()
 	std::cout << "Bye bye" << std::endl;
 }
 
-Ircserv::Ircserv(int port, std::string password, std::string opPassword)
+Ircserv::Ircserv(int port, std::string password)
 {
 	_hostName = "Irrelevant Random Chat";
 	_version = "1.0";
@@ -67,7 +67,6 @@ Ircserv::Ircserv(int port, std::string password, std::string opPassword)
 	_config = Config();
 	_config.setPort(port);
 	_config.setPassword(password);
-	_config.setOpPassword(opPassword);
 	_config.setPingInterval(1000);
 	_config.setPingTimeout(5000);
 	_config.setMaxClients(100);
