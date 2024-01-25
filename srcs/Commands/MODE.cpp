@@ -13,20 +13,17 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 {
 	if (c == 'i')
 	{
-		std::cout << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII" << std::endl;
 		modeI(sign);
 		return (--paramIndex);
 	}
 	else if (c == 't')
 	{
-		std::cout << "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT" << std::endl;
 		modeT(sign);
 		return (--paramIndex);
 	}
 	else
 	if (sign == "+")
 	{
-		std::cout << _input.size() << " lll" << std::endl;
 		if (_input.size() - 1 < paramIndex)
 		{
 			std::string flag(1, c);
@@ -37,15 +34,26 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 		{
 			if (_ircserv.getChannel(_input[1])->getKey() == _input[paramIndex])
 				return (paramIndex);
-			std::cout << "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK AVEC " << _input[paramIndex] << std::endl;
 			modeKpositive(_input[paramIndex]);
 		}
 		else if (c == 'o') {
-			std::cout << "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO AVEC " << _input[paramIndex] << std::endl;
 			modeOpositive(_input[paramIndex]);
 		}
 		else if (c == 'l') {
-			std::cout << "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL AVEC " << _input[paramIndex] << std::endl;
+			for (unsigned long i = 0; i < _input[paramIndex].size(); i++)
+			{
+				if (!isdigit(_input[paramIndex][i]))
+				{
+					if (i == 0)
+					{
+						std::string flag(1, c);
+						_user.printMessage(500, _input[1], flag); // ERR_CMODE
+						return (paramIndex);
+					}
+					else
+						_input[paramIndex] = _input[paramIndex].substr(0, i);
+				}
+			}
 			modeLpositive(_input[paramIndex]);
 		}
 		paramIndex++;
@@ -59,15 +67,12 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 			return (paramIndex);
 		}
 		else if (c == 'k') {
-			std::cout << "------------------KKKKKKKKKKKKK AVEC " << _input[paramIndex] << std::endl;
 			modeKnegative();
 		}
 		else if (c == 'o') {
-			std::cout << "------------------OOOOOOOOOOOOOOOO AVEC " << _input[paramIndex] << std::endl;
 			modeOnegative(_input[paramIndex]);
 		}
 		else if (c == 'l') {
-			std::cout << "------------------LLLLLLLLLLLLLLLLLLLLLL AVEC " << _input[paramIndex] << std::endl;
 			modeLnegative();
 		}
 		paramIndex++;
@@ -84,10 +89,13 @@ void	Command::modeFind(Channel *channel)
 	unsigned long	paramIndex = 3;
 	std::string sign = "+";
 	std::string param;
+	std::cout << "lol" << std::endl;
 
 	for (unsigned long i = 0; i < _input[2].size(); i++)
 	{
-		if ((_input[2][i] != '+' && _input[2][i] != '-') && cInStr(_input[2][i], channel->getModeCmd()))
+		if ((_input[2][i] != '+' && _input[2][i] != '-') && (cInStr(_input[2][i], channel->getModeCmd()) && sign == "+"))
+			;
+		else if ((_input[2][i] != '+' && _input[2][i] != '-') && (_input[2][i] != 'o' && sign == "-" && !cInStr(_input[2][i], channel->getModeCmd())))
 			;
 		else if ((_input[2][i] != '+' && _input[2][i] != '-') && cInStr(_input[2][i], modeKnown) == false)
 		{
@@ -156,6 +164,7 @@ void	Command::changeMode(void)
 }
 
 void	Command::modeI(std::string &sign) {
+	std::cout << "here" << std::endl;
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (sign == "+") {
 		if (_ircserv.getChannel(_input[1])->getMode() == Channel::PUBLIC) {
@@ -168,10 +177,13 @@ void	Command::modeI(std::string &sign) {
 			;
 	}
 	else if (sign == "-") {
-		if (_ircserv.getChannel(_input[1])->getMode() == Channel::INVITE_ONLY) {
+		if (_ircserv.getChannel(_input[1])->getMode() == Channel::INVITE_ONLY)
+		{
 			_ircserv.getChannel(_input[1])->setMode(Channel::PUBLIC);
+			std::cout << "JE SUIS MOINSSS" << std::endl;
 			if (cInStr('i', _ircserv.getChannel(_input[1])->getModeCmd()))
 				mode.erase('i', 1);
+			std::cout << "JE SUIS MOINSSS APRES" << std::endl;
 			_ircserv.getChannel(_input[1])->setModeCmd(mode);
 		}
 		else
@@ -180,6 +192,7 @@ void	Command::modeI(std::string &sign) {
 }
 
 void	Command::modeT(std::string &sign) {
+	std::cout << "LALALLA " << sign << std::endl;
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (sign == "+") {
 		if (cInStr('t', _ircserv.getChannel(_input[1])->getModeCmd()))
