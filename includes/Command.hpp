@@ -44,16 +44,16 @@ public:
 
 
 	void		admin(void);
-	void		info(void); //Y
-	void		join(void);//C
-	void		nickname(void);//Y
-	void		names(void); //Y
+	void		info(void);
+	void		join(void);
+	void		nickname(void);
+	void		names(void);
 	void		part(void);
-	void		quit(void); //Y
-	void 		list(void); //Y
-	void		kick(void);//C
-	void		invite(void);//C
-	void		topic(void);//C
+	void		quit(void);
+	void 		list(void);
+	void		kick(void);
+	void		invite(void);
+	void		topic(void);
 	void		changeMode(void);
 	bool		isInChannel(void);
 	void 		version(void);
@@ -63,10 +63,10 @@ public:
 	void		modeT(std::string &sign);
 	void		modeKpositive(std::string &param);
 	void		modeKnegative(void);
-	void		modeLpositive(std::string &param);
+	bool		modeLpositive(std::string &param);
 	void		modeLnegative(void);
 	bool		modeOpositive(std::string &param);
-	void		modeOnegative(std::string &param);
+	bool		modeOnegative(std::string &param);
 	std::string		parseParamL(std::string str, char c);
 
 	std::vector<std::string>	split(std::string str, char separator);
@@ -97,7 +97,6 @@ private:
 	std::map<std::string, Channel *>		_channels;
 };
 
-/*Template to convert int to string*/
 template<typename T>
 std::string to_string(T value)
 {
@@ -106,7 +105,6 @@ std::string to_string(T value)
 	return os.str();
 }
 
-/* Template to print vector. Usage: std::cout << myVector << std::endl;*/
 template <typename T>
 std::ostream& operator<< (std::ostream& os, const std::vector<T> &v) {
 	for (typename std::vector<T>::const_iterator it = v.begin(); it != v.end(); it++) {

@@ -55,7 +55,6 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 			modeKpositive(_input[paramIndex]);
 		}
 		else if (c == 'o') {
-			std::cout << "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO AVEC " << _input[paramIndex] << std::endl;
 			if (modeOpositive(_input[paramIndex]) == false)
 				return (paramIndex);
 		}
@@ -84,7 +83,8 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 			modeKnegative();
 		}
 		else if (c == 'o') {
-			modeOnegative(_input[paramIndex]);
+			if (modeOnegative(_input[paramIndex]) == false)
+				return (paramIndex);
 		}
 		else if (c == 'l') {
 			modeLnegative();
@@ -178,7 +178,6 @@ void	Command::changeMode(void)
 }
 
 void	Command::modeI(std::string &sign) {
-	std::cout << "here" << std::endl;
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (sign == "+") {
 		if (_ircserv.getChannel(_input[1])->getMode() == Channel::PUBLIC) {
@@ -207,7 +206,6 @@ void	Command::modeI(std::string &sign) {
 }
 
 void	Command::modeT(std::string &sign) {
-	std::cout << "LALALLA " << sign << std::endl;
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (sign == "+") {
 		if (cInStr('t', _ircserv.getChannel(_input[1])->getModeCmd()))
@@ -251,26 +249,28 @@ void	Command::modeKnegative(void) {
 		size_t found = mode.find('k');
 		if (found != std::string::npos)
 			mode.erase(found, 1);
-	_ircserv.getChannel(_input[1])->setModeCmd(mode);
+		_ircserv.getChannel(_input[1])->setModeCmd(mode);
 		_ircserv.getChannel(_input[1])->setKey("");
 	}
 	else
 		;
 }
 
-void	Command::modeLpositive(std::string &param) {
+bool	Command::modeLpositive(std::string &param) {
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (cInStr('l', _ircserv.getChannel(_input[1])->getModeCmd())) {
 		if (_ircserv.getChannel(_input[1])->getMaxUser() == static_cast<unsigned long>(atoi(param.c_str())))
-			;
+			return false;
 		else {
 			_ircserv.getChannel(_input[1])->setMaxUser(atoi(param.c_str()));
+			return true;
 		}
 	}
 	else {
 		mode += "l";
 		_ircserv.getChannel(_input[1])->setModeCmd(mode);
 		_ircserv.getChannel(_input[1])->setMaxUser(atoi(param.c_str()));
+		return true;
 	}
 }
 
@@ -299,10 +299,14 @@ bool	Command::modeOpositive(std::string &param) {
 	return false;
 }
 
-void	Command::modeOnegative(std::string &param) {
-	if  (_ircserv.getChannel(_input[1])->isUserInChannel(param) && _ircserv.getChannel(_input[1])->isOperator(param)) {
-		_ircserv.getChannel(_input[1])->removeOperator(param);
+bool	Command::modeOnegative(std::string &param) {
+	if (_ircserv.getChannel(_input[1])->isUserInChannel(param)) {
+		if  (_ircserv.getChannel(_input[1])->isOperator(param)) {
+			_ircserv.getChannel(_input[1])->removeOperator(*_ircserv.getUser(param));
+			return true;
+		}
+		else
+			return false;
 	}
-	else
-		;
+	return false;
 }

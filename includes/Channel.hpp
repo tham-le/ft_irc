@@ -84,7 +84,6 @@ private:
 		unsigned long			_maxUser;
 
 		std::map<int, User *>	_users;
-		// std::vector<User *>		_bannedUsers;
 		std::vector<User *>		_invitedUsers;
 		std::vector<User *>		_operators;
 };
