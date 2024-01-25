@@ -23,11 +23,7 @@ void		Command::initCmd()
 	_func["CAP"] = &Command::cap;
 	_func["PING"] = &Command::ping;
 	_func["PONG"] = &Command::pong;
-
 	_func["PRIVMSG"] = &Command::privmsg;
-	// _func["NOTICE"] = &Command::notice;
-	// _func["WHO"] = &Command::who;
-
 	_func["ADMIN"] = &Command::admin;
 	_func["INFO"] = &Command::info; //->no channel
 	_func["JOIN"] =  &Command::join;
@@ -95,16 +91,3 @@ std::string		Command::toFormat(std::string cmd, std::string channel, std::string
 	return (out);
 }
 
-
-
-/*a supp*/
-void		Command::channelUsers(std::string channel)
-{
-	std::map<int, User *> listUsers;
-	listUsers = _ircserv.getChannel(channel)->getUsers();
-	std::cout << "---------------------------------------------" << std::endl;
-	std::cout << "List users of channel #" << _ircserv.getChannel(channel)->getName() << std::endl;
-	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
-		std::cout << "*" << it->second->getNickname() << std::endl;
-	std::cout << "---------------------------------------------" << std::endl;
-}
