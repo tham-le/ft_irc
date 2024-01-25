@@ -25,5 +25,9 @@ void	Command::pass(void)
 		_user.printMessage(003);
 		_user.printMessage(004);
 		_user.printMessage(005);
+		_user.printMessage(375);
+		_user.printMessage(372, "Today is a good day");
+		_user.printMessage(376);
+
 	}
 }

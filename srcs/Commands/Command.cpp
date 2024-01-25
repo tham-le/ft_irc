@@ -1,5 +1,6 @@
 #include "../includes/Command.hpp"
 #include <ctype.h>
+#include <iostream>
 
 Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _user(user), _ircserv(ircserv)
 {

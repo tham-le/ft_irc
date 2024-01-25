@@ -6,7 +6,7 @@
 /*   By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 20:50:16 by thi-le            #+#    #+#             */
-/*   Updated: 2024/01/25 12:34:40 by thi-le           ###   ########.fr       */
+/*   Updated: 2024/01/25 13:05:40 by thi-le           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ static int toInt(char const *port)
 
 int main(int argc, char **argv)
 {
-
 	try
 	{
 		if (argc != 3)

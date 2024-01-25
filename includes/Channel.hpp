@@ -49,7 +49,11 @@ class Channel
 		bool			isUserInChannel(User const &user) const;
 
 
+<<<<<<< HEAD
 		void			Invite(User *user);
+=======
+		void			Invite(User* user);
+>>>>>>> f93133d40738ad3c91affd022c3b64aa0f5c907d
 		void			Uninvite(User &user);
 		bool			isInvited(User &user);
 

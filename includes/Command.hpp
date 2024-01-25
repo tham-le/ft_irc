@@ -9,7 +9,7 @@
 #include <functional>
 #include <exception>
 
-
+#include <iostream>
 #include "User.hpp"
 #include "Ircserv.hpp"
 #include "Channel.hpp"
@@ -65,7 +65,7 @@ public:
 	void		modeKnegative(void);
 	void		modeLpositive(std::string &param);
 	void		modeLnegative(void);
-	void		modeOpositive(std::string &param);
+	bool		modeOpositive(std::string &param);
 	void		modeOnegative(std::string &param);
 	std::string		parseParamL(std::string str, char c);
 
