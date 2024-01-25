@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 void	User::printMessage(std::string str) {
-	std::cout <<BOLD  GREEN << ">>> " RESET<< str;
+	_ircserv->log("fd " + to_string(_fd) + "<<<<<<<< "+str);
 	if (write(_fd, str.c_str(), str.size()) < 0)
 		throw std::runtime_error("write() failed");
 }
