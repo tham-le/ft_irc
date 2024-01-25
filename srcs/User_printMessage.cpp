@@ -245,8 +245,8 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 	switch (code) {
 
-	case 322:
-		str += RPL_LIST(m1, m2, m3); //EXAMPLE, DONT USE
+	case 500:
+		str += ERR_CMODE(m1, m2, m3);
 		break;
 	}
 	str += "\r\n";
