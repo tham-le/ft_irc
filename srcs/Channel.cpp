@@ -1,5 +1,6 @@
 #include "../includes/Channel.hpp"
 #include <vector>
+#include <iostream>
 
 
 Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _modeCmd("+"), _maxUser(100)

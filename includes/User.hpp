@@ -2,13 +2,10 @@
 #define USER_HPP
 
 
-#include <locale>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <iostream>
 #include <string>
-#include <cctype>
 #include <map>
 #include <vector>
 #include <netinet/in.h>
@@ -36,8 +33,9 @@ public:
 		DELETED
 	};
 	friend class Command;
-	~User();
+	virtual ~User();
 
+	User() {};
 	User(int fd, struct sockaddr_in addr, Ircserv *ircserv);
 
 	void	sendMessage(User *user, std::string message);

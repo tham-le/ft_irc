@@ -1,5 +1,6 @@
 #include "../includes/Command.hpp"
 #include "../includes/ReplyCommand.hpp"
+#include <iostream>
 
 void	Command::topicChannel(Channel *channel)
 {
