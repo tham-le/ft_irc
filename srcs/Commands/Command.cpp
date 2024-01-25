@@ -94,6 +94,8 @@ std::string		Command::toFormat(std::string cmd, std::string channel, std::string
 	return (out);
 }
 
+
+
 /*a supp*/
 void		Command::channelUsers(std::string channel)
 {

@@ -19,6 +19,7 @@ std::string		Channel::getName() const
 	return (_name);
 }
 
+
 void	Channel::setTopic(std::string const topic, std::string const nickname)
 {
 	this->_topic = topic;
@@ -149,11 +150,11 @@ bool			Channel::isUserInChannel(User const &user) const
 	return (false);
 }
 
-void			Channel::Invite(User &user)
+void			Channel::Invite(User *user)
 {
 	// std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
 
-	_invitedUsers.push_back(&user);
+	_invitedUsers.push_back(user);
 }
 
 void			Channel::Uninvite(User &user)
@@ -166,19 +167,6 @@ void			Channel::Uninvite(User &user)
 		_invitedUsers.erase(it);
 }
 
-void			Channel::Uninvite(std::string const nickname)
-{
-	std::vector<User *>::iterator it;
-
-	for (it = _invitedUsers.begin(); it != _invitedUsers.end(); it++)
-	{
-		if ((*it)->getNickname() == nickname)
-			break ;
-	}
-	if (it == _invitedUsers.end())
-		return ;
-	_invitedUsers.erase(it);
-}
 
 bool			Channel::isInvited(User &user)
 {

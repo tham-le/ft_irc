@@ -3,7 +3,6 @@
 
 
 
-
 void		Command::info(void)
 {
 	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)

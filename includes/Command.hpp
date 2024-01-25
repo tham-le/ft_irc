@@ -67,6 +67,7 @@ public:
 	void		modeLnegative(void);
 	void		modeOpositive(std::string &param);
 	void		modeOnegative(std::string &param);
+	std::string		parseParamL(std::string str, char c);
 
 	std::vector<std::string>	split(std::string str, char separator);
 	void		command();
@@ -80,6 +81,7 @@ public:
 	void		modeFind(Channel *channel);
 	bool		cInStr(char c, std::string str);
 	unsigned long		modeParseParam(std::string sign, char c, unsigned long paramIndex);
+	void		joinChannel(std::vector<std::string> channelToJoin, std::vector<std::string> key);
 
 	/*a supprimer , pour tester*/
 	void		channelUsers(std::string channel); //print la liste des users du channel

@@ -9,6 +9,25 @@ bool	Command::cInStr(char c, std::string str)
 	return (false);
 }
 
+std::string		Command::parseParamL(std::string str, char c)
+{
+	for (unsigned long i = 0; i < str.size(); i++)
+	{
+		if (!isdigit(str[i]))
+		{
+			if (i == 0)
+			{
+				std::string flag(1, c);
+				_user.printMessage(500, _input[1], flag); // ERR_CMODE
+				return (0);
+			}
+			else
+				str = str.substr(0, i);
+		}
+	}
+	return (str);
+}
+
 unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long paramIndex)
 {
 	if (c == 'i')
@@ -21,8 +40,7 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 		modeT(sign);
 		return (--paramIndex);
 	}
-	else
-	if (sign == "+")
+	else if (sign == "+")
 	{
 		if (_input.size() - 1 < paramIndex)
 		{
@@ -40,21 +58,15 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 			modeOpositive(_input[paramIndex]);
 		}
 		else if (c == 'l') {
-			for (unsigned long i = 0; i < _input[paramIndex].size(); i++)
-			{
-				if (!isdigit(_input[paramIndex][i]))
-				{
-					if (i == 0)
-					{
-						std::string flag(1, c);
-						_user.printMessage(500, _input[1], flag); // ERR_CMODE
-						return (paramIndex);
-					}
-					else
-						_input[paramIndex] = _input[paramIndex].substr(0, i);
-				}
-			}
+			std::string tmp = parseParamL(_input[paramIndex], c);
+			if (tmp == "0")
+				return (paramIndex);
+			else if (tmp != _input[paramIndex])
+				_input[paramIndex] = tmp;
+			std::cout << _input[paramIndex] << "." << std::endl;
 			modeLpositive(_input[paramIndex]);
+			// if (modeLpositive(_input[paramIndex]) == false)
+			// 	return (paramIndex);
 		}
 		paramIndex++;
 	}
@@ -85,36 +97,37 @@ void	Command::modeFind(Channel *channel)
 {
 	std::string modeKnown = "iklto";
 	std::string modeInputClear;
+	std::string input = _input[2];
 
 	unsigned long	paramIndex = 3;
 	std::string sign = "+";
 	std::string param;
 	std::cout << "lol" << std::endl;
 
-	for (unsigned long i = 0; i < _input[2].size(); i++)
+	for (unsigned long i = 0; i < input.size(); i++)
 	{
-		if ((_input[2][i] != '+' && _input[2][i] != '-') && (sign == "+" && cInStr(_input[2][i], channel->getModeCmd())))
+		if ((input[i] != '+' && input[i] != '-') && (input[i] != 'l' && sign == "+" && cInStr(input[i], channel->getModeCmd())))
 			;
-		else if ((_input[2][i] != '+' && _input[2][i] != '-') && (_input[2][i] != 'o' && sign == "-" && !cInStr(_input[2][i], channel->getModeCmd())))
+		else if ((input[i] != '+' && input[i] != '-') && (input[i] != 'o' && sign == "-" && !cInStr(input[i], channel->getModeCmd())))
 			;
-		else if ((_input[2][i] != '+' && _input[2][i] != '-') && cInStr(_input[2][i], modeKnown) == false)
+		else if ((input[i] != '+' && input[i] != '-') && cInStr(input[i], modeKnown) == false)
 		{
-			std::string s(1, _input[2][i]);
+			std::string s(1, input[i]);
 			_user.printMessage(472, s); //ERR_UNKNOWNMODE
 		}
 		else
 		{
-			if (_input[2][i] == '+' || _input[2][i] == '-')
+			if (input[i] == '+' || input[i] == '-')
 			{
-				sign = _input[2][i];
-				modeInputClear += _input[2][i];
+				sign = input[i];
+				modeInputClear += input[i];
 			}
 			else
 			{
-				unsigned long tmp = modeParseParam(sign, _input[2][i], paramIndex);
+				unsigned long tmp = modeParseParam(sign, input[i], paramIndex);
 				if (paramIndex != tmp)
 				{
-					modeInputClear += _input[2][i];
+					modeInputClear += input[i];
 					if (tmp > paramIndex)
 						param = " " + _input[paramIndex++];
 				}
@@ -126,8 +139,10 @@ void	Command::modeFind(Channel *channel)
 	if (modeInputClear.length() > 1)
 	{
 		param = ":" + _user.getPrefix() + " MODE " + _input[1] + " " + modeInputClear + param;
-		std::cout << param << "!" <<std::endl;
-		_user.printMessage(param + "\r\n");
+		std::map<int, User *> listUsers = channel->getUsers();
+		for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+				it->second->printMessage(param + "\r\n");
+		// _user.printMessage(param + "\r\n");
 	}
 
 }
