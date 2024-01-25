@@ -13,20 +13,11 @@ class User;
 class Channel
 {
 	public:
-		enum	e_ChannelType
-		{
-			LOCAL, //'&', 0x26
-			REGULAR //'#', 0x23
-		};
-
 		enum	e_ChannelMode
 		{
 			INVITE_ONLY,
-			PRIVATE,
 			PUBLIC,
-			PROTECTED
 		};
-		// Channel();
 		Channel(std::string name);
 		~Channel();
 
