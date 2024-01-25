@@ -15,7 +15,9 @@ void	Command::topicChannel(Channel *channel)
 	}
 	channel->setTopic(topic, _user.getNickname());
 	msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " " + topic + "\r\n";
-	_user.printMessage(msg);
+	std::map<int, User *> listUsers = channel->getUsers();
+		for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+				it->second->printMessage(msg + "\r\n");
 }
 
 void		Command::topicCheck(Channel *channel)
@@ -46,8 +48,6 @@ void		Command::topic()
 
 	if (_user.getStatus() == User::ONLINE)
 	{
-		for (unsigned long i = 0; i != _input.size(); i++)
-			std::cout << "input[" << i << "] = " << _input[i] <<std::endl;
 		if (_input.size() > 2)
 			topicCheck(_ircserv.getChannel(_input[1]));
 	}
