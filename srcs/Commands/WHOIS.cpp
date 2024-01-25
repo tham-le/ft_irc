@@ -19,7 +19,7 @@ void    Command::whois() {
     std::vector<std::string>::reverse_iterator rit = _input.rbegin();
     std::vector<std::string>::reverse_iterator rend = _input.rend() - 1;
     for (; rit != rend; ++rit) {;
-        if (strcmp(rit->c_str(), _ircserv._users[_user.getFd()]->getNickname().c_str()) == 0) {
+        if (strcmp(rit->c_str(), _ircserv._users[_user.getFd()]->getNickname().c_str()) == 0 && _ircserv._users[_user.getFd()]->getStatus() != User::DELETED) {
             _user.printMessage(311);
             _user.printMessage(312);
             if (_user._channels.size() > 0) {
