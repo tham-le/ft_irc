@@ -10,13 +10,10 @@ void	Command::list(void)
 		return ;
 	}
 	_user.printMessage(321);
-	_user.printMessage(323);
-	if (_input.size() > 1 && _input[1][0] != '#') {
+	if (_input.size() <= 1 || _ircserv.getChannels().empty()) {
 		_user.printMessage(323);
 		return ;
 	}
-	if (_ircserv.getChannels().empty() || _input[1].empty())
-		_user.printMessage(323);
 	std::vector<std::string> channels = split(_input[1], ',');
 	for (size_t i = 0; i < channels.size(); i++) {
 		if (_ircserv.isChannel(channels[i])) {
