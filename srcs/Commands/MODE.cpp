@@ -143,7 +143,6 @@ void	Command::modeFind(Channel *channel)
 		std::map<int, User *> listUsers = channel->getUsers();
 		for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 				it->second->printMessage(param + "\r\n");
-		// _user.printMessage(param + "\r\n");
 	}
 
 }
@@ -171,8 +170,8 @@ void	Command::changeMode(void)
 			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)
 			_user.printMessage(324, _input[1], _ircserv.getChannel(_input[1])->getModeCmd()); // RPL_CHANNELMODEIS
-		// else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
-		// 	_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
+		else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
+			_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
 		else
 			modeFind(_ircserv.getChannel(_input[1]));
 	}
