@@ -3,6 +3,7 @@
 #include "../includes/Ircserv.hpp"
 #include "../includes/Command.hpp"
 #include <cstring>
+#include <ostream>
 #include <string.h>
 #include <map>
 #include <string>
@@ -40,6 +41,11 @@ static void	sighandler(int signum)
 
 Ircserv::~Ircserv()
 {
+	if (_isLog)
+	{
+		_logFile.close();
+
+	}
 	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
 	{
 		std::cout << "Deleting user " << it->first << std::endl;
@@ -71,7 +77,36 @@ Ircserv::Ircserv(int port, std::string password, std::string opPassword)
 	std::strftime(buffer, sizeof(buffer), "%d/%m/%y - %H:%M:%S", std::localtime(&start));
 	std::cout << "Current time: " << buffer << std::endl;
 	_startTime = buffer;
+
+	std::string filename = "ircserv.log" + to_string(start);
+	
+	_logFile.open(filename.c_str());
+	
+	if (_logFile.is_open())
+	{
+		std::cout << "Logging to " << filename << std::endl;
+		_isLog = true;
+	}
+	else
+	{
+		std::cout << "Failed to open log file" << std::endl;
+		_isLog = false;
+	}
 }
+
+void			Ircserv::log(std::string msg)
+{
+	if (_isLog)
+	{
+		time_t now = time(0);
+		char buffer[100];
+		std::strftime(buffer, sizeof(buffer), "%d/%m/%y - %H:%M:%S", std::localtime(&now));
+		_logFile << buffer << ": " << msg << std::endl;
+		//std::cout << buffer << ": " << msg << std::endl;
+
+	}
+}
+
 
 std::string		Ircserv::getHostName() const
 {
@@ -127,29 +162,29 @@ void			Ircserv::waitForEvent() {
 
 }
 
-void			Ircserv::putStrFd(int fd, std::string const &str){
-	if (write(fd, str.c_str(), str.size()) < 0)
-		throw std::runtime_error("write() failed");
-}
+// void			Ircserv::putStrFd(int fd, std::string const &str){
+// 	if (write(fd, str.c_str(), str.size()) < 0)
+// 		throw std::runtime_error("write() failed");
+// }
 
 void			Ircserv::writeToClient(int fd, std::string const &msg){
 	User &user = getUser(fd);
 	user.printMessage(msg);
 }
 
-void			Ircserv::writeToAllClients(std::string const &msg)
-{
-	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
-		if (it->fd != _sockfd)
-			putStrFd(it->fd, msg);
-}
+// void			Ircserv::writeToAllClients(std::string const &msg)
+// {
+// 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
+// 		if (it->fd != _sockfd)
+// 			putStrFd(it->fd, msg);
+// }
 
-void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
-{
-	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
-		if (it->fd != _sockfd && it->fd != fd)
-			putStrFd(it->fd, msg);
-}
+// void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
+// {
+// 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
+// 		if (it->fd != _sockfd && it->fd != fd)
+// 			putStrFd(it->fd, msg);
+// }
 
 /* */
 std::string		Ircserv::readFromClient(int fd)
@@ -169,7 +204,7 @@ std::string		Ircserv::readFromClient(int fd)
 			throw std::runtime_error("Invalid fd");
 
 		int bytes = recv(fd, buf, BUFF_SIZE, 0);
-		std::cout << BOLD RED"<<< " RESET << buf;
+		log( "fd " + to_string(fd) +">>>>>>" + buf );
 
 		if (bytes < 0)
 		{

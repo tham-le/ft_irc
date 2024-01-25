@@ -14,6 +14,7 @@
 #include "Channel.hpp"
 #include "Config.hpp"
 #include <poll.h>
+#include <fstream>
 class User;
 class Channel;
 class Command;
@@ -71,8 +72,7 @@ class Ircserv
 		bool			isUser(std::string nickname) const;
 		User			*getUser(std::string nickname) const;
 
-
-
+		void	log(std::string msg);
 
 	private:
 		friend class Command;
@@ -88,6 +88,8 @@ class Ircserv
 		bool							_stopSignal;
 		std::string						_hostName;
 		std::string						_version;
+		std::ofstream					_logFile;
+		bool							_isLog;
 
 
 

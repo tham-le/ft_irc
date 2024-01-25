@@ -38,6 +38,6 @@
 .vscode
 objects
 ircserv
-*.log
+*.log*
 *.txt
 .nfs*
