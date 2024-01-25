@@ -29,7 +29,8 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 		std::cout << _input.size() << " lll" << std::endl;
 		if (_input.size() - 1 < paramIndex)
 		{
-			std::cout << "ERRREURRRRRR avec _input size = " << _input.size() << std::endl; //message erreur
+			std::string flag(1, c);
+			_user.printMessage(500, _input[1], flag, _user.getNickname());
 			return (paramIndex);
 		}
 		else if (c == 'k')
@@ -47,7 +48,8 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 	{
 		if (_input.size() - 1 < paramIndex && c == 'o')
 		{
-				std::cout << "ERRREURRRRRR avec _input size = " << _input.size() << std::endl; //message erreur
+			std::string flag(1, c);
+			_user.printMessage(500, _input[1], flag, _user.getNickname());
 			return (paramIndex);
 		}
 		else if (c == 'k')
@@ -133,19 +135,12 @@ void	Command::changeMode(void)
 		else if (!_ircserv.isChannel(_input[1]))
 			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)
-		{
 			_user.printMessage(324, _input[1], _ircserv.getChannel(_input[1])->getModeCmd()); // RPL_CHANNELMODEIS
-			_user.printMessage(329, _input[1], _ircserv.getChannel(_input[1])->getCreationTime()); // RPL_CREATIONTIME
-		}
 
 		// else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
 		// 	_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
 		else
 			modeFind(_ircserv.getChannel(_input[1]));
 	}
-	// else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
-	// 	_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
-	else
-		modeFind(_ircserv.getChannel(_input[1]));
 
 }
