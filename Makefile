@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cqin <cqin@student.42.fr>                  +#+  +:+       +#+         #
+#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/24 19:23:59 by cqin             ###   ########.fr        #
+#    Updated: 2024/01/25 13:00:45 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ clean:
 
 fclean: clean
 		@$(RM) $(NAME)
+		@$(RM) *.log*
 		@echo "\033[31m$(NAME) deleted\033[0m"
 
 re: fclean all

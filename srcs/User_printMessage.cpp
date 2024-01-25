@@ -87,6 +87,12 @@ void	User::printMessage(int code)
 	case 374:
 		str += RPL_ENDOFINFO();
 		break;
+	case 375:
+		str += RPL_MOTDSTART(_ircserv->getHostName());
+		break;
+	case 376:
+		str += RPL_ENDOFMOTD();
+		break;
 	case 407:
 		str += ERR_TOOMANYTARGETS();
 		break;
@@ -135,6 +141,9 @@ void	User::printMessage(int code, std::string m1)
 		break;
 	case 366:
 		str += RPL_ENDOFNAMES(m1);
+		break;
+	case 372:
+		str += RPL_MOTD(m1);
 		break;
 	case 401:
 		str += ERR_NOSUCHNICK(m1);

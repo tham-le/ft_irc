@@ -6,7 +6,7 @@
 #    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/24 17:33:39 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/25 14:41:52 by thi-le           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ DEBUG_FLAG = -g3
 RM = rm -rf
 
 
-SRC_FILES = main.cpp 
+SRC_FILES = main.cpp sillyBot.cpp
 COMMAND_SRC = $(addprefix $(COMMAND_DIR), $(COMMAND_FILES))
 
 SRC_FILES += $(COMMAND_SRC)
@@ -33,8 +33,6 @@ OBJ = $(addprefix $(OBJS_DIR), $(SRC_FILES:.cpp=.o))
 DEP = $(OBJ:.o=.d)
 
 all: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=all ./ircserv 6667 we
-
 
 
 $(NAME): $(OBJ) Makefile

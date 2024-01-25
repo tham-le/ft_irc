@@ -70,7 +70,9 @@
 # define RPL_INVITING(nick, channel) (nick + " " +  channel); // 341
 # define RPL_INFO(version, date) (":This server is running an IRC server: " + version + ". Created: " + date); // 371
 # define RPL_ENDOFINFO() (":End of /INFO list"); // 374
-
+# define RPL_MOTDSTART(servername) (":- " + servername + " Message of the day - ") // 375
+# define RPL_MOTD(message) (": " + message) // 372
+# define RPL_ENDOFMOTD() (":End of /MOTD command") // 376
 
 // enum ReplyCode
 // {
