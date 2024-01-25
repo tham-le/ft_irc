@@ -96,6 +96,8 @@ public:
 
 	std::string		_buffer;
 	time_t			_lastPing;
+	time_t			_lastPong;
+
 
 private:
 	int				_fd;

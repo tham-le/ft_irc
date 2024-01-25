@@ -25,6 +25,8 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	_realname = "*";
 	_ircserv = ircserv;
 	_MaxChannelofUser = 50;
+	_lastPing = std::time(0);
+	_lastPong = std::time(0);
 
 	time_t start = std::time(0);
 	char buffer[100];

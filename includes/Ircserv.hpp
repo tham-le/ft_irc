@@ -71,6 +71,9 @@ class Ircserv
 		bool			isUser(std::string nickname) const;
 		User			*getUser(std::string nickname) const;
 
+
+
+
 	private:
 		friend class Command;
 		std::map<int, User *>			_users;
@@ -80,8 +83,6 @@ class Ircserv
 
 		int 							_sockfd;
 		std::vector <pollfd>			_pollfds;
-		time_t							_lastPing;
-		time_t							_lastPong;
 
 		std::string						_startTime;
 		bool							_stopSignal;

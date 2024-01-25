@@ -57,16 +57,15 @@ Ircserv::Ircserv(int port, std::string password, std::string opPassword)
 {
 	_hostName = "Irrelevant Random Chat";
 	_version = "1.0";
-	_lastPing = std::time(0);
+
 	_config = Config();
 	_config.setPort(port);
 	_config.setPassword(password);
 	_config.setOpPassword(opPassword);
-	// _config.setPingInterval(1000);
-	// _config.setPingTimeout(10 000);
+	_config.setPingInterval(1000);
+	_config.setPingTimeout(5000);
 	_config.setMaxClients(100);
 	time_t start = std::time(0);
-	_lastPing = start;
 	std::cout << "Starting Ircserv..." << std::endl;
 	char buffer[100];
 	std::strftime(buffer, sizeof(buffer), "%d/%m/%y - %H:%M:%S", std::localtime(&start));
@@ -191,7 +190,18 @@ std::string		Ircserv::readFromClient(int fd)
 			user._buffer.erase(0, pos + delim.length());
 			if (!msg.length())
 				continue ;
-			handleMessage(user, msg);
+			Command cmd(msg, user, *this);
+		}
+
+		if (time(0) - user._lastPing > _config.getPingInterval())
+		{
+			user._lastPing = time(0);
+			user.printMessage("PING " + user.getNickname() + "\r\n");
+		}
+		if (time(0) - user._lastPong > _config.getPingTimeout())
+		{
+			std::cout << "Client " << fd << " timed out" << std::endl;
+			throw DisconnectedUser(fd);
 		}
 	}
 	catch (const DisconnectedUser& e) {
@@ -219,7 +229,6 @@ void			Ircserv::disconnectClient(int fd)
 	if (it != _users.end())
 	{
 		std::cout << "Client " << fd << " disconnected" << std::endl;
-		//delete it->second;
 		it->second->setStatus(User::DELETED);
 		//_users.erase(it);
 	}
@@ -283,31 +292,14 @@ void			Ircserv::connectClient()
 	}
 }
 
-void		Ircserv::handleMessage(User &user, std::string const &msg)
-{
-	Command cmd(msg, user, *this);
-}
-
 void		Ircserv::readFromAllClients()
 {
 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
 	{
 		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLIN)
 			readFromClient(it->fd);
+
 	}
-}
-
-void			Ircserv::sendPing()
-{
-	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
-	{
-		if (it->fd > 0 && it->fd != _sockfd &&  it->revents & POLLOUT)
-		{
-			write(it->fd, "PING\n", 5);
-		}
-	}
-
-
 }
 
 void			Ircserv::run()
@@ -321,11 +313,6 @@ void			Ircserv::run()
 			readFromAllClients();
 			if (stop == true)
 				throw SigintException();
-			if (std::time(0) - _lastPing > _config.getPingInterval())
-			{
-				_lastPing = std::time(0);
-				sendPing();
-			}
 		}
 		catch (const DisconnectedUser& e)
 		{
@@ -434,6 +421,5 @@ User			*Ircserv::getUser(std::string nickname) const
 	}
 	return (it->second);
 }
-
 
 #endif

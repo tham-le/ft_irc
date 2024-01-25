@@ -64,5 +64,11 @@ void		Command::nickname(void)
 			}
 		}
 	}
-
+	if (_user.getStatus() == User::PASSWORD_MATCH && _user.getUsername() != "*") {
+		_user.setStatus(User::REGISTERED);
+		_user.printMessage(001);
+		_user.printMessage(003);
+		_user.printMessage(004);
+		_user.printMessage(005);
+	}
 }

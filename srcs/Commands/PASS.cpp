@@ -18,5 +18,12 @@ void	Command::pass(void)
 		return ;
 	}
 	_user.setStatus(User::PASSWORD_MATCH);
-	
+	if (_user.getUsername() != "*" && _user.getNickname() != "*")
+	{
+		_user.setStatus(User::REGISTERED);
+		_user.printMessage(001);
+		_user.printMessage(003);
+		_user.printMessage(004);
+		_user.printMessage(005);
+	}
 }
