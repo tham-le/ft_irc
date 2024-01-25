@@ -234,6 +234,9 @@ void	User::printMessage(int code, std::string m1, std::string m2)
 	case 443:
 		str += ERR_USERONCHANNEL(m1, m2);
 		break;
+	case 500:
+		str += ERR_CMODE(m1, m2);
+		break;
 	}
 	str += "\r\n";
 	printMessage(str);
@@ -245,8 +248,11 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 	switch (code) {
 
-	case 500:
-		str += ERR_CMODE(m1, m2, m3);
+	case 319:
+		str += RPL_WHOISCHANNELS(m1, m2); //EXAMPLE, DONT USE
+		break;
+	case 366:
+		str += RPL_ENDOFNAMES(m3); //EXAMPLE, DONT USE
 		break;
 	}
 	str += "\r\n";

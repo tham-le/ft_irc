@@ -35,7 +35,7 @@
 # define ERR_UMODEUKNOWNFLAG(flag) (" :Unknown MODE flag") // 501
 # define ERR_USERSDONTMATCH() (" :Cant change mode for other users"); //502
 # define ERR_INVALIDMODEPARAM() (" :Invalid MODE parameter") // 696
-# define ERR_CMODE(channel, flag, name) (channel + " " + name + " You must specify a parameter for `" + flag + "' mode."); // 500
+# define ERR_CMODE(channel, flag) (channel + " You must specify a parameter for `" + flag + "' mode."); // 500
 
 
 
