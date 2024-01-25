@@ -13,28 +13,27 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 {
 	if (c == 'i')
 	{
-		std::cout << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII" << std::endl;
 		modeI(sign);
 		return (--paramIndex);
 	}
 	else if (c == 't')
 	{
-		std::cout << "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT" << std::endl;
 		modeT(sign);
 		return (--paramIndex);
 	}
 	else
 	if (sign == "+")
 	{
-		std::cout << _input.size() << " lll" << std::endl;
 		if (_input.size() - 1 < paramIndex)
 		{
 			std::string flag(1, c);
-			_user.printMessage(500, _input[1], flag, _user.getNickname());
+			_user.printMessage(500, _input[1], flag); // ERR_CMODE
 			return (paramIndex);
 		}
-		else if (c == 'k') {
-			std::cout << "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK AVEC " << _input[paramIndex] << std::endl;
+		else if (c == 'k')
+		{
+			if (_ircserv.getChannel(_input[1])->getKey() == _input[paramIndex])
+				return (paramIndex);
 			modeKpositive(_input[paramIndex]);
 		}
 		else if (c == 'o') {
@@ -43,7 +42,20 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 				return (paramIndex);
 		}
 		else if (c == 'l') {
-			std::cout << "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL AVEC " << _input[paramIndex] << std::endl;
+			for (unsigned long i = 0; i < _input[paramIndex].size(); i++)
+			{
+				if (!isdigit(_input[paramIndex][i]))
+				{
+					if (i == 0)
+					{
+						std::string flag(1, c);
+						_user.printMessage(500, _input[1], flag); // ERR_CMODE
+						return (paramIndex);
+					}
+					else
+						_input[paramIndex] = _input[paramIndex].substr(0, i);
+				}
+			}
 			modeLpositive(_input[paramIndex]);
 		}
 		paramIndex++;
@@ -53,19 +65,16 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 		if (_input.size() - 1 < paramIndex && c == 'o')
 		{
 			std::string flag(1, c);
-			_user.printMessage(500, _input[1], flag, _user.getNickname());
+			_user.printMessage(500, _input[1], flag); // ERR_CMODE
 			return (paramIndex);
 		}
 		else if (c == 'k') {
-			std::cout << "------------------KKKKKKKKKKKKK AVEC " << _input[paramIndex] << std::endl;
 			modeKnegative();
 		}
 		else if (c == 'o') {
-			std::cout << "------------------OOOOOOOOOOOOOOOO AVEC " << _input[paramIndex] << std::endl;
 			modeOnegative(_input[paramIndex]);
 		}
 		else if (c == 'l') {
-			std::cout << "------------------LLLLLLLLLLLLLLLLLLLLLL AVEC " << _input[paramIndex] << std::endl;
 			modeLnegative();
 		}
 		paramIndex++;
@@ -77,34 +86,36 @@ unsigned long	Command::modeParseParam(std::string sign, char c, unsigned long pa
 void	Command::modeFind(Channel *channel)
 {
 	std::string modeKnown = "iklto";
-	std::string input = _input[2];
 	std::string modeInputClear;
 
 	unsigned long	paramIndex = 3;
 	std::string sign = "+";
 	std::string param;
+	std::cout << "lol" << std::endl;
 
-	for (unsigned long i = 0; i < input.size(); i++)
+	for (unsigned long i = 0; i < _input[2].size(); i++)
 	{
-		if ((input[i] != '+' && input[i] != '-') && (sign == "+" && cInStr(input[i], channel->getModeCmd())))
+		if ((_input[2][i] != '+' && _input[2][i] != '-') && (sign == "+" && cInStr(_input[2][i], channel->getModeCmd())))
+			;
+		else if ((_input[2][i] != '+' && _input[2][i] != '-') && (_input[2][i] != 'o' && sign == "-" && !cInStr(_input[2][i], channel->getModeCmd())))
 			;
 		if ((input[i] != '+' && input[i] != '-') && (input[i] != 'o' && sign == "-" && !cInStr(input[i], channel->getModeCmd())))
 			;
 		else if ((input[i] != '+' && input[i] != '-') && cInStr(input[i], modeKnown) == false)
 		{
-			std::string s(1, input[i]);
+			std::string s(1, _input[2][i]);
 			_user.printMessage(472, s); //ERR_UNKNOWNMODE
 		}
 		else
 		{
-			if (input[i] == '+' || input[i] == '-')
+			if (_input[2][i] == '+' || _input[2][i] == '-')
 			{
-				sign = input[i];
-				modeInputClear += input[i];
+				sign = _input[2][i];
+				modeInputClear += _input[2][i];
 			}
 			else
 			{
-				unsigned long tmp = modeParseParam(sign, input[i], paramIndex);
+				unsigned long tmp = modeParseParam(sign, _input[2][i], paramIndex);
 				if (paramIndex != tmp)
 				{
 					modeInputClear += input[i];
@@ -137,7 +148,7 @@ void	Command::changeMode(void)
 	for (unsigned long i = 0; i != _input.size(); i++)
 		std::cout << "input[" << i << "] = " << _input[i]  << "." << std::endl;
 
-	if (_user.getStatus() != User::DELETED)
+	if (_user.getStatus() != User::DELETED && !_ircserv.isUser(_input[1]))
 	{
 		if (_input[1].empty())
 			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
@@ -147,7 +158,6 @@ void	Command::changeMode(void)
 			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)
 			_user.printMessage(324, _input[1], _ircserv.getChannel(_input[1])->getModeCmd()); // RPL_CHANNELMODEIS
-
 		// else if (_ircserv.isChannel(_input[1]) && !_ircserv.getChannel(_input[1])->isOperator(_user))
 		// 	_user.printMessage(482, _input[1]); //ERR_CHANOPRIVSNEEDED
 		else
@@ -156,6 +166,7 @@ void	Command::changeMode(void)
 }
 
 void	Command::modeI(std::string &sign) {
+	std::cout << "here" << std::endl;
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (sign == "+") {
 		if (_ircserv.getChannel(_input[1])->getMode() == Channel::PUBLIC) {
@@ -164,11 +175,12 @@ void	Command::modeI(std::string &sign) {
 				mode += "i";
 			_ircserv.getChannel(_input[1])->setModeCmd(mode);
 		}
-		else if (_ircserv.getChannel(_input[1])->getMode() == Channel::INVITE_ONLY) 
+		else if (_ircserv.getChannel(_input[1])->getMode() == Channel::INVITE_ONLY)
 			;
 	}
 	else if (sign == "-") {
-		if (_ircserv.getChannel(_input[1])->getMode() == Channel::INVITE_ONLY) {
+		if (_ircserv.getChannel(_input[1])->getMode() == Channel::INVITE_ONLY)
+		{
 			_ircserv.getChannel(_input[1])->setMode(Channel::PUBLIC);
 			if (cInStr('i', _ircserv.getChannel(_input[1])->getModeCmd())) {
 				size_t found = mode.find('i');
@@ -183,6 +195,7 @@ void	Command::modeI(std::string &sign) {
 }
 
 void	Command::modeT(std::string &sign) {
+	std::cout << "LALALLA " << sign << std::endl;
 	std::string mode = _ircserv.getChannel(_input[1])->getModeCmd();
 	if (sign == "+") {
 		if (cInStr('t', _ircserv.getChannel(_input[1])->getModeCmd()))
