@@ -41,8 +41,8 @@ User::User(int fd, struct sockaddr_in addr, Ircserv *ircserv): _fd(fd)
 	
 	printMessage("If you use Irssi, use /CONNECT <host> <port> <password>\r\n");
 	printMessage("Irssi does not support /PASS command\r\n");
-	printMessage("If you use Hexchat, use /SERVER <host> <port> <password>\r\n");
-	printMessage("OR Enter password with PASS command and use NICK/USER to register\r\n");
+	// printMessage("If you use Hexchat, use /SERVER <host> <port> <password>\r\n");
+	// printMessage("OR Enter password with PASS command and use NICK/USER to register\r\n");
 }
 
 User::~User() {}
