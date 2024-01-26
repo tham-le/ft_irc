@@ -32,8 +32,11 @@ void    Command::kick(void) {
                 _user.printMessage(441, listUser[i], _ircserv.getChannel(channel)->getName());
                 return ;
             }
+            if (_user.getNickname() == listUser[i]) {
+                _user.printMessage(":" + _user.getPrefix() + " " + channel + " :Don't kick yourself, please PART if you want to leave\r\n");
+                return ;
+            }
             std::string msg1 = toFormat("KICK", channel + " " + listUser[i] + " :" + reason);
-            
             std::map<int, User *> users = _ircserv.getChannel(channel)->getUsers();
             for (std::map<int, User *>::iterator it = users.begin(); it != users.end(); it++) {
                 it->second->printMessage(msg1 + "\r\n");
