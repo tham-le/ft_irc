@@ -9,6 +9,10 @@ void	Command::names(void)
 		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
 	}
+	if (_input.size() <= 1 || _ircserv.getChannels().empty()) {
+		_user.printMessage(ERR_NOTJOINEDANYCHANNEL()); //RPL_ENDOFNAMES
+		return ;
+	}
 	std::vector<std::string> channels = split(_input[1], ',');
 	for (size_t i = 0; i < channels.size(); i++) {
 		if (_user.getStatus() != User::ONLINE && _user.getStatus() != User::DELETED && !_ircserv.getChannels().empty()) {

@@ -31,7 +31,7 @@ void		Command::privmsg(void) {
                 user->printMessage(toFormat("PRIVMSG", user->getNickname(), msg));
             }
             else
-                _user.printMessage(301, target, msg); // should code for send RPL_AWAY if user is away
+                _user.printMessage(401, target);
         }
         else if (_ircserv.isChannel(target)) {
             Channel *channel = _ircserv.getChannel(target);
