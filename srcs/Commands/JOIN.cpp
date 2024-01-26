@@ -12,7 +12,7 @@ void		Command::joinChannel(Channel *channel)
 	}
 	if (_user.getStatus() == User::DELETED)
 		return ;
-	
+
 	std::string channelName = channel->getName();
 	if (_user.getNbChannelsofUser() + 1 > _user.getMaxChannelofUser())
 	{
@@ -84,7 +84,8 @@ void		Command::joinChannel(std::vector<std::string> channelToJoin, std::vector<s
 			{
 				if (channel->getKey() != "") //if channel has a key
 				{
-					if (i >= key.size() && !channel->isGoodKey(key[i]))
+					std::cout << key.size() << "." << std::endl;
+					if (key.empty() || i >= key.size() || !channel->isGoodKey(key[i]))
 					{
 						_user.printMessage(475, channel->getName()); // ERR_BADCHANNELKEY
 						continue;
@@ -146,7 +147,7 @@ void		Command::join(void)
 
 	channelToJoin = split(params[0], ',');
 	if (params.size() >= 2)
-		key = split(params[0], ',');
+		key = split(params[1], ',');
 	if (channelToJoin.size() == 0)
 	{
 		_user.printMessage(461, _input[0]); // ERR_NEEDMOREPARAMS
