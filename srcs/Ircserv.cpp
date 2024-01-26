@@ -17,7 +17,6 @@
 #include <unistd.h>
 #include <cerrno>
 #include <iostream>
-#include "../includes/Color.h"
 #include "User.hpp"
 #include <csignal>
 
