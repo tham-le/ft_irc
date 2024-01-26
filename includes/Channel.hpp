@@ -1,5 +1,6 @@
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
+#define MAX_USER 100
 
 
 #include <string>

@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _modeCmd("+"), _maxUser(100)
+Channel::Channel(std::string name): _name(name), _topic(""), _mode(PUBLIC), _key(""), _modeCmd("+"), _maxUser(MAX_USER)
 {
 	_creationTime = setTime();
 }
