@@ -161,31 +161,12 @@ void			Ircserv::waitForEvent() {
 
 }
 
-// void			Ircserv::putStrFd(int fd, std::string const &str){
-// 	if (write(fd, str.c_str(), str.size()) < 0)
-// 		throw std::runtime_error("write() failed");
-// }
 
 void			Ircserv::writeToClient(int fd, std::string const &msg){
 	User &user = getUser(fd);
 	user.printMessage(msg);
 }
 
-// void			Ircserv::writeToAllClients(std::string const &msg)
-// {
-// 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
-// 		if (it->fd != _sockfd)
-// 			putStrFd(it->fd, msg);
-// }
-
-// void			Ircserv::writeToAllClientsExcept(int fd, std::string const &msg)
-// {
-// 	for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); it++)
-// 		if (it->fd != _sockfd && it->fd != fd)
-// 			putStrFd(it->fd, msg);
-// }
-
-/* */
 std::string		Ircserv::readFromClient(int fd)
 {
 	try
@@ -278,7 +259,6 @@ void			Ircserv::disconnectClient(int fd)
 			}
 			it->second->setStatus(User::DELETED);
 		}
-		//_users.erase(it);
 	}
 }
 

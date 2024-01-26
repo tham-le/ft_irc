@@ -10,7 +10,6 @@ void		Command::info(void)
 		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
 	}
-
 	_user.printMessage(371, _ircserv.getVersion(), _ircserv.getStartTime());
 	_user.printMessage(371, "This server was created sometime in 2024");
 	_user.printMessage(371, "By :");
