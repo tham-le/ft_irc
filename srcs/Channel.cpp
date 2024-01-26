@@ -109,13 +109,19 @@ std::map<int, User *>	Channel::getUsers()
 	return (_users);
 }
 
-std::string Channel::getUsersName() const
+std::string Channel::getUsersName()
 {
 	std::string str = "";
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
 	{
-		str += it->second->getNickname();
-		str += " , ";
+		if (it->second->getStatus() != User::DELETED) {
+			if (isOperator(*it->second))
+				str += "@";
+			str += it->second->getNickname();
+			str += " ";
+		}
+		else
+			;
 	}
 	return (str);
 }
