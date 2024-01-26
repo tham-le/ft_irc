@@ -8,6 +8,8 @@ void	Command::pong(void)
 		return ;
 	}
 	_user._lastPong = std::time(0);
+	if (_user._lastPong - _user._lastPing > 60)
+		_user.printMessage(toFormat("PING",""));
 	return ;
 }
 
@@ -19,5 +21,5 @@ void	Command::ping(void)
 		return ;
 	}
 	_user._lastPing = std::time(0);
-	_user.printMessage(toFormat("PONG", _ircserv.getHostName() + " :" + _input[1]));
+	_user.printMessage(toFormat("PONG",":" + _input[1]));
 }

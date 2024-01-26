@@ -267,11 +267,8 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 
 	switch (code) {
 
-	case 319:
-		str += RPL_WHOISCHANNELS(m1, m2); //EXAMPLE, DONT USE
-		break;
-	case 366:
-		str += RPL_ENDOFNAMES(m3); //EXAMPLE, DONT USE
+	case 322:
+		str += RPL_LIST(m1, m2, m3);
 		break;
 	}
 	str += "\r\n";

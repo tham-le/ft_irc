@@ -58,7 +58,7 @@
 # define RPL_ENDOFWHOIS() (" :End of /WHOIS list") //318
 # define RPL_LISTSTART() ("Channel :Users Name") //321
 # define RPL_LIST(channel, nb_users, topic) (channel + " " + nb_users + " :" + topic ) //322
-# define RPL_LISTEND() ("End of /LIST") //323
+# define RPL_LISTEND() (":End of /LIST") //323
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " " + mode ) //324
 # define RPL_CREATIONTIME(channel, date) (channel + " :" + date ) //329
 # define RPL_NOTOPIC(channel) (channel +  ":No topic is set") // 331
