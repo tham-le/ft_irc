@@ -68,7 +68,7 @@ void	User::printMessage(int code)
 		str += RPL_CREATED(_ircserv->getStartTime());
 		break;
 	case 004:
-		str += RPL_MYINFO(_ircserv->getHostName(), _ircserv->getVersion(), "ao", "mtov");
+		str += RPL_MYINFO(_ircserv->getHostName(), _ircserv->getVersion(), "o", "iktl");
 		break;
 	case 005:
 		str += RPL_ISUPPORT();

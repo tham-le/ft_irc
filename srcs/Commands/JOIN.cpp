@@ -35,7 +35,9 @@ void		Command::joinChannel(Channel *channel)
 	{
 		// if (it->second->getStatus() == User::DELETED)
 		// 	continue;
-		if (channel->isOperator(*it->second))
+		if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
+			listUsersNames += "@@" + it->second->getNickname() + " ";
+		else if (channel->isOperator(*it->second))
 			listUsersNames += "@" + it->second->getNickname() + " ";
 		else
 			listUsersNames += it->second->getNickname() + " ";
@@ -46,7 +48,7 @@ void		Command::joinChannel(Channel *channel)
 		// 	continue;
 
 		it->second->printMessage(toFormat("JOIN", channelName) + "\r\n");
-		it->second->printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
+		it->second->printMessage(353, " " + channelName, listUsersNames); // RPL_NAMREPLY
 		it->second->printMessage(366, channelName);	// RPL_ENDOFNAMES
 	}
 	if (channel->getTopic() != "")
@@ -55,6 +57,7 @@ void		Command::joinChannel(Channel *channel)
 		_user.printMessage(333, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	}
 	_user.printMessage(329, channel->getName(), channel->getCreationTime()); //RPL_CREATIONTIME
+	//_user.printMessage(329, channel->getName(), "Thu Jan  2 01:00:00 1971"); //RPL_CREATIONTIME
 }
 
 void		Command::joinChannel(std::vector<std::string> channelToJoin, std::vector<std::string> key)
@@ -84,7 +87,6 @@ void		Command::joinChannel(std::vector<std::string> channelToJoin, std::vector<s
 			{
 				if (channel->getKey() != "") //if channel has a key
 				{
-					std::cout << key.size() << "." << std::endl;
 					if (key.empty() || i >= key.size() || !channel->isGoodKey(key[i]))
 					{
 						_user.printMessage(475, channel->getName()); // ERR_BADCHANNELKEY

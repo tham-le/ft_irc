@@ -154,7 +154,7 @@ void			Channel::Uninvite(User &user)
 	std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
 
 	if (it == _invitedUsers.end())
-		std::cout << "Cannot uninvited because "<< user.getNickname() << " is not invited." << std::endl;
+		;
 	else
 		_invitedUsers.erase(it);
 }
@@ -232,8 +232,7 @@ bool			Channel::isEmptyOperator()
 std::string		Channel::setTime()
 {
 	time_t start = std::time(0);
-	char buffer[100];
-	std::strftime(buffer, sizeof(buffer), "%a %b %d  %H:%M:%S %Y", std::localtime(&start));
+	std::string buffer = to_string(start);
 	return (buffer);
 }
 

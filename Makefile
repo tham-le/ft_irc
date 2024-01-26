@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: thi-le <thi-le@student.42.fr>              +#+  +:+       +#+         #
+#    By: yuboktae <yuboktae@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 19:34:03 by thi-le            #+#    #+#              #
-#    Updated: 2024/01/25 13:00:45 by thi-le           ###   ########.fr        #
+#    Updated: 2024/01/26 19:31:21 by yuboktae         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ SRCS_DIR = ./srcs/
 OBJS_DIR = ./objs/
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 $(INCLUDES) -MMD -MP
-OPTI_FLAG = -O3
 DEBUG_FLAG = -g3
 RM = rm -rf
 
@@ -43,19 +42,17 @@ OBJ = $(addprefix $(OBJS_DIR), $(SRC_FILES:.cpp=.o))
 DEP = $(OBJ:.o=.d)
 
 all: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=all ./ircserv 6667 we
-
 
 
 $(NAME): $(OBJ) Makefile
-		@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OPTI_FLAG) $(OBJ) -o $(NAME)
+		@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -o $(NAME)
 		@echo "\033[32m$(NAME) created\033[0m"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 			@mkdir -p $(OBJS_DIR)
 			@mkdir -p $(OBJS_DIR)$(COMMAND_DIR)
 
-			@$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OPTI_FLAG) -c $< -o $@
+			@$(CC) $(CFLAGS) $(DEBUG_FLAG) -c $< -o $@
 			@echo "\033[33m$@ object file created\033[0m"
 -include $(DEP)
 

@@ -4,7 +4,6 @@
 
 void	Command::names(void)
 {
-	std::cout << "JE SUIS PAR LA " << std::endl;
 	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
 	{
 		_user.printMessage(451); //ERR_NOTREGISTEREd

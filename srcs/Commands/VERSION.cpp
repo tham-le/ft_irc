@@ -8,6 +8,5 @@ void	Command::version(void)
 		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
 	}
-	for (unsigned long i = 0; i != _input.size(); i++)
-		std::cout << "input[" << i << "] = " << _input[i] << std::endl;
+	_user.printMessage(351, "IRCserv", "1.0.0"); //RPL_VERSION
 }
