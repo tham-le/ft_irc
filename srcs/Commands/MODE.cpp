@@ -1,5 +1,6 @@
 #include "../includes/Command.hpp"
 #include "../includes/ReplyCommand.hpp"
+#include <limits.h>
 
 bool	Command::cInStr(char c, std::string str)
 {
@@ -280,7 +281,7 @@ void	Command::modeLnegative(void) {
 		if (found != std::string::npos)
 			mode.erase(found, 1);
 		_ircserv.getChannel(_input[1])->setModeCmd(mode);
-		_ircserv.getChannel(_input[1])->setMaxUser(0);
+		_ircserv.getChannel(_input[1])->setMaxUser(MAX_USER);
 	}
 	else
 		;
