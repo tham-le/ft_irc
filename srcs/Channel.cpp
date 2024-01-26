@@ -195,7 +195,7 @@ void			Channel::removeOperator(std::string const nickname)
 	if (it == _operators.end())
 		return ;
 	_operators.erase(it);
-	removeUser(nickname);
+	// removeUser(nickname);
 }
 
 bool			Channel::isOperator(User &user)

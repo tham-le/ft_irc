@@ -14,7 +14,9 @@ void	Command::topicChannel(Channel *channel)
 		topic = topic.substr(0, 307);
 	}
 	channel->setTopic(topic, _user.getNickname());
-	msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " " + topic + "\r\n";
+	//irssi rajoute les : mais nc n'ajoute pas les :
+	// msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " " + topic + "\r\n"; //irssi
+	msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " :" + topic + "\r\n"; //nc
 	std::map<int, User *> listUsers = channel->getUsers();
 		for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 				it->second->printMessage(msg + "\r\n");
@@ -26,14 +28,20 @@ void		Command::topicCheck(Channel *channel)
 		_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 	else if (!channel->isUserInChannel(_user))
 		_user.printMessage(442, _input[1]); //ERR_NOTONCHANNEL
-	else if (!_input[2].empty() && !channel->isOperator(_user))
+	else if (_input.size() > 2 && (!channel->isOperator(_user) && Command::cInStr('t', channel->getModeCmd())))
 		_user.printMessage(482, channel->getName());// ERR_CHANOPRIVSNEEDED
-	else if (!_input[2].empty() && ((channel->isOperator(_user) && Command::cInStr('t', channel->getModeCmd())) || !Command::cInStr('t', channel->getModeCmd())))
+	else if (_input.size() > 2 && (!Command::cInStr('t', channel->getModeCmd())))
 		topicChannel(channel);
 	else
 	{
-		_user.printMessage(332, channel->getName(), channel->getTopic()); //  RPL_TOPIC
-		_user.printMessage(333, _user.getNickname(), channel->getTopicTime()); // RPL_TOPICWHOTIME
+		std::cout << "lalala" << std::endl;
+		if (channel->getTopic() != "")
+		{
+			_user.printMessage(332, channel->getName(), channel->getTopic()); //  RPL_TOPIC
+			_user.printMessage(333, _user.getNickname(), channel->getTopicTime()); // RPL_TOPICWHOTIME
+		}
+		else
+			_user.printMessage(331, channel->getName()); // RPL_NOTOPIC
 	}
 }
 
@@ -46,18 +54,11 @@ void		Command::topic()
 		return ;
 	}
 
-	if (_user.getStatus() == User::ONLINE)
-	{
-		if (_input.size() > 2)
-			topicCheck(_ircserv.getChannel(_input[1]));
-	}
-	else
-	{
-		if (_input[1] == "")
-			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
-		else if (_input[1][0] != '#' || (_input[1][0] == '#' && !_ircserv.isChannel(_input[1])))
-			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
-		else if (_input[1][0] == '#' && _ircserv.isChannel(_input[1]))
-			topicCheck(_ircserv.getChannel(_input[1]));
-	}
+	std::cout << _input.size() << "." << std::endl;
+	if (_input.size() < 2)
+		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
+	else if (_input[1][0] != '#' || (_input[1][0] == '#' && !_ircserv.isChannel(_input[1])))
+		_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
+	else if (_input[1][0] == '#' && _ircserv.isChannel(_input[1]))
+		topicCheck(_ircserv.getChannel(_input[1]));
 }
