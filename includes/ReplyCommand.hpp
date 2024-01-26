@@ -68,7 +68,7 @@
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick ) //353
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list") //366
 # define RPL_INVITING(nick, channel) (nick + " " +  channel); // 341
-# define RPL_INFO(version, date) (":This server is running an IRC server: " + version + ". Created: " + date); // 371
+# define RPL_INFO(version, date) (version + date); // 371
 # define RPL_ENDOFINFO() (":End of /INFO list"); // 374
 # define RPL_MOTDSTART(servername) (":- " + servername + " Message of the day - ") // 375
 # define RPL_MOTD(message) (": " + message) // 372
