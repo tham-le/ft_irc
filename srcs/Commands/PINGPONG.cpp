@@ -19,5 +19,5 @@ void	Command::ping(void)
 		return ;
 	}
 	_user._lastPing = std::time(0);
-	_user.printMessage("PONG " + _input[1] + "\r\n");
+	_user.printMessage(toFormat("PONG", _ircserv.getHostName() + " :" _input[1]));
 }
