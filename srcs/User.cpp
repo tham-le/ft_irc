@@ -59,10 +59,8 @@ size_t		User::getNbChannelsofUser() const
 
 void User::setNickname(std::string nickname) {
 	try {
-		// if (nickname.length() > 9)
-		// 	throw std::runtime_error("Nickname too long");
-		// else if (nickname.length() < 1)
-		// 	throw std::runtime_error("Nickname too short");
+		if (nickname.empty())
+			throw std::runtime_error("Nickname cannot be empty");
 		for (std::string::iterator it = nickname.begin(); it != nickname.end(); it++)
 			if (std::isspace(*it))
 				throw std::runtime_error("Nickname cannot contain spaces");

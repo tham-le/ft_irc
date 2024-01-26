@@ -32,7 +32,6 @@ void		Command::topicCheck(Channel *channel)
 		topicChannel(channel);
 	else
 	{
-		std::cout << "lalala" << std::endl;
 		if (channel->getTopic() != "")
 		{
 			_user.printMessage(332, channel->getName(), channel->getTopic()); //  RPL_TOPIC
@@ -52,7 +51,6 @@ void		Command::topic()
 		return ;
 	}
 
-	std::cout << _input.size() << "." << std::endl;
 	if (_input.size() < 2)
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
 	else if (_input[1][0] != '#' || (_input[1][0] == '#' && !_ircserv.isChannel(_input[1])))

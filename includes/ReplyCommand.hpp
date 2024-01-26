@@ -20,7 +20,7 @@
 # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneus nickname") // 432
 # define ERR_NICKNAMEINUSE(nick) (nick + " : Nickname is already in use") // 433
 # define ERR_NICKCOLLISION(nick) (nick + " : Nickname collision KILL") // 436
-# define ERR_USERNOTINCHANNEL(nick, channel) (nick + " " + channel + " :They aren't on that channel") // 441 quand on veut kick ou change mode d'un user qui n'est pas dans le channel
+# define ERR_USERNOTINCHANNEL(nick, channel) (nick + " " + channel + ":They aren't on that channel") // 441 quand on veut kick ou change mode d'un user qui n'est pas dans le channel
 # define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel") // 442
 # define ERR_USERONCHANNEL(nick, channel) (nick + " " + channel + " :is already on channel") // 443
 # define ERR_NOTREGISTERED() (":You have not registered"); // 451
@@ -60,7 +60,7 @@
 # define RPL_LIST(channel, nb_users, topic) (channel + " " + nb_users + " :" + topic ) //322
 # define RPL_LISTEND() ("End of /LIST") //323
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " " + mode ) //324
-# define RPL_CREATIONTIME(channel, date) (channel + " " + date ) //329
+# define RPL_CREATIONTIME(channel, date) (channel + " :" + date ) //329
 # define RPL_NOTOPIC(channel) (channel +  ":No topic is set") // 331
 # define RPL_TOPIC(channel, topic) (channel + " :" + topic ) // 332
 # define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]" )// 333
