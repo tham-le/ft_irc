@@ -1,5 +1,4 @@
 #include "../includes/User.hpp"
-#include "../includes/Color.h"
 #include <unistd.h>
 
 void	User::printMessage(std::string str) {
