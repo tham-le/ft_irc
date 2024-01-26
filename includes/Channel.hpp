@@ -42,7 +42,7 @@ class Channel
 		void			removeUser(std::string const nickname);
 		User*			getUser(std::string const nickname);
 		std::map<int, User *>	getUsers();
-		std::string		getUsersName() const;
+		std::string		getUsersName();
 
 
 		bool			isUserInChannel(std::string const nickname) const;
