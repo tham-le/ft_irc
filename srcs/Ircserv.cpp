@@ -77,9 +77,9 @@ Ircserv::Ircserv(int port, std::string password)
 	_startTime = buffer;
 
 	std::string filename = "ircserv.log" + to_string(start);
-	
+
 	_logFile.open(filename.c_str());
-	
+
 	if (_logFile.is_open())
 	{
 		std::cout << "Logging to " << filename << std::endl;
@@ -352,7 +352,7 @@ void			Ircserv::run()
 			closeAllSocket();
 			std::cerr << e.what() << '\n';
 			return ;
-		
+
 		}
 
 		catch (const std::exception& e)
@@ -428,6 +428,8 @@ Config			Ircserv::getConfig() const
 
 bool			Ircserv::isUser(std::string nickname) const
 {
+	// if (getUser(nickname)->getStatus() == User:: DELETED)
+	// 	return (false);
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
 	{
 		if (it->second->getNickname() == nickname)

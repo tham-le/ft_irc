@@ -127,7 +127,7 @@ void	Command::modeFind(Channel *channel)
 			else
 			{
 				unsigned long tmp = modeParseParam(sign, input[i], paramIndex);
-				if (paramIndex != tmp)
+				if (paramIndex != tmp && !(sign == "-" && input[i] == 'o'))
 				{
 					modeInputClear += input[i];
 					if (tmp > paramIndex)

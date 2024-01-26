@@ -14,7 +14,7 @@ void	Command::invite(void)
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
 	else if (_input[2][0] != '#' || (_input[2][0] == '#' && !_ircserv.isChannel(_input[2])))
 		_user.printMessage(403, _input[2]); //ERR_NOSUCHCHANNEL
-	else if (!_ircserv.isUser(_input[1]))
+	else if (!_ircserv.isUser(_input[1]) || (_ircserv.isUser(_input[1]) && _ircserv.getUser(_input[1])->getStatus() == User::DELETED))
 		_user.printMessage(401, _input[1]); //ERR_NOSUCHNICK
 	else if (!_ircserv.getChannel(_input[2])->isUserInChannel(_user))
 		_user.printMessage(442, _input[2]); //ERR_NOTONCHANNEL
@@ -27,7 +27,6 @@ void	Command::invite(void)
 		_ircserv.getChannel(_input[2])->Invite(_ircserv.getUser(_input[1]));
 		std::string msg;
 		msg = ":" + _user.getPrefix() + " INVITE " + _input[1] + " :" + _input[2] + "\r\n";
-		std::cout << msg << std::endl;
 		_ircserv.getUser(_input[1])->printMessage(msg);
 		_user.printMessage(341, _input[1], _input[2]); //RPL_INVITING
 	}
