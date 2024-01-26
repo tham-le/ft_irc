@@ -127,7 +127,7 @@ void	Command::modeFind(Channel *channel)
 			else
 			{
 				unsigned long tmp = modeParseParam(sign, input[i], paramIndex);
-				if (paramIndex != tmp)
+				if (paramIndex != tmp && !(sign == "-" && input[i] == 'o'))
 				{
 					modeInputClear += input[i];
 					if (tmp > paramIndex)
@@ -301,6 +301,11 @@ bool	Command::modeOpositive(std::string &param) {
 bool	Command::modeOnegative(std::string &param) {
 	if (_ircserv.getChannel(_input[1])->isUserInChannel(param)) {
 		if  (_ircserv.getChannel(_input[1])->isOperator(param)) {
+			std::string msg = ":" + _user.getPrefix() + " MODE " + _input[1] + " -o " + param;
+
+			std::map<int, User *> listUsers = _ircserv.getChannel(_input[1])->getUsers();
+			for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+				it->second->printMessage(msg + "\r\n");
 			_ircserv.getChannel(_input[1])->removeOperator(*_ircserv.getUser(param));
 			return true;
 		}

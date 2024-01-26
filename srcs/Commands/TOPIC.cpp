@@ -14,9 +14,7 @@ void	Command::topicChannel(Channel *channel)
 		topic = topic.substr(0, 307);
 	}
 	channel->setTopic(topic, _user.getNickname());
-	//irssi rajoute les : mais nc n'ajoute pas les :
-	// msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " " + topic + "\r\n"; //irssi
-	msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " :" + topic + "\r\n"; //nc
+	msg = ":" + _user.getPrefix() + " TOPIC " + channel->getName() + " " + topic + "\r\n"; //nc
 	std::map<int, User *> listUsers = channel->getUsers();
 		for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 				it->second->printMessage(msg + "\r\n");
