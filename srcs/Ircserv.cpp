@@ -263,7 +263,21 @@ void			Ircserv::disconnectClient(int fd)
 	if (it != _users.end())
 	{
 		std::cout << "Client " << fd << " disconnected" << std::endl;
-		it->second->setStatus(User::DELETED);
+		for (std::map<std::string, Channel *>::iterator itChan = _channels.begin(); itChan != _channels.end(); itChan++)
+		{
+			if (itChan->second->isUserInChannel(*it->second))
+			{
+				itChan->second->removeUser(it->second->getNickname());
+				std::map<int, User *> users = itChan->second->getUsers();
+				for (std::map<int, User *>::iterator itUsers = users.begin(); itUsers != users.end(); itUsers++) {
+					std::string msg = ":"  + it->second->getPrefix() + " QUIT " + itChan->first;
+					(*itUsers->second).printMessage(msg + "\r\n");
+					if (users.size() == 0)
+						removeChannel(itChan->first);
+				}
+			}
+			it->second->setStatus(User::DELETED);
+		}
 		//_users.erase(it);
 	}
 }
