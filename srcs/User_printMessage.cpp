@@ -151,6 +151,9 @@ void	User::printMessage(int code, std::string m1)
 	case 366:
 		str += RPL_ENDOFNAMES(m1);
 		break;
+	case 368:
+		str += RPL_ENDOFBANLIST(m1);
+		break;
 	case 372:
 		str += RPL_MOTD(m1);
 		break;
