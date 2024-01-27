@@ -1,5 +1,4 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
 #include <iostream>
 
 void	Command::topicChannel(Channel *channel)
@@ -42,7 +41,6 @@ void		Command::topicCheck(Channel *channel)
 	}
 }
 
-
 void		Command::topic()
 {
 	if (_user.getStatus() == User::PASSWORD_REQUIRED || _user.getStatus() == User::PASSWORD_MATCH)
@@ -50,7 +48,6 @@ void		Command::topic()
 		_user.printMessage(451); //ERR_NOTREGISTEREd
 		return ;
 	}
-
 	if (_input.size() < 2)
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
 	else if (_input[1][0] != '#' || (_input[1][0] == '#' && !_ircserv.isChannel(_input[1])))

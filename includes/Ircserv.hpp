@@ -1,9 +1,9 @@
 #ifndef IRC_SERV_HPP
-#define IRC_SERV_HPP
+# define IRC_SERV_HPP
 
 # define MAX_CLIENTS 100
-#define BUFF_SIZE 512
-#define FOPEN_MAX FD_SETSIZE
+# define BUFF_SIZE 512
+# define FOPEN_MAX FD_SETSIZE
 
 
 
@@ -15,6 +15,7 @@
 #include "Config.hpp"
 #include <poll.h>
 #include <fstream>
+
 class User;
 class Channel;
 class Command;
@@ -36,7 +37,7 @@ class Ircserv
 		void			writeToAllClientsExcept(int fd, std::string const &msg);
 
 		std::string		readFromClient(int fd);
-		void		readFromAllClients();
+		void			readFromAllClients();
 
 		void			putStr(std::string const &str);
 		void			disconnectClient(int fd);
@@ -90,8 +91,6 @@ class Ircserv
 		std::string						_version;
 		std::ofstream					_logFile;
 		bool							_isLog;
-
-
 
 		class	DisconnectedUser : public std::exception
 		{

@@ -1,6 +1,4 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
-
 
 void	Command::names(void)
 {
@@ -21,7 +19,7 @@ void	Command::names(void)
 					_user.printMessage(366, channels[i]); //RPL_ENDOFNAMES
 				}
 			else
-				_user.printMessage(366, channels[i]);
+				_user.printMessage(366);
 		}
 		else if (_user.getStatus() == User::ONLINE) {
 			_user.printMessage(353, channels[i], _ircserv.getChannel(channels[i])->getUsersName());

@@ -6,7 +6,6 @@ Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _user(u
 {
 	initCmd();
 	_input = split(msg, ' ');
-	//turn input[ 0] to uppercas
 	if (_input.size() < 1)
 		return ;
 	for (size_t i = 0; i < _input[0].size(); i++)
@@ -14,8 +13,7 @@ Command::Command(std::string const &msg, User &user, Ircserv &ircserv) : _user(u
 	command();
 }
 
-Command::~Command()
-{}
+Command::~Command() {}
 
 void		Command::initCmd()
 {
@@ -90,4 +88,3 @@ std::string		Command::toFormat(std::string cmd, std::string channel, std::string
 	out += msg + "\r\n";
 	return (out);
 }
-

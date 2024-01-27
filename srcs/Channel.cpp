@@ -20,7 +20,6 @@ std::string		Channel::getName() const
 	return (_name);
 }
 
-
 void	Channel::setTopic(std::string const topic, std::string const nickname)
 {
 	this->_topic = topic;
@@ -84,7 +83,7 @@ void	Channel::removeUser(User &user)
 	_users.erase(fd);
 }
 
-void			Channel::removeUser(std::string const nickname)
+void	Channel::removeUser(std::string const nickname)
 {
 	std::map<int, User *>::iterator it = _users.find(getUser(nickname)->getFd());
 	User *user = getUser(nickname);
@@ -94,7 +93,7 @@ void			Channel::removeUser(std::string const nickname)
 	_users.erase(it);
 }
 
-User*			Channel::getUser(std::string const nickname)
+User*	Channel::getUser(std::string const nickname)
 {
 	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
 	{
@@ -109,7 +108,7 @@ std::map<int, User *>	Channel::getUsers()
 	return (_users);
 }
 
-std::string Channel::getUsersName()
+std::string	Channel::getUsersName()
 {
 	std::string str = "";
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
@@ -126,7 +125,7 @@ std::string Channel::getUsersName()
 	return (str);
 }
 
-bool			Channel::isUserInChannel(std::string const nickname) const
+bool	Channel::isUserInChannel(std::string const nickname) const
 {
 	for (std::map<int, User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
 	{
@@ -136,7 +135,7 @@ bool			Channel::isUserInChannel(std::string const nickname) const
 	return (false);
 }
 
-bool			Channel::isUserInChannel(User const &user) const
+bool	Channel::isUserInChannel(User const &user) const
 {
 	int fd = user.getFd();
 	if (_users.find(fd) != _users.end())
@@ -144,12 +143,12 @@ bool			Channel::isUserInChannel(User const &user) const
 	return (false);
 }
 
-void			Channel::Invite(User* user)
+void	Channel::Invite(User* user)
 {
 	_invitedUsers.push_back(user);
 }
 
-void			Channel::Uninvite(User &user)
+void	Channel::Uninvite(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
 
@@ -159,8 +158,7 @@ void			Channel::Uninvite(User &user)
 		_invitedUsers.erase(it);
 }
 
-
-bool			Channel::isInvited(User &user)
+bool	Channel::isInvited(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), &user);
 
@@ -169,14 +167,14 @@ bool			Channel::isInvited(User &user)
 	return (false);
 }
 
-bool			Channel::isGoodKey(std::string key)
+bool	Channel::isGoodKey(std::string key)
 {
 	if (key == _key)
 		return (true);
 	return (false);
 }
 
-void			Channel::addOperator(User &user)
+void	Channel::addOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
@@ -187,7 +185,7 @@ void			Channel::addOperator(User &user)
 	}
 }
 
-void			Channel::removeOperator(User &user)
+void	Channel::removeOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 	if (it == _operators.end())
@@ -195,16 +193,15 @@ void			Channel::removeOperator(User &user)
 	_operators.erase(it);
 }
 
-void			Channel::removeOperator(std::string const nickname)
+void	Channel::removeOperator(std::string const nickname)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), getUser(nickname));
 	if (it == _operators.end())
 		return ;
 	_operators.erase(it);
-	// removeUser(nickname);
 }
 
-bool			Channel::isOperator(User &user)
+bool	Channel::isOperator(User &user)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), &user);
 
@@ -213,7 +210,7 @@ bool			Channel::isOperator(User &user)
 	return (true);
 }
 
-bool			Channel::isOperator(std::string const nickname)
+bool	Channel::isOperator(std::string const nickname)
 {
 	std::vector<User *>::iterator it = std::find(_operators.begin(), _operators.end(), getUser(nickname));
 
@@ -222,7 +219,7 @@ bool			Channel::isOperator(std::string const nickname)
 	return (true);
 }
 
-bool			Channel::isEmptyOperator()
+bool	Channel::isEmptyOperator()
 {
 	if (_operators.empty())
 		return (true);
@@ -251,7 +248,7 @@ std::string		Channel::getModeCmd() const
 	return (_modeCmd);
 }
 
-void			Channel::setModeCmd(std::string mode)
+void	Channel::setModeCmd(std::string mode)
 {
 	_modeCmd = mode;
 }

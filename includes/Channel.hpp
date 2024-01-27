@@ -35,7 +35,7 @@ class Channel
 		std::string		getKey() const;
 
 		void			setMaxUser(int maxUser);
-		unsigned long				getMaxUser() const;
+		unsigned long	getMaxUser() const;
 
 
 		void			addUser(User &user);
@@ -63,13 +63,12 @@ class Channel
 		bool			isOperator(std::string const nickname);
 		bool			isEmptyOperator();
 
-		std::string			setTime();
+		std::string		setTime();
 		std::string		getCreationTime() const;
 		std::string		getTopicTime() const;
 		std::string		getTopicUser()const;
 		std::string		getModeCmd() const;
 		void			setModeCmd(std::string mode);
-
 
 private:
 		friend class Command;

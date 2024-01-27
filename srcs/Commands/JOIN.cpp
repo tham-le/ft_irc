@@ -1,4 +1,3 @@
-
 #include "../includes/Command.hpp"
 #include <string>
 #include <vector>
@@ -25,7 +24,6 @@ void		Command::joinChannel(Channel *channel)
 		_user.printMessage(471, channelName); // ERR_CHANNELISFULL
 		return;
 	}
-
 	channel->addUser(_user);
 	_user.setStatus(User::ONLINE);
 	std::string listUsersNames;
@@ -57,7 +55,6 @@ void		Command::joinChannel(Channel *channel)
 		_user.printMessage(333, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	}
 	_user.printMessage(329, channel->getName(), channel->getCreationTime()); //RPL_CREATIONTIME
-	//_user.printMessage(329, channel->getName(), "Thu Jan  2 01:00:00 1971"); //RPL_CREATIONTIME
 }
 
 void		Command::joinChannel(std::vector<std::string> channelToJoin, std::vector<std::string> key)

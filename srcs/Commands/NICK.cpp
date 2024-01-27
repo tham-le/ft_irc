@@ -49,7 +49,6 @@ void		Command::nickname(void)
 	}
 	//EVERYTHING IS OK, CHANGE NICKNAME
 	std::string msg = toFormat("NICK", _input[1]);
-
 	_user.printMessage(msg);
 	_user.setNickname(_input[1]);
 	std::map<std::string,Channel *> channels = _user.getChannels();

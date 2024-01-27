@@ -1,6 +1,4 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
-
 
 void	Command::list(void)
 {
@@ -11,7 +9,6 @@ void	Command::list(void)
 	}
 	if (_input.empty())
 		return ;
-	
 	//if LIST has no arguments, return all channels
 	if (_input.size() == 1 || (_input.size() == 2 && _input[1].empty())) {
 				_user.printMessage(321);
@@ -23,9 +20,6 @@ void	Command::list(void)
 		return ;
 	}
 	//if LIST has arguments, return only those channels
-
-
-
 	std::vector<std::string> channels = split(_input[1], ',');
 	_user.printMessage(321);
 	for (size_t i = 0; i < channels.size(); i++) {

@@ -1,5 +1,5 @@
 #ifndef USER_HPP
-#define USER_HPP
+# define USER_HPP
 
 
 #include <sys/socket.h>
@@ -22,7 +22,6 @@ class Ircserv;
 
 class User
 {
-
 public:
 	enum	e_status
 	{
@@ -32,13 +31,10 @@ public:
 		ONLINE,
 		DELETED
 	};
-	friend class Command;
 	virtual ~User();
 
 	User() {};
 	User(int fd, struct sockaddr_in addr, Ircserv *ircserv);
-
-	void	sendMessage(User *user, std::string message);
 
 	void	setNickname(std::string nickname);
 	void	setUsername(std::string username);
@@ -69,10 +65,6 @@ public:
 
 	void	addChannel(Channel *channel);
 	void	removeChannel(std::string channel);
-	void	addLastChannel(Channel *channel);
-	void	removeLastChannel();
-	Channel	*getLastChannel();
-	bool	isInLastChannels(Channel *channel);
 
 	void	printMessage(std::string str);
 	void	printMessage(int code);
@@ -96,12 +88,11 @@ public:
 	time_t			_lastPing;
 	time_t			_lastPong;
 
-
 private:
+	friend class Command;
 	int				_fd;
 	Ircserv			*_ircserv;
 
-	//std::string		_pendingMessages;
 	std::vector<Command *>		CommandQueue;
 
 	std::string		_nickname;
@@ -116,13 +107,7 @@ private:
 	std::string	_awayMessage;
 	int			_mode;
 	int			_MaxChannelofUser;
-
 	std::string		_connectionTime;
-
-	void	receive(Ircserv *ircserv);
-
-	
-	std::vector<Channel *> _lastChannels;
 	std::map<std::string, Channel *> _channels;
 };
 

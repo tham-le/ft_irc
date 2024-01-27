@@ -1,5 +1,4 @@
 #include "../includes/Command.hpp"
-#include "../includes/ReplyCommand.hpp"
 
 void	Command::version(void)
 {
