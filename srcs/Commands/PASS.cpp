@@ -19,15 +19,9 @@ void	Command::pass(void)
 	}
 	_user.setStatus(User::PASSWORD_MATCH);
 	if (_user.getUsername() != "*" && _user.getNickname() != "*")
-	{
-		_user.setStatus(User::REGISTERED);
-		_user.printMessage(001);
-		_user.printMessage(003);
-		_user.printMessage(004);
-		_user.printMessage(005);
-		_user.printMessage(375);
-		_user.printMessage(372, "Today is a good day");
-		_user.printMessage(376);
-
-	}
+		Auth();
+	else if (_user.getUsername() == "*" && _user.getNickname() != "*")
+		_user.printMessage("Username required\r\n");
+	else if (_user.getUsername() != "*" && _user.getNickname() == "*")
+		_user.printMessage("Nickname required\r\n");
 }

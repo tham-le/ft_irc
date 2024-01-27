@@ -65,10 +65,10 @@ void		Command::nickname(void)
 		}
 	}
 	if (_user.getStatus() == User::PASSWORD_MATCH && _user.getUsername() != "*") {
-		_user.setStatus(User::REGISTERED);
-		_user.printMessage(001);
-		_user.printMessage(003);
-		_user.printMessage(004);
-		_user.printMessage(005);
+		Auth();
 	}
+	else if (_user.getStatus() != User::PASSWORD_MATCH)
+		_user.printMessage("Pass required\r\n");
+	else if (_user.getUsername() == "*")
+		_user.printMessage("Username required\r\n");
 }

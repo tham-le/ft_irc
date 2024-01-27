@@ -39,7 +39,6 @@ void		Command::initCmd()
 	_func["VERSION"] = &Command::version; // -> no channel
 }
 
-
 void		Command::command()
 {
 	std::map<std::string, FuncType >::iterator it = _func.find(_input[0]);
@@ -87,4 +86,16 @@ std::string		Command::toFormat(std::string cmd, std::string channel, std::string
 	out += " " + cmd + " " + channel + " :";
 	out += msg + "\r\n";
 	return (out);
+}
+
+void		Command::Auth()
+{
+		_user.setStatus(User::REGISTERED);
+		_user.printMessage(001);
+		_user.printMessage(003);
+		_user.printMessage(004);
+		_user.printMessage(005);
+		_user.printMessage(375);
+		_user.printMessage(372, "Today is a good day");
+		_user.printMessage(376);
 }

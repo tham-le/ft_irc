@@ -26,7 +26,7 @@ public:
 	Command(std::string const &msg, User &user, Ircserv &ircserv);
 
 	~Command();
-
+	void		Auth();
 	void		pass(void);
 	void		cap(void);
 	void		who(void);

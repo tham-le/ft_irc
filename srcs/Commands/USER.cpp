@@ -19,14 +19,7 @@ void    Command::user() {
     _user.setRealname(realname);
 
     if (_user.getStatus() == User::PASSWORD_MATCH && _user.getNickname() != "*") {
-        _user.setStatus(User::REGISTERED);
-        _user.printMessage(001);
-        _user.printMessage(003);
-        _user.printMessage(004);
-        _user.printMessage(005);
-        _user.printMessage(375);
-        _user.printMessage(372, "Today is a good day");
-        _user.printMessage(376);
+        Auth();
     }
     else if (_user.getStatus() != User::PASSWORD_MATCH)
         _user.printMessage("Pass required\r\n");
