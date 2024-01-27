@@ -22,7 +22,7 @@ void    Command::kick(void) {
     std::vector<std::string> listUser = split(_input[2], ',');
     for (size_t i = 0; i < listUser.size(); i++) {
         if (_user.getStatus() == User::ONLINE && _user.getChannels().size() > 0) {
-            if (!_user.isOperator()) {
+            if (!_ircserv.getChannel(channel)->isOperator(_user)) {
                 _user.printMessage(482, channel);
                 return ;
             }

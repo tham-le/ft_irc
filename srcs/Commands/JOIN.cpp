@@ -55,7 +55,7 @@ void		Command::joinChannel(Channel *channel)
 	if (channel->getTopic() != "")
 	{
 		_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
-		_user.printMessage(333, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
+		//_user.printMessage(333, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	}
 	_user.printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
 	_user.printMessage(366,channelName);	// RPL_ENDOFNAMES
