@@ -19,7 +19,7 @@ void	Command::names(void)
 					_user.printMessage(366, channels[i]); //RPL_ENDOFNAMES
 				}
 			else
-				_user.printMessage(366);
+				_user.printMessage(366, channels[i]);
 		}
 		else if (_user.getStatus() == User::ONLINE) {
 			_user.printMessage(353, channels[i], _ircserv.getChannel(channels[i])->getUsersName());
