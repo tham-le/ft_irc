@@ -40,6 +40,7 @@ void		Command::joinChannel(Channel *channel)
 		else
 			listUsersNames += it->second->getNickname() + " ";
 	}
+
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
 		// if (it->second->getStatus() == User::DELETED)
@@ -47,6 +48,7 @@ void		Command::joinChannel(Channel *channel)
 
 		it->second->printMessage(toFormat("JOIN", channelName) + "\r\n");
 		it->second->printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
+
 		it->second->printMessage(366, channelName);	// RPL_ENDOFNAMES
 	}
 	if (channel->getTopic() != "")
