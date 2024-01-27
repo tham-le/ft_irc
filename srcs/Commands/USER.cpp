@@ -2,7 +2,7 @@
 
 void    Command::user() {
     if (_input.empty() || _input.size() < 5) {
-        _user.printMessage(461);
+        _user.printMessage(461, _input[0]);
         return ;
     }
     if (_user.getStatus() == User::REGISTERED || _user.getStatus() == User::ONLINE) {
