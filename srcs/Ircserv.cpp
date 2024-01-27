@@ -32,27 +32,19 @@ class	SigintException : public std::exception
 
 static void	sighandler(int signum)
 {
-	std::cout << "Caught signal " << signum << std::endl;
-	if (signum == SIGINT || signum == SIGQUIT || signum == SIGTERM)
-	{
-		stop = true;
-	}
+	(void)signum;
+	stop = true;
 }
 
 void		catchSignal()
 {
-	int	signal[] = {SIGINT, SIGQUIT, SIGTERM, SIGTSTP};
+	int	signal = SIGINT;
 	struct sigaction sig;
 	sig.sa_handler = sighandler;
 	sigemptyset(&sig.sa_mask);
 	sig.sa_flags = 0;
-
-	for (int i = 0; i < 4; i++)
-	{
-		if (sigaction(signal[i], &sig, NULL) == -1)
-			throw std::runtime_error("We don't handle the signal");
-	}
-
+	if (sigaction(signal, &sig, NULL) == -1)
+		throw std::runtime_error("sigaction() failed");
 }
 
 
@@ -383,7 +375,7 @@ void			Ircserv::run()
 		{
 			closeAllSocket();
 			std::cerr << e.what() << '\n';
-			break ;
+			continue ;
 		}
 	}
 
