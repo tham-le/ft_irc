@@ -29,17 +29,20 @@ void		Command::joinChannel(Channel *channel)
 	std::string listUsersNames;
 
 	std::map<int, User *> listUsers = channel->getUsers();
-	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
-	{
-		// if (it->second->getStatus() == User::DELETED)
-		// 	continue;
-		// if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
-		// 	listUsersNames += "@" + it->second->getPrefix();
-		if (channel->isOperator(*it->second))
-			listUsersNames += "@" + it->second->getPrefix();
-		else
-			listUsersNames += it->second->getNickname() + " ";
-	}
+	// std::map<int, User *>::operator itEnd = listUsers.end() - 1;
+	// for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+	// {
+	// 	// if (it->second->getStatus() == User::DELETED)
+	// 	// 	continue;
+	// 	// if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
+	// 	// 	listUsersNames += "@" + it->second->getPrefix();
+	// 	if (channel->isOperator(*it->second))
+	// 		listUsersNames += "@" + it->second->getPrefix();
+	// 	else
+	// 		listUsersNames += it->second->getPrefix();
+	// 	if (it != --listUsers.end())
+	// 		listUsersNames += " ";
+	// }
 
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
@@ -47,7 +50,7 @@ void		Command::joinChannel(Channel *channel)
 		// 	continue;
 
 		it->second->printMessage(toFormat("JOIN", channelName) + "\r\n");
-		it->second->printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
+		it->second->printMessage(353, "= " + channelName, channel->getUsersName()); // RPL_NAMREPLY
 
 		it->second->printMessage(366, channelName);	// RPL_ENDOFNAMES
 	}
