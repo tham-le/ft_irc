@@ -33,10 +33,10 @@ void		Command::joinChannel(Channel *channel)
 	{
 		// if (it->second->getStatus() == User::DELETED)
 		// 	continue;
-		if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
-			listUsersNames += "@@" + it->second->getNickname() + " ";
-		else if (channel->isOperator(*it->second))
-			listUsersNames += "@" + it->second->getNickname() + " ";
+		// if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
+		// 	listUsersNames += "@" + it->second->getPrefix();
+		if (channel->isOperator(*it->second))
+			listUsersNames += "@" + it->second->getPrefix();
 		else
 			listUsersNames += it->second->getNickname() + " ";
 	}
@@ -46,7 +46,7 @@ void		Command::joinChannel(Channel *channel)
 		// 	continue;
 
 		it->second->printMessage(toFormat("JOIN", channelName) + "\r\n");
-		it->second->printMessage(353, " " + channelName, listUsersNames); // RPL_NAMREPLY
+		it->second->printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
 		it->second->printMessage(366, channelName);	// RPL_ENDOFNAMES
 	}
 	if (channel->getTopic() != "")
