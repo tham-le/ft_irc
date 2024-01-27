@@ -13,6 +13,7 @@
 #include "User.hpp"
 #include "Ircserv.hpp"
 #include "Channel.hpp"
+#include "ReplyCommand.hpp"
 
 class User;
 class Ircserv;
@@ -26,23 +27,12 @@ public:
 
 	~Command();
 
-	void		run(int fd, Ircserv &ircserv);
-	// std::string	getName() const;
-
-
 	void		pass(void);
 	void		cap(void);
-
-
 	void		who(void);
 	void		ping(void);
 	void		pong(void);
 	void		privmsg(void);
-	void		notice(void);
-
-
-
-
 	void		admin(void);
 	void		info(void);
 	void		join(void);
@@ -55,7 +45,6 @@ public:
 	void		invite(void);
 	void		topic(void);
 	void		changeMode(void);
-	bool		isInChannel(void);
 	void 		version(void);
 	void		user(void);
 	void		whois(void);
@@ -90,7 +79,6 @@ private:
 	std::vector<std::string>	_input;
 	typedef void 				(Command::*FuncType)();
 	std::map<std::string, FuncType >		_func;
-	std::vector<Channel *>					_lastChannels;
 	std::map<std::string, Channel *>		_channels;
 };
 

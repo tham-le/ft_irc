@@ -72,7 +72,6 @@ void User::setNickname(std::string nickname) {
 	_nickname = nickname;
 }
 
-
 void User::setUsername(std::string username) {
 	_username = username;
 }
@@ -157,29 +156,6 @@ void	User::removeChannel(std::string channel)
 	_channels.erase(channel);
 }
 
-void	User::addLastChannel(Channel *channel)
-{
-	_lastChannels.push_back(channel);
-}
-
-void	User::removeLastChannel()
-{
-	_lastChannels.pop_back();
-}
-
-Channel	*User::getLastChannel()
-{
-	return (_lastChannels[_lastChannels.size() - 1]);
-}
-
-bool	User::isInLastChannels(Channel *channel)
-{
-	std::vector<Channel*>::iterator it = std::find(_lastChannels.begin(), _lastChannels.end(), channel);
-	if (it != _lastChannels.end())
-		return (true);
-	return (false);
-}
-
 std::string User::getNameChannels() const
 {
 	std::string str = "";
@@ -191,13 +167,7 @@ std::string User::getNameChannels() const
 	return (str);
 }
 
-
 std::map<std::string, Channel *>	User::getChannels() const
 {
 	return (_channels);
 }
-
-
-
-
-

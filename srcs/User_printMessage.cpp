@@ -35,7 +35,7 @@ static std::string	convert3digits(int n)
 	return (str);
 }
 
- std::string	User::getTarget(int code)
+std::string	User::getTarget(int code)
 {
 	std::string str = ":";
 	str += getPrefix();
@@ -208,7 +208,6 @@ void	User::printMessage(int code, std::string m1)
 	}
 	str += "\r\n";
 	printMessage(str);
-
 }
 
 void	User::printMessage(int code, std::string m1, std::string m2)
@@ -285,12 +284,9 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	case 319:
 		str += RPL_WHOISCHANNELS(m1, m2); //EXAMPLE, DONT USE
 		break;
-	case 366:
-		str += RPL_ENDOFNAMES(m3); //EXAMPLE, DONT USE
-		break;
 	}
+	(void)m3;
 	(void)m4;
-
 	str += "\r\n";
 	printMessage(str);
 }
@@ -351,6 +347,3 @@ void	User::printMessage(int code, std::string m1, std::string m2, std::string m3
 	str += "\r\n";
 	printMessage(str);
 }
-
-
-
