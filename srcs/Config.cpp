@@ -19,8 +19,8 @@ Config::~Config(){}
 void	Config::setPort(int port)
 {
 	this->_port = port;
-	if (this->_port < 6660 || this->_port > 7000)
-		throw std::invalid_argument("Invalid <port> : <port> must be between 6660 and 7000");
+	// if (this->_port < 6660 || this->_port > 7000)
+	// 	throw std::invalid_argument("Invalid <port> : <port> must be between 6660 and 7000");
 }
 
 void	Config::setPassword(std::string const password)
