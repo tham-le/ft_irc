@@ -45,6 +45,8 @@ void		Command::part(void)
 				_user.removeChannel(listChannel[i]);
 				if (users.size() == 1)
 					_ircserv.removeChannel(listChannel[i]);
+				if (_user.getChannels().size() == 0)
+					_user.setStatus(User::REGISTERED);
 			}
 			else
 				_user.printMessage(442, std::string(listChannel[i])); // ERR_NOTONCHANNEL
