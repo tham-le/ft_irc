@@ -66,14 +66,14 @@
 # define RPL_TOPICWHOTIME(user, time) ("Topic set by " + user + " [" + time + "]" )// 333
 # define RPL_VERSION(version, servername) (": " + version + " " + servername) //351
 # define RPL_NAMREPLY(channel, nick) (channel + " :" + nick ) //353
-# define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list") //366
-# define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list") // 368
+# define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list.") //366
+# define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list.") // 368
 # define RPL_INVITING(nick, channel) (nick + " " +  channel); // 341
 # define RPL_INFO(version, date) (version + date); // 371
-# define RPL_ENDOFINFO() (":End of /INFO list"); // 374
+# define RPL_ENDOFINFO() (":End of /INFO list."); // 374
 # define RPL_MOTDSTART(servername) (":- " + servername + " Message of the day - ") // 375
 # define RPL_MOTD(message) (": " + message) // 372
-# define RPL_ENDOFMOTD() (":End of /MOTD command") // 376
+# define RPL_ENDOFMOTD() (":End of /MOTD command.") // 376
 
 // enum ReplyCode
 // {

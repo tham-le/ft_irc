@@ -29,36 +29,36 @@ void		Command::joinChannel(Channel *channel)
 	std::string listUsersNames;
 
 	std::map<int, User *> listUsers = channel->getUsers();
-	// std::map<int, User *>::operator itEnd = listUsers.end() - 1;
-	// for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
-	// {
-	// 	// if (it->second->getStatus() == User::DELETED)
-	// 	// 	continue;
-	// 	// if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
-	// 	// 	listUsersNames += "@" + it->second->getPrefix();
-	// 	if (channel->isOperator(*it->second))
-	// 		listUsersNames += "@" + it->second->getPrefix();
-	// 	else
-	// 		listUsersNames += it->second->getPrefix();
-	// 	if (it != --listUsers.end())
-	// 		listUsersNames += " ";
-	// }
+	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
+	{
+		// if (it->second->getStatus() == User::DELETED)
+		// 	continue;
+		// if (channel->isOperator(*it->second) && channel->getUsers().size() == 1)
+		// 	listUsersNames += "@" + it->second->getPrefix();
+		if (channel->isOperator(*it->second))
+			listUsersNames += "@" + it->second->getNickname();
+		else
+			listUsersNames += it->second->getNickname();
+		if (it != --listUsers.end())
+			listUsersNames += " ";
+	}
 
 	for (std::map<int, User *>::iterator it = listUsers.begin(); it != listUsers.end(); it++)
 	{
 		// if (it->second->getStatus() == User::DELETED)
 		// 	continue;
 
-		it->second->printMessage(toFormat("JOIN", channelName) + "\r\n");
-		it->second->printMessage(353, "= " + channelName, channel->getUsersName()); // RPL_NAMREPLY
-
-		it->second->printMessage(366, channelName);	// RPL_ENDOFNAMES
+		it->second->printMessage(toFormat("JOIN", channelName));
+		// it->second->printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
+		// it->second->printMessage(366,channelName);	// RPL_ENDOFNAMES
 	}
 	if (channel->getTopic() != "")
 	{
 		_user.printMessage(332, channelName, channel->getTopic()); //RPL_TOPIC
 		_user.printMessage(333, channelName, channel->getTopicTime());//RPL_TOPICWHOTIME
 	}
+	_user.printMessage(353, "= " + channelName, listUsersNames); // RPL_NAMREPLY
+	_user.printMessage(366,channelName);	// RPL_ENDOFNAMES
 	_user.printMessage(329, channel->getName(), channel->getCreationTime()); //RPL_CREATIONTIME
 }
 
