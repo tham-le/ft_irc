@@ -32,11 +32,29 @@ class	SigintException : public std::exception
 
 static void	sighandler(int signum)
 {
-	if (signum == SIGINT)
+	std::cout << "Caught signal " << signum << std::endl;
+	if (signum == SIGINT || signum == SIGQUIT || signum == SIGTERM)
 	{
 		stop = true;
 	}
 }
+
+void		catchSignal()
+{
+	int	signal[] = {SIGINT, SIGQUIT, SIGTERM, SIGTSTP};
+	struct sigaction sig;
+	sig.sa_handler = sighandler;
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (sigaction(signal[i], &sig, NULL) == -1)
+			throw std::runtime_error("We don't handle the signal");
+	}
+
+}
+
 
 Ircserv::~Ircserv()
 {
@@ -140,7 +158,10 @@ void			Ircserv::init()
 	addr.sin_port = htons(_config.getPort());
 	addr.sin_addr.s_addr = INADDR_ANY;
 	if (bind(_sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+	{
+		close(_sockfd);
 		throw std::runtime_error("bind port failed: Port already in use");
+	}
 	if (listen(_sockfd, 10) < 0)
 		throw std::runtime_error("listen() failed");
 	char hostname[1024];
@@ -170,7 +191,7 @@ std::string		Ircserv::readFromClient(int fd)
 {
 	try
 	{
-		signal(SIGINT, sighandler);
+		catchSignal();
 		char buf[4096];
 		memset(buf, 0, 4096);
 
