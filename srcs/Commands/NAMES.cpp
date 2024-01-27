@@ -11,19 +11,23 @@ void	Command::names(void)
 		_user.printMessage(ERR_NOTJOINEDANYCHANNEL()); //RPL_ENDOFNAMES
 		return ;
 	}
-	std::vector<std::string> channels = split(_input[1], ',');
-	for (size_t i = 0; i < channels.size(); i++) {
+	std::vector<std::string> params = split(_input[1], ',');
+	for (size_t i = 0; i < params.size(); i++) {
 		if (_user.getStatus() != User::ONLINE && _user.getStatus() != User::DELETED && !_ircserv.getChannels().empty()) {
-			if (_ircserv.isChannel(channels[i])) {
-					_user.printMessage(353, channels[i], _ircserv.getChannel(channels[i])->getUsersName()); //RPL_NAMREPLY
-					_user.printMessage(366, channels[i]); //RPL_ENDOFNAMES
+			if (_ircserv.isChannel(params[i])) {
+					_user.printMessage(353, params[i], _ircserv.getChannel(params[i])->getUsersName()); //RPL_NAMREPLY
+					_user.printMessage(366, params[i]); //RPL_ENDOFNAMES
 				}
-			else
-				_user.printMessage(366, channels[i]);
 		}
 		else if (_user.getStatus() == User::ONLINE) {
-			_user.printMessage(353, channels[i], _ircserv.getChannel(channels[i])->getUsersName());
-			_user.printMessage(366, channels[i]);
+			if (_ircserv.isChannel(params[i])) {
+				if (!_ircserv.getChannel(params[i])->isUserInChannel(_user))
+					_user.printMessage(366, params[i]);
+				else {
+					_user.printMessage(353, params[i], _ircserv.getChannel(params[i])->getUsersName());
+					_user.printMessage(366, params[i]);
+				}
+			}
 		}
 	}
 }
