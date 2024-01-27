@@ -15,7 +15,6 @@
 #include <fcntl.h>
 #include <ctime>
 #include <unistd.h>
-#include <cerrno>
 #include <iostream>
 #include "User.hpp"
 #include <csignal>
@@ -84,13 +83,14 @@ Ircserv::Ircserv(int port, std::string password)
 
 void			Ircserv::init()
 {
-	_sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_sockfd < 0)
+	int fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (fd < 0)
 		throw std::runtime_error("Creating socket() failed");
+	_sockfd = fd;
 	int opt = 1;
 	if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 		throw std::runtime_error("setsockopt() failed");
-	if (fcntl(_sockfd, F_SETFL, O_NONBLOCK) < 0)
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
 		throw std::runtime_error("fcntl() failed");
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
@@ -218,12 +218,7 @@ std::string		Ircserv::readFromClient(int fd)
 		log( "fd " + to_string(fd) +">>>>>>" + buf );
 
 		if (bytes < 0)
-		{
-			if (errno == EWOULDBLOCK || errno == EAGAIN)
-				return ("");
-			else
-				throw std::runtime_error("recv() failed");
-		}
+			throw std::runtime_error("recv() failed");
 		else if (bytes == 0)
 			throw DisconnectedUser(fd);
 		User	&user = getUser(fd);
