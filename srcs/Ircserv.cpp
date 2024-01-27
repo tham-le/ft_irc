@@ -57,6 +57,8 @@ Ircserv::Ircserv(int port, std::string password)
 	_config.setPingInterval(1000);
 	_config.setPingTimeout(5000);
 	_config.setMaxClients(100);
+	_location = "Paris, France";
+	_email = "thi-le@student.42.fr";
 	time_t start = std::time(0);
 	std::cout << "Starting Ircserv..." << std::endl;
 	char buffer[100];
@@ -353,6 +355,15 @@ std::string		Ircserv::getVersion() const
 	return (_version);
 }
 
+std::string		Ircserv::getLocation() const
+{
+	return (_location);
+}
+
+std::string		Ircserv::getEmail() const
+{
+	return (_email);
+}
 
 User & Ircserv::getUser(int fd) const
 {

@@ -163,6 +163,8 @@ void	Command::changeMode(void)
 			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
 		else if (_ircserv.isUser(_input[1]))
 			return;
+		else if (_input.size() > 2 && _input[2] == "b")
+			_user.printMessage(368, _input[1]); //RPL_ENDOFBANLIST
 		else if (!_ircserv.isChannel(_input[1]))
 			_user.printMessage(403, _input[1]); //ERR_NOSUCHCHANNEL
 		else if (_ircserv.isChannel(_input[1]) && _input.size() == 2)

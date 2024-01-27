@@ -67,6 +67,8 @@ class Ircserv
 		size_t			getNbClients() const;
 		size_t			getNbChannels() const;
 		Config			getConfig() const;
+		std::string		getLocation() const;
+		std::string		getEmail() const;
 		std::map<std::string, Channel *>	getChannels() const;
 		std::map<int, User *>	getUsers() const;
 
@@ -91,7 +93,8 @@ class Ircserv
 		std::string						_version;
 		std::ofstream					_logFile;
 		bool							_isLog;
-
+		std::string						_location;
+		std::string						_email;
 		class	DisconnectedUser : public std::exception
 		{
 			public:
