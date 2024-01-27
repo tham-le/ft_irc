@@ -112,6 +112,9 @@ void	User::printMessage(int code)
 	case 462:
 		str += ERR_ALREADYREGISTRED();
 		break;
+	case 464:
+		str+= ERR_PASSWDMISMATCH();
+		break;
 	case 451:
 		str += ERR_NOTREGISTERED();
 		break;

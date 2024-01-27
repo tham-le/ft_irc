@@ -9,13 +9,19 @@ void	Command::invite(void)
 		return ;
 	}
 
-	if (_input[1].empty())
+	if (_user.getStatus() == User::REGISTERED)
+	{
+		if (_input.size() < 3 && _input[1].empty())
+			_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
+	}
+
+	if (_input.size() < 1 && _input[1].empty())
 		_user.printMessage(461, _input[0]); //ERR_NEEDMOREPARAMS
-	else if (_input[2][0] != '#' || (_input[2][0] == '#' && !_ircserv.isChannel(_input[2])))
+	else if (_input.size() > 2 &&(_input[2][0] != '#' || (_input[2][0] == '#' && !_ircserv.isChannel(_input[2]))))
 		_user.printMessage(403, _input[2]); //ERR_NOSUCHCHANNEL
 	else if (!_ircserv.isUser(_input[1]) || (_ircserv.isUser(_input[1]) && _ircserv.getUser(_input[1])->getStatus() == User::DELETED))
 		_user.printMessage(401, _input[1]); //ERR_NOSUCHNICK
-	else if (!_ircserv.getChannel(_input[2])->isUserInChannel(_user))
+	else if (_input.size() > 2 && !_ircserv.getChannel(_input[2])->isUserInChannel(_user))
 		_user.printMessage(442, _input[2]); //ERR_NOTONCHANNEL
 	else if (!_ircserv.getChannel(_input[2])->isOperator(_user))
 		_user.printMessage(482, _input[2]); //ERR_CHANOPRIVSNEEDED

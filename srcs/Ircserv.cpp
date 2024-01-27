@@ -243,6 +243,8 @@ void			Ircserv::disconnectClient(int fd)
 	if (it != _users.end())
 	{
 		std::cout << "Client " << fd << " disconnected" << std::endl;
+		if (it->second->getChannels().size() == 0)
+			it->second->setStatus(User::DELETED);
 		for (std::map<std::string, Channel *>::iterator itChan = _channels.begin(); itChan != _channels.end(); itChan++)
 		{
 			if (itChan->second->isUserInChannel(*it->second))
@@ -300,7 +302,8 @@ void			Ircserv::connectClient()
 		if (fd < 0)
 			throw std::runtime_error("accept() failed");
 		std::map<int, User *>::iterator it = _users.find(fd);
-		if (it != _users.end())
+
+		if (it != _users.end()) //&& (it->second->getStatus() != User::DELETED))
 		{
 			if (it->second->getStatus() == User::DELETED)
 			{
