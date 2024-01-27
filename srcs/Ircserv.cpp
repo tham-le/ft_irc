@@ -223,16 +223,36 @@ std::string		Ircserv::readFromClient(int fd)
 			throw DisconnectedUser(fd);
 		User	&user = getUser(fd);
 		user._buffer += buf;
-		std::string delim = "\r\n";
-		size_t pos = 0;
-		while ((pos = user._buffer.find(delim)) != std::string::npos)
+		std::string delim[] = {"\r\n", "\n"};
+		
+		//check if there is a complete message
+		//check if the message has "\r\n" first, then "\n"
+		////normally, the client should send "\r\n" but some clients send "\n"
+		bool found = false;
+		for (size_t i = 0; i < 2; i++)
 		{
-			std::string msg = user._buffer.substr(0, pos);
-			user._buffer.erase(0, pos + delim.length());
-			if (!msg.length())
-				continue ;
-			Command cmd(msg, user, *this);
+			size_t pos = 0;
+			while ((pos = user._buffer.find(delim[i])) != std::string::npos)
+			{
+				found = true;
+				std::string msg = user._buffer.substr(0, pos);
+				user._buffer.erase(0, pos + delim[i].length());
+				if (!msg.length())
+					continue ;
+				Command cmd(msg, user, *this);
+			}
+			if (found)
+				break ;
 		}
+
+		// while ((pos = user._buffer.find(delim)) != std::string::npos)
+		// {
+		// 	std::string msg = user._buffer.substr(0, pos);
+		// 	user._buffer.erase(0, pos + delim.length());
+		// 	if (!msg.length())
+		// 		continue ;
+		// 	Command cmd(msg, user, *this);
+		// }
 	}
 	catch (const DisconnectedUser& e) {
 		disconnectClient(e._fd);
