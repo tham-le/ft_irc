@@ -29,48 +29,6 @@ This project is an implementation of a basic IRC server, adhering to a subset of
 *   **Logging:** Logs server activity to a file.
 *   **Error Handling:** Implements several error replies as defined in the IRC specifications.
 
-## Project Structure
-
-The project is organized into the following directories:
-
-*   **`tham-le-ft_irc/`**
-    *   **`Makefile`**:  The makefile for compiling the project.
-    *   **`includes/`**:  Contains all the header files (`.hpp`).
-        *   `Channel.hpp`:  Definition of the `Channel` class.
-        *   `Command.hpp`:  Definition of the `Command` class.
-        *   `Config.hpp`:  Definition of the `Config` class.
-        *   `Ircserv.hpp`:  Definition of the `Ircserv` class.
-        *   `ReplyCommand.hpp`: Defines reply codes and messages.
-        *   `User.hpp`:  Definition of the `User` class.
-    *   **`srcs/`**:  Contains all the source files (`.cpp`).
-        *   `Channel.cpp`:  Implementation of the `Channel` class.
-        *   `Config.cpp`:  Implementation of the `Config` class.
-        *   `Ircserv.cpp`:  Implementation of the `Ircserv` class.
-        *   `User.cpp`:  Implementation of the `User` class.
-        *   `User_printMessage.cpp`: Implementation of User's message handling.
-        *   `main.cpp`:  The main entry point of the server.
-        *   **`srcs/Commands/`**:  Contains the implementation of the IRC commands.
-            *   `ADMIN.cpp`
-            *   `CAP.cpp`
-            *   `Command.cpp`:  Base class for all commands.
-            *   `INFO.cpp`
-            *   `INVITE.cpp`
-            *   `JOIN.cpp`
-            *   `KICK.cpp`
-            *   `LIST.cpp`
-            *   `MODE.cpp`
-            *   `NAMES.cpp`
-            *   `NICK.cpp`
-            *   `PART.cpp`
-            *   `PASS.cpp`
-            *   `PINGPONG.cpp`
-            *   `PRIVMSG.cpp`
-            *   `QUIT.cpp`
-            *   `TOPIC.cpp`
-            *   `USER.cpp`
-            *   `VERSION.cpp`
-            *   `WHOIS.cpp`
-
 ## Compilation
 
 To compile the project, use the following command:
