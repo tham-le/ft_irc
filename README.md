@@ -98,6 +98,6 @@ The following IRC commands are implemented:
 ## Authors
 
 *   [Christine Qin](https://github.com/cqin42) (cqin)
-*   [Tham Le](https://github.com/thile42) (thi-le)
-*   [Yulia Boktaeva](https://github.com/yuboktae42) (yuboktae)
+*   [Tham Le]([https://github.com/thile42](https://github.com/tham-le)) (thi-le)
+*   [Yulia Boktaeva]([https://github.com/yuboktae42](https://github.com/yboktaeva)) (yuboktae)
 
